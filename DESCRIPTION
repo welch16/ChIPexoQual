@@ -1,0 +1,19 @@
+Package: ChIPexoQual
+Type: Package
+Title: ChIPexoQual
+Version: 1.0
+Date: 2014-12-12
+Author: Rene Welch <welch@stat.wisc.edu>
+Maintainer: Rene Welch <welch@stat.wisc.edu>
+Description: Package with quality controls for ChIP-exo data set
+URL: https:github.com/welch16/profile
+License: MIT + file LICENSE
+Depends:
+    R (>= 3.0.0),
+    GenomicRanges (>= 1.14.4),
+    GenomicAlignments (>= 1.0.1),
+    ggplot2 (>= 1.0),
+    knitr (>= 1.6)
+VignetteBuilder: knitr
+Suggests:
+    BiocStyle
