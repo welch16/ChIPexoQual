@@ -8,7 +8,7 @@
 #' @return A set of regions in the genome
 #'
 #' @export
-.create_regions <- function(reads,lower)
+create_regions <- function(reads,lower)
 {
   stopifnot(class(reads)=="GRanges")
   stopifnot(lower > 0)
