@@ -12,6 +12,9 @@ reads_overlaps(chr, chr_islands, chr_reads)
 
 \item{chr_reads,}{GRanges object with a set of reads for certain chromosome (or genome)}
 }
+\value{
+A list with all the overlaps between reads and island for each chromosome
+}
 \description{
 Find the overlaps between the reads and regions for certain chromosome
 }
