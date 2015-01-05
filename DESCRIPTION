@@ -13,9 +13,10 @@ Depends:
     parallel,
     GenomicRanges (>= 1.14.4),
     GenomicAlignments (>= 1.0.1),
-    data.table (>= 1.9.2),
     ggplot2 (>= 1.0),
     knitr (>= 1.6)
+Imports:
+    data.table (>= 1.9.2)
 VignetteBuilder: knitr
 Suggests:
     BiocStyle
