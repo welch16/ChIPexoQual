@@ -7,6 +7,7 @@ clean:
 	rm -f */*~
 	rm -f .*~
 	rm -f inst/rscripts/*~
+	rm -f .Rhistory
 
 # knit the vignettes
 vignettes/%.pdf:vignettes/%.Rnw
