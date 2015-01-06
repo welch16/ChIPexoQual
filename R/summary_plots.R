@@ -1,4 +1,6 @@
 
+#' @import ggplot2
+NULL
 
 .fn_filter <- function(chr_measurement,chr_depth,lower)return(chr_measurement[chr_depth > lower])
 
@@ -74,3 +76,47 @@ filter_label_plot <- function(lowerBounds,chr_depths,labels)
   
   return(p) 
 }
+
+
+#' Returns a ggplot object with a collection of MA plots faceted by lower bound
+#'
+#' @param lowerBounds An integer vector with the lower bounds used to filter
+#'
+#' @param chr_depths A list of vectors with the islands depths per chromosome
+#'
+#' @param chr_M_values A list of vectors with the M coordinate of an MA plot
+#'
+#' @param chr_A_values A list of vectors with the A coordinate of an MA plot
+#'
+#' @export
+filter_MA_plot <- function(lowerBounds,chr_depths,chr_M_values,chr_A_values,smooth=FALSE)
+{
+
+  filter_M = lapply(lowerBounds,function(x){
+    mcmapply(.fn_filter,chr_M_values,chr_depths,MoreArgs = list(lower = x),
+      SIMPLIFY = FALSE,mc.cores = mc)})           
+
+  filter_A = lapply(lowerBounds,function(x){
+    mcmapply(.fn_filter,chr_A_values,chr_depths,MoreArgs = list(lower = x),
+      SIMPLIFY = FALSE,mc.cores = mc)})           
+    
+  filter_regions = mcmapply(function(x,Mval,Aval){
+    data.table(bound = x,M = do.call(c,Mval),A = do.call(c,Aval))},lowerBounds,filter_M,filter_A,MoreArgs = list(),
+    SIMPLIFY = FALSE,mc.cores = mc)
+
+  filter_regions = do.call(rbind,filter_regions)
+  filter_regions$bound = factor(filter_regions$bound)
+
+  filter_regions = filter_regions[ !is.infinite(M) & !is.infinite(A),]
+  
+  p = ggplot(filter_regions,aes(M,A))+geom_point()+
+    facet_wrap(~bound,ncol =4)+
+    geom_abline(slope=0,intercept = 0,linetype =2)
+
+  if(smooth){
+      p = p + geom_smooth(method = "loess",na.rm=TRUE,se=FALSE,colour = I("red"))
+  }
+  
+  return(p)
+}
+
