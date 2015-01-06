@@ -16,8 +16,10 @@ NULL
 #'
 #' @param log A boolean variable indicating if the y-axis is going to be rescaled with log10
 #'
+#' @param mc Number of cores used
+#'
 #' @export
-filter_regions_plot <- function(lowerBounds,chr_depths,chr_measurement,measurement_label,log = FALSE)
+filter_regions_plot <- function(lowerBounds,chr_depths,chr_measurement,measurement_label,mc,log = FALSE)
 {
   filter_regions = lapply(lowerBounds,function(x){
     mcmapply(.fn_filter,chr_measurement,chr_depths,MoreArgs = list(lower = x),
@@ -51,9 +53,11 @@ filter_regions_plot <- function(lowerBounds,chr_depths,chr_measurement,measureme
 #'
 #' @param labels A list of character vectors with the labels for each island
 #'
+#' @param mc Number of cores used
+#'
 #' @export
 
-filter_label_plot <- function(lowerBounds,chr_depths,labels)
+filter_label_plot <- function(lowerBounds,chr_depths,labels,mc)
 {
   filter_labels= lapply(lowerBounds,function(x){
     mcmapply(.fn_filter,labels,chr_depths,MoreArgs = list(lower = x),
@@ -88,8 +92,10 @@ filter_label_plot <- function(lowerBounds,chr_depths,labels)
 #'
 #' @param chr_A_values A list of vectors with the A coordinate of an MA plot
 #'
+#' @param mc Number of cores used
+#'
 #' @export
-filter_MA_plot <- function(lowerBounds,chr_depths,chr_M_values,chr_A_values,smooth=FALSE)
+filter_MA_plot <- function(lowerBounds,chr_depths,chr_M_values,chr_A_values,mc,smooth=FALSE)
 {
 
   filter_M = lapply(lowerBounds,function(x){
@@ -101,7 +107,7 @@ filter_MA_plot <- function(lowerBounds,chr_depths,chr_M_values,chr_A_values,smoo
       SIMPLIFY = FALSE,mc.cores = mc)})           
     
   filter_regions = mcmapply(function(x,Mval,Aval){
-    data.table(bound = x,M = do.call(c,Mval),A = do.call(c,Aval))},lowerBounds,filter_M,filter_A,MoreArgs = list(),
+    data.table(bound = x,A = do.call(c,Mval),M = do.call(c,Aval))},lowerBounds,filter_M,filter_A,MoreArgs = list(),
     SIMPLIFY = FALSE,mc.cores = mc)
 
   filter_regions = do.call(rbind,filter_regions)

@@ -4,7 +4,7 @@
 \alias{filter_label_plot}
 \title{Returns a ggplot object with an area plot of the label distribution per lower bound}
 \usage{
-filter_label_plot(lowerBounds, chr_depths, labels)
+filter_label_plot(lowerBounds, chr_depths, labels, mc)
 }
 \arguments{
 \item{lowerBounds}{An integer vector with the lower bounds used to filter}
@@ -12,6 +12,8 @@ filter_label_plot(lowerBounds, chr_depths, labels)
 \item{chr_depths}{A list of vectors with the islands depths per chromosome}
 
 \item{labels}{A list of character vectors with the labels for each island}
+
+\item{mc}{Number of cores used}
 }
 \description{
 Returns a ggplot object with an area plot of the label distribution per lower bound

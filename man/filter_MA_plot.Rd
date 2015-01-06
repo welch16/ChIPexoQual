@@ -4,7 +4,7 @@
 \alias{filter_MA_plot}
 \title{Returns a ggplot object with a collection of MA plots faceted by lower bound}
 \usage{
-filter_MA_plot(lowerBounds, chr_depths, chr_M_values, chr_A_values,
+filter_MA_plot(lowerBounds, chr_depths, chr_M_values, chr_A_values, mc,
   smooth = FALSE)
 }
 \arguments{
@@ -15,6 +15,8 @@ filter_MA_plot(lowerBounds, chr_depths, chr_M_values, chr_A_values,
 \item{chr_M_values}{A list of vectors with the M coordinate of an MA plot}
 
 \item{chr_A_values}{A list of vectors with the A coordinate of an MA plot}
+
+\item{mc}{Number of cores used}
 }
 \description{
 Returns a ggplot object with a collection of MA plots faceted by lower bound
