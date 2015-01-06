@@ -55,7 +55,7 @@ outdir = args[2]
 filecodename = args[3]
 mcores = args[4]
 
-codedir = "."
+codedir = "/p/keles/ChIPexo/volume4/ChIPexoQual"
 library(devtools)
 library(scales)
 
