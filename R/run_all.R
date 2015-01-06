@@ -29,23 +29,28 @@ bound_analysis <- function(exofile,mc,
 {
   # Load reads
   param = ScanBamParam( what = "mapq")
+  message("Loading reads")
   reads = readGAlignmentsFromBam(exofile,param = param)
   depth = length(reads)  
 
   # Convert to GRanges and separate it by strand and seqnames
+  message("Separating reads")
   gr = as(reads,"GRanges")
   grF = .separate_gr(gr,"+")
   grR = .separate_gr(gr,"-")
-  
+
+  message("Creating regions")
   regions = create_regions(gr,1)
 
   # Extract reads per-region
+  message("Calculating reads - regions overlaps")
   all_chr = names(seqlengths(gr))
   fwd_overlaps = mcmapply(reads_overlaps,all_chr,
     regions,grF,MoreArgs = list(),SIMPLIFY = FALSE,mc.cores = mc)
   bwd_overlaps = mcmapply(reads_overlaps,all_chr,
     regions,grR,MoreArgs = list(),SIMPLIFY = FALSE,mc.cores = mc)
-  
+
+  message("Extracting reads")
   fwd_reads = mcmapply(extract_reads,all_chr,grF,fwd_overlaps,
     regions, MoreArgs = list(),SIMPLIFY = FALSE,mc.cores = mc)
   bwd_reads = mcmapply(extract_reads,all_chr,grR,bwd_overlaps,
@@ -57,6 +62,7 @@ bound_analysis <- function(exofile,mc,
   # Calculate depths per region
   chr_Nregions = mclapply(regions,length,mc.cores = mc)
 
+  message("Calculating region depths")
   fwd_depths = mcmapply(depth_from_reads,fwd_reads,chr_Nregions,
     SIMPLIFY=FALSE,mc.cores = mc)
   bwd_depths = mcmapply(depth_from_reads,bwd_reads,chr_Nregions,
@@ -65,6 +71,7 @@ bound_analysis <- function(exofile,mc,
     SIMPLIFY=FALSE,mc.cores= mc)
 
   # Calculate ratio statistics
+  message("Calculating ratio statistics")
   labels = mcmapply(function(x,y)ifelse(x >0,ifelse(y > 0,"both","fwd"),"bwd"),
     fwd_depths,bwd_depths,SIMPLIFY = FALSE,mc.cores = mc)
   fwd_strand_ratio = mcmapply("/",fwd_depths,chr_depths,SIMPLIFY=FALSE,mc.cores = mc)  
@@ -72,20 +79,20 @@ bound_analysis <- function(exofile,mc,
     return(chr_depth/width(chr_regions))}
     ,regions,chr_depths,MoreArgs = list(),SIMPLIFY=FALSE,mc.cores = mc)
 
+  message("Calculating M vs A values")
   M_values = mcmapply(function(chr_regions,fwd_depth,bwd_depth){
     return(fwd_depth * bwd_depth / width(chr_regions)^2)},regions,
     fwd_depths,bwd_depths,MoreArgs = list(),SIMPLIFY=FALSE,mc.cores = mc)
   A_values = mcmapply("/",fwd_depths,bwd_depths,MoreArgs= list(),
-    SIMPLIFY=FALSE,mc.cores =mc)
-
+    SIMPLIFY=FALSE,mc.cores =mc)  
   M_values = mcmapply(log10,M_values,SIMPLIFY=FALSE,mc.cores = mc)
   A_values = mcmapply(log10,A_values,SIMPLIFY=FALSE,mc.cores=mc)
 
   plots = list()
-  plots[[1]] = filter_regions_plot(lowerBounds,chr_depths,fwd_strand_ratio,"fwd/(fwd + bwd)")
-  plots[[2]] = filter_regions_plot(lowerBounds,chr_depths,depth_width_ratio,"depth/width",TRUE)
-  plots[[3]] = filter_label_plot(lowerBounds,chr_depths,labels)
-  plots[[4]] = filter_MA_plot(lowerBounds,chr_depths,M_values,A_values)
+  plots[[1]] = filter_regions_plot(lowerBounds,chr_depths,fwd_strand_ratio,"fwd/(fwd + bwd)",mc)
+  plots[[2]] = filter_regions_plot(lowerBounds,chr_depths,depth_width_ratio,"depth/width",mc,TRUE)
+  plots[[3]] = filter_label_plot(lowerBounds,chr_depths,labels,mc)
+  plots[[4]] = filter_MA_plot(lowerBounds,chr_depths,M_values,A_values,mc)
   
   out = list(plots = plots,regions = regions,depth = depth,boundRegions = table(plots[[3]]$data),
     subset_reads = subset_reads)
