@@ -115,7 +115,7 @@ filter_MA_plot <- function(lowerBounds,chr_depths,chr_M_values,chr_A_values,mc,s
 
   filter_regions = filter_regions[ !is.infinite(M) & !is.infinite(A),]
   
-  p = ggplot(filter_regions,aes(M,A))+geom_point()+
+  p = ggplot(filter_regions,aes(A,M))+geom_point()+
     facet_wrap(~bound,ncol =4)+
     geom_abline(slope=0,intercept = 0,linetype =2)
 
