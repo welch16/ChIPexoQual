@@ -44,7 +44,9 @@ bound_analysis <- function(exofile,mc,
 
   # Extract reads per-region
   message("Calculating reads - regions overlaps")
-  all_chr = names(seqlengths(gr))
+  all_chr= sort(names(seqlengths(gr)),index.return=TRUE)
+  regions = regions[all_chr$ix]
+  all_chr = all_chr$x
   fwd_overlaps = mcmapply(reads_overlaps,all_chr,
     regions,grF,MoreArgs = list(),SIMPLIFY = FALSE,mc.cores = mc)
   bwd_overlaps = mcmapply(reads_overlaps,all_chr,
@@ -85,8 +87,8 @@ bound_analysis <- function(exofile,mc,
     fwd_depths,bwd_depths,MoreArgs = list(),SIMPLIFY=FALSE,mc.cores = mc)
   A_values = mcmapply("/",fwd_depths,bwd_depths,MoreArgs= list(),
     SIMPLIFY=FALSE,mc.cores =mc)  
-  M_values = mcmapply(log10,M_values,SIMPLIFY=FALSE,mc.cores = mc)
-  A_values = mcmapply(log10,A_values,SIMPLIFY=FALSE,mc.cores=mc)
+  M_values = mcmapply(log2,M_values,SIMPLIFY=FALSE,mc.cores = mc)
+  A_values = mcmapply(log2,A_values,SIMPLIFY=FALSE,mc.cores=mc)  
 
   plots = list()
   plots[[1]] = filter_regions_plot(lowerBounds,chr_depths,fwd_strand_ratio,"fwd/(fwd + bwd)",mc)
