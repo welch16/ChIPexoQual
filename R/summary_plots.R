@@ -114,10 +114,15 @@ filter_MA_plot <- function(lowerBounds,chr_depths,chr_M_values,chr_A_values,mc,s
   filter_regions$bound = factor(filter_regions$bound)
 
   filter_regions = filter_regions[ !is.infinite(M) & !is.infinite(A),]
+
+  rf = colorRampPalette(rev(brewer.pal(11,"Spectral")))
+  r = rf(16)
   
-  p = ggplot(filter_regions,aes(A,M))+geom_point()+
+  p = ggplot(filter_regions,aes(A,M))+stat_binhex(bins = 70)+
     facet_wrap(~bound,ncol =4)+
-    geom_abline(slope=0,intercept = 0,linetype =2)
+    scale_fill_gradientn(colours =r,trans='log10')+
+    geom_abline(slope=0,intercept = 0,linetype =2)+
+    theme(legend.position = "top")
 
   if(smooth){
       p = p + geom_smooth(method = "loess",na.rm=TRUE,se=FALSE,colour = I("red"))
