@@ -16,6 +16,7 @@ summary_statistics <- function(summary_table)
   summary_table[,fwd_dw_ratio:= fwd_depth/width]
   summary_table[,bwd_dw_ratio:= bwd_depth/width]
   summary_table[,dw_ratio:= depth/width]
+  summary_table[,pbc:=npos/depth]
   return(summary_table)
 }
 
@@ -34,3 +35,5 @@ MA_values <- function(summary_table)
   return(summary_table)
 }
   
+
+

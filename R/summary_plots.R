@@ -2,77 +2,76 @@
 #' @import ggplot2
 NULL
 
-.fn_filter <- function(chr_measurement,chr_depth,lower)return(chr_measurement[chr_depth > lower])
+.fn_filter <- function(lower,summary_table,byVar)
+{
+  setkeyv(summary_table,cols = byVar)
+  return(summary_table[ eval(parse(text=byVar)) > lower,])
+}
 
 #' Returns a ggplot object with a boxplot of lowerBounds vs chr_measurement. It filters the measurement by the islands such that the depth is greater than lowerBound
 #'
 #' @param lowerBounds An integer vector with the lower bounds used to filter
 #'
-#' @param chr_depths A list of vectors with the islands depths per chromosome
+#' @param filtered_summary A list of data.tables with the already filtered summary statistics
 #'
-#' @param chr_measurement A list of vector with the islands given measurements per chromosome
+#' @param measure_var A string with the name of the variable to be drawn
 #'
-#' @param measurement_label A string with the ylab of the plot
+#' @param measure_label A string with the y-axis label
 #'
 #' @param log A boolean variable indicating if the y-axis is going to be rescaled with log10
 #'
 #' @param mc Number of cores used
 #'
 #' @export
-filter_regions_plot <- function(lowerBounds,chr_depths,chr_measurement,measurement_label,mc,log = FALSE)
+filter_regions_plot <- function(lowerBounds,filtered_summary,
+  measure_var,measure_label,mc,log=FALSE)
 {
-  filter_regions = lapply(lowerBounds,function(x){
-    mcmapply(.fn_filter,chr_measurement,chr_depths,MoreArgs = list(lower = x),
-      SIMPLIFY = FALSE,mc.cores = mc)})           
-  names(filter_regions) = lowerBounds
- 
-  filter_regions = mcmapply(function(x,y){
-    data.table(bound = x,measurement = do.call(c,y))},lowerBounds,filter_regions,MoreArgs = list(),
-    SIMPLIFY = FALSE,mc.cores = mc)
 
-  filter_regions = do.call(rbind,filter_regions)
-  filter_regions$bound = factor(filter_regions$bound)
-
-  p = ggplot(filter_regions,aes(bound,measurement,colour=bound))+
+  plot_data = mcmapply(function(lower,filtered){
+    dt = data.table(bound=lower,
+      measurement= filtered[[measure_var]])
+    return(dt)},lowerBounds,filtered_summary,MoreArgs = list(),
+  SIMPLIFY=FALSE,mc.cores = mc)
+  
+  plot_data = do.call(rbind,plot_data)
+  plot_data$bound = factor(plot_data$bound)
+  
+  p = ggplot(plot_data,aes(bound,measurement,colour=bound))+
     geom_boxplot(outlier.colour = alpha("black",1/50))+
     theme(legend.position = "none")+
-    ylab(measurement_label)
+    ylab(measure_label)
 
   if(log){
-    p = p + scale_y_log10(  labels=trans_format('log10', math_format(10^.x)))
+    p = p + scale_y_log10(  labels=trans_format('log10',
+                              math_format(10^.x)))
   }
   return(p)
 }
 
 
-#' Returns a ggplot object with an area plot of the label distribution per lower bound
+
+#' Returns a ggplot object with an area plot of the label distribution per lower bound. It filters the labels by the islands such that the depth is greater than lowerBound
 #'
 #' @param lowerBounds An integer vector with the lower bounds used to filter
 #'
-#' @param chr_depths A list of vectors with the islands depths per chromosome
-#'
-#' @param labels A list of character vectors with the labels for each island
+#' @param filtered_summary A list of data.tables with the already filtered summary statistics
 #'
 #' @param mc Number of cores used
 #'
 #' @export
 
-filter_label_plot <- function(lowerBounds,chr_depths,labels,mc)
+filter_label_plot <- function(lowerBounds,filtered_summary,mc)
 {
-  filter_labels= lapply(lowerBounds,function(x){
-    mcmapply(.fn_filter,labels,chr_depths,MoreArgs = list(lower = x),
-    SIMPLIFY = FALSE,mc.cores = mc)})           
-  names(filter_labels) = lowerBounds
-
-  filter_labels = mcmapply(function(x,y){
-    data.table(bound = x,measurement = do.call(c,y))},lowerBounds,filter_labels,MoreArgs = list(),
-    SIMPLIFY = FALSE,mc.cores = mc)
-
-  filter_labels = do.call(rbind,filter_labels)
-  filter_labels$bound = factor(filter_labels$bound)
-  filter_labels$measurement = factor(filter_labels$measurement)
- 
-  p = ggplot(filter_labels,aes(bound,fill = measurement))+
+  plot_data = mcmapply(function(lower,filtered){
+    dt = data.table(bound=lower,
+      measurement= filtered[["label"]])
+    return(dt)},lowerBounds,filtered_summary,MoreArgs = list(),
+  SIMPLIFY=FALSE,mc.cores = mc)
+  
+  plot_data = do.call(rbind,plot_data)
+  plot_data$bound = factor(plot_data$bound)
+  
+  p = ggplot(plot_data,aes(bound,fill = measurement))+
     geom_bar(position = "fill")+
     scale_fill_brewer(palette = "Set1")+
     theme(legend.position = "bottom")+
@@ -82,43 +81,33 @@ filter_label_plot <- function(lowerBounds,chr_depths,labels,mc)
 }
 
 
-#' Returns a ggplot object with a collection of MA plots faceted by lower bound
+#' Returns a ggplot object with a collection of MA plots faceted by lower bound. It filters the labels by the islands such that the depth is greater than lowerBound
 #'
 #' @param lowerBounds An integer vector with the lower bounds used to filter
 #'
-#' @param chr_depths A list of vectors with the islands depths per chromosome
-#'
-#' @param chr_M_values A list of vectors with the M coordinate of an MA plot
-#'
-#' @param chr_A_values A list of vectors with the A coordinate of an MA plot
+#' @param filtered_summary A list of data.tables with the already filtered summary statistics
 #'
 #' @param mc Number of cores used
 #'
+#' @param smooth A boolean variable indicating if a loess regression line is going to be added to the plot
+#'
 #' @export
-filter_MA_plot <- function(lowerBounds,chr_depths,chr_M_values,chr_A_values,mc,smooth=FALSE)
+
+filter_MA_plot <- function(lowerBounds,filtered_summary,mc,smooth=FALSE)
 {
-
-  filter_M = lapply(lowerBounds,function(x){
-    mcmapply(.fn_filter,chr_M_values,chr_depths,MoreArgs = list(lower = x),
-      SIMPLIFY = FALSE,mc.cores = mc)})           
-
-  filter_A = lapply(lowerBounds,function(x){
-    mcmapply(.fn_filter,chr_A_values,chr_depths,MoreArgs = list(lower = x),
-      SIMPLIFY = FALSE,mc.cores = mc)})           
-    
-  filter_regions = mcmapply(function(x,Mval,Aval){
-    data.table(bound = x,A = do.call(c,Mval),M = do.call(c,Aval))},lowerBounds,filter_M,filter_A,MoreArgs = list(),
-    SIMPLIFY = FALSE,mc.cores = mc)
-
-  filter_regions = do.call(rbind,filter_regions)
-  filter_regions$bound = factor(filter_regions$bound)
-
-  filter_regions = filter_regions[ !is.infinite(M) & !is.infinite(A),]
+  plot_data = mcmapply(function(lower,filtered){
+    dt = data.table(bound=lower,
+      A= filtered[["A"]],M = filtered[["M"]])
+    return(dt)},lowerBounds,filtered_summary,MoreArgs = list(),
+  SIMPLIFY=FALSE,mc.cores = mc)
+  
+  plot_data = do.call(rbind,plot_data)
+  plot_data$bound = factor(plot_data$bound)
 
   rf = colorRampPalette(rev(brewer.pal(11,"Spectral")))
   r = rf(16)
-  
-  p = ggplot(filter_regions,aes(A,M))+stat_binhex(bins = 70)+
+
+  p = ggplot(plot_data[!is.infinite(A) & !is.infinite(M)],aes(A,M))+stat_binhex(bins = 70)+
     facet_wrap(~bound,ncol =4)+
     scale_fill_gradientn(colours =r,trans='log10')+
     geom_abline(slope=0,intercept = 0,linetype =2)+
