@@ -19,3 +19,18 @@ summary_statistics <- function(summary_table)
   return(summary_table)
 }
 
+#' Update the summary_table including the MA-plot values
+#'
+#' @param summary_table A data.table with summary statistics
+#'
+#' @return Updated summary table including M and A values
+#'
+#' @export
+MA_values <- function(summary_table)
+{
+  summary_table[,M:= log2(fwd_depth/bwd_depth)]
+  summary_table[,A:=log2(fwd_depth) + log2(bwd_depth)
+                    - 2*log2(width)]
+  return(summary_table)
+}
+  
