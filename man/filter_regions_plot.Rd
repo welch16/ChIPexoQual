@@ -4,17 +4,17 @@
 \alias{filter_regions_plot}
 \title{Returns a ggplot object with a boxplot of lowerBounds vs chr_measurement. It filters the measurement by the islands such that the depth is greater than lowerBound}
 \usage{
-filter_regions_plot(lowerBounds, chr_depths, chr_measurement, measurement_label,
+filter_regions_plot(lowerBounds, filtered_summary, measure_var, measure_label,
   mc, log = FALSE)
 }
 \arguments{
 \item{lowerBounds}{An integer vector with the lower bounds used to filter}
 
-\item{chr_depths}{A list of vectors with the islands depths per chromosome}
+\item{filtered_summary}{A list of data.tables with the already filtered summary statistics}
 
-\item{chr_measurement}{A list of vector with the islands given measurements per chromosome}
+\item{measure_var}{A string with the name of the variable to be drawn}
 
-\item{measurement_label}{A string with the ylab of the plot}
+\item{measure_label}{A string with the y-axis label}
 
 \item{mc}{Number of cores used}
 

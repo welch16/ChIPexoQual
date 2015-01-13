@@ -2,20 +2,18 @@
 % Please edit documentation in R/summary_plots.R
 \name{filter_label_plot}
 \alias{filter_label_plot}
-\title{Returns a ggplot object with an area plot of the label distribution per lower bound}
+\title{Returns a ggplot object with an area plot of the label distribution per lower bound. It filters the labels by the islands such that the depth is greater than lowerBound}
 \usage{
-filter_label_plot(lowerBounds, chr_depths, labels, mc)
+filter_label_plot(lowerBounds, filtered_summary, mc)
 }
 \arguments{
 \item{lowerBounds}{An integer vector with the lower bounds used to filter}
 
-\item{chr_depths}{A list of vectors with the islands depths per chromosome}
-
-\item{labels}{A list of character vectors with the labels for each island}
+\item{filtered_summary}{A list of data.tables with the already filtered summary statistics}
 
 \item{mc}{Number of cores used}
 }
 \description{
-Returns a ggplot object with an area plot of the label distribution per lower bound
+Returns a ggplot object with an area plot of the label distribution per lower bound. It filters the labels by the islands such that the depth is greater than lowerBound
 }
 

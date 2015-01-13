@@ -2,23 +2,20 @@
 % Please edit documentation in R/summary_plots.R
 \name{filter_MA_plot}
 \alias{filter_MA_plot}
-\title{Returns a ggplot object with a collection of MA plots faceted by lower bound}
+\title{Returns a ggplot object with a collection of MA plots faceted by lower bound. It filters the labels by the islands such that the depth is greater than lowerBound}
 \usage{
-filter_MA_plot(lowerBounds, chr_depths, chr_M_values, chr_A_values, mc,
-  smooth = FALSE)
+filter_MA_plot(lowerBounds, filtered_summary, mc, smooth = FALSE)
 }
 \arguments{
 \item{lowerBounds}{An integer vector with the lower bounds used to filter}
 
-\item{chr_depths}{A list of vectors with the islands depths per chromosome}
-
-\item{chr_M_values}{A list of vectors with the M coordinate of an MA plot}
-
-\item{chr_A_values}{A list of vectors with the A coordinate of an MA plot}
+\item{filtered_summary}{A list of data.tables with the already filtered summary statistics}
 
 \item{mc}{Number of cores used}
+
+\item{smooth}{A boolean variable indicating if a loess regression line is going to be added to the plot}
 }
 \description{
-Returns a ggplot object with a collection of MA plots faceted by lower bound
+Returns a ggplot object with a collection of MA plots faceted by lower bound. It filters the labels by the islands such that the depth is greater than lowerBound
 }
 
