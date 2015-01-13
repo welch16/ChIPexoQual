@@ -12,6 +12,10 @@
   return(gr)
 }
 
+.add_chr <- function(chr,summary_table)
+{
+  return(cbind(data.table(chrID=chr),summary_table))
+}
 
 #' This functions does all the bound analysis. Briefly, it load the
 #' reads, creates the regions and returns a collection of plots that
@@ -34,6 +38,7 @@ bound_analysis <- function(exofile,mc,
   depth = length(reads)  
 
   # Convert to GRanges and separate it by strand and seqnames
+
   message("Separating reads")
   gr = as(reads,"GRanges")
   grF = .separate_gr(gr,"+")
@@ -65,39 +70,67 @@ bound_analysis <- function(exofile,mc,
   chr_Nregions = mclapply(regions,length,mc.cores = mc)
 
   message("Calculating region depths")
-  fwd_depths = mcmapply(depth_from_reads,fwd_reads,chr_Nregions,
-    SIMPLIFY=FALSE,mc.cores = mc)
-  bwd_depths = mcmapply(depth_from_reads,bwd_reads,chr_Nregions,
-    SIMPLIFY=FALSE,mc.cores = mc)
-  chr_depths = mcmapply("+",fwd_depths,bwd_depths,
-    SIMPLIFY=FALSE,mc.cores= mc)
+  fwd_depths = mclapply(fwd_reads,
+    function(reads)reads[,length(seqnames),by=region],mc.cores = mc) 
+  bwd_depths = mclapply(bwd_reads,
+    function(reads)reads[,length(seqnames),by=region],mc.cores = mc)
 
-  # Calculate ratio statistics
-  message("Calculating ratio statistics")
-  labels = mcmapply(function(x,y)ifelse(x >0,ifelse(y > 0,"both","fwd"),"bwd"),
-    fwd_depths,bwd_depths,SIMPLIFY = FALSE,mc.cores = mc)
-  fwd_strand_ratio = mcmapply("/",fwd_depths,chr_depths,SIMPLIFY=FALSE,mc.cores = mc)  
-  depth_width_ratio = mcmapply(function(chr_regions,chr_depth){
-    return(chr_depth/width(chr_regions))}
-    ,regions,chr_depths,MoreArgs = list(),SIMPLIFY=FALSE,mc.cores = mc)
-
-  message("Calculating M vs A values")
-  M_values = mcmapply(function(chr_regions,fwd_depth,bwd_depth){
-    return(fwd_depth * bwd_depth / width(chr_regions)^2)},regions,
-    fwd_depths,bwd_depths,MoreArgs = list(),SIMPLIFY=FALSE,mc.cores = mc)
-  A_values = mcmapply("/",fwd_depths,bwd_depths,MoreArgs= list(),
-    SIMPLIFY=FALSE,mc.cores =mc)  
-  M_values = mcmapply(log2,M_values,SIMPLIFY=FALSE,mc.cores = mc)
-  A_values = mcmapply(log2,A_values,SIMPLIFY=FALSE,mc.cores=mc)  
-
-  plots = list()
-  plots[[1]] = filter_regions_plot(lowerBounds,chr_depths,fwd_strand_ratio,"fwd/(fwd + bwd)",mc)
-  plots[[2]] = filter_regions_plot(lowerBounds,chr_depths,depth_width_ratio,"depth/width",mc,TRUE)
-  plots[[3]] = filter_label_plot(lowerBounds,chr_depths,labels,mc)
-  plots[[4]] = filter_MA_plot(lowerBounds,chr_depths,M_values,A_values,mc)
+  # Calculate number of positions
+  message("Calculating region's number of unique positions")
+  fwd_npos = mclapply(fwd_reads,
+    function(reads)reads[,length(unique(start)),by=region],
+    mc.cores = mc)
+  bwd_npos = mclapply(bwd_reads,
+    function(reads)reads[,length(unique(end)),by=region],
+    mc.cores = mc)
+  widths = mclapply(regions,function(region){
+    data.table(region = 1:length(region),V1 = width(region))},
+    mc.cores = mc)
   
-  out = list(plots = plots,regions = regions,depth = depth,boundRegions = table(plots[[3]]$data),
-    subset_reads = subset_reads)
+  message("Merging base statistics")  
+  summary_tables = mclapply(chr_Nregions,
+    .create_summary,mc.cores = mc)
+  name_variables = c("width","fwd_npos","bwd_npos","fwd_depth","bwd_depth")
+  variables = list(widths,fwd_npos,bwd_npos,fwd_depths,bwd_depths)
+  names(variables) = name_variables
+  for(i in name_variables){
+    summary_tables = mcmapply(.add_variable,
+      summary_tables,variables[[i]],
+      MoreArgs = list(name = i),
+      SIMPLIFY=FALSE,mc.cores = mc)
+  }
+
+    
+  # Calculates region depth and number of unique positions
+  message("Calculating summary statistics")
+  summary_tables = mclapply(summary_tables,
+    summary_statistics,mc.cores = mc)
+  
+  message("Calculating M vs A values")
+  summary_tables = mclapply(summary_tables,
+    MA_values,mc.cores = mc)
+
+  summary_tables = mcmapply(.add_chr,names(summary_tables),
+    summary_tables,MoreArgs = list(),SIMPLIFY=FALSE,mc.cores=mc)
+  
+  filtered_summary = lapply(lowerBounds,function(x,summary_tables){
+    print(x)
+    filtered = mclapply(summary_tables,
+      function(summary_table,lower){
+      return(.fn_filter(lower,summary_table,"depth"))}         
+      ,x,mc.cores = mc)
+    return(do.call(rbind,filtered))},summary_tables)
+  
+  plots = list()
+  plots[[1]] = filter_regions_plot(lowerBounds,filtered_summary,
+    "prob","fwd/(fwd + bwd)",mc)
+  plots[[2]] = filter_regions_plot(lowerBounds,filtered_summary,"dw_ratio","depth/width",mc,TRUE)
+  plots[[3]] = filter_label_plot(lowerBounds,filtered_summary,mc)
+  plots[[4]] = filter_regions_plot(lowerBounds,filtered_summary,
+     "pbc","npos/depth",mc)
+  plots[[5]] = filter_MA_plot(lowerBounds,filtered_summary,mc)
+  
+  out = list(plots = plots,regions = regions,depth = depth,boundRegions = table(plots[[3]]$data),subset_reads = subset_reads,summary_stats = summary_tables)
 
   return(out)
 }
