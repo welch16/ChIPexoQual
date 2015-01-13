@@ -58,8 +58,15 @@ mcores = args[4]
 codedir = "/p/keles/ChIPexo/volume4/ChIPexoQual"
 library(devtools)
 library(scales)
+library(hexbin)
+library(RColorBrewer)
 
 load_all(codedir)
+
+## exofile = "/p/keles/ChIPexo/volume3/CarrollData/human/ERR336933.bam"
+## outdir = "/p/keles/ChIPexo/volume3/Analysis/Carroll/human/ER-Rep1new"
+## filecodename = "ER-Rep1"
+## mcores = 8
 
 message("File: ",exofile)
 message("Dir to save: ",outdir)
@@ -85,7 +92,7 @@ pdf(file = file.path(figsdir,paste0(filecodename,"_bound_VS_fwd_strand_ratio.pdf
 u = print(plots[[1]])
 dev.off()
 
-pdf(file = file.path(figsdir,paste0(filecodename,"_bound_VS_width_depth_ratio.pdf")),height = 8,width = 12)
+pdf(file = file.path(figsdir,paste0(filecodename,"_bound_VS_depth_width__ratio.pdf")),height = 8,width = 12)
 u = print(plots[[2]])
 dev.off()
 
@@ -93,8 +100,13 @@ pdf(file = file.path(figsdir,paste0(filecodename,"_bound_VS_label_area.pdf")),he
 u = print(plots[[3]])
 dev.off()
 
-pdf(file = file.path(figsdir,paste0(filecodename,"_MA_plots.pdf")),height = 12,width = 12)
+pdf(file = file.path(figsdir,paste0(filecodename,"_bound_VS_npos_depth_ratio.pdf")),height = 8,width = 12)
 u = print(plots[[4]])
+dev.off()
+
+
+pdf(file = file.path(figsdir,paste0(filecodename,"_MA_plots.pdf")),height = 12,width = 12)
+u = print(plots[[5]])
 dev.off()
 
 # Save data
@@ -102,23 +114,10 @@ regions = results$regions
 depth = results$depth
 boundRegionsTable = results$boundRegions
 reads_table = results$subset_reads
+summary_stats = results$summary_stats
 
 save(list = "regions",file = file.path(datadir,paste0(filecodename,"_regions.RData")))
 save(list = "depth",file = file.path(datadir,paste0(filecodename,"_depth.RData")))
 save(list = "boundRegionsTable",file = file.path(datadir,paste0(filecodename,"_boundRegionsTable.RData")))
 save(list = "reads_table",file = file.path(datadir,paste0(filecodename,"_reads_by_region.RData")))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+save(list = "summary_stats",file = file.path(datadir,paste0(filecodename,"_summary_statistics.RData")))
