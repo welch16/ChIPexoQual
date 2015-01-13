@@ -1,24 +1,21 @@
 
-
-#' This function calculates the number of reads that overlaps a set of regions
+#' Update the summary_table with summary statistics
 #'
-#' @param chr_reads A data.table containing the reads that overlaps the set of regions, with a region key
+#' @param summary_table A data.table with the fields width, fwd_npos, bwd_npos, fwd_depth and bwd_depth
 #'
-#' @param chr_nregions, An integer with the expected size of the vector, if it is NULL is going to define as the possible number of regions in chr_reads
-#' @return A numeric vector with the depth for each region
+#' @return Updated summary_table with compound statistics
 #'
 #' @export
-depth_from_reads <- function(chr_reads,chr_nregions= NULL)
+summary_statistics <- function(summary_table)
 {
-  if(is.null(chr_nregions)){    
-    chr_depth = table(chr_reads$region)
-
-  }else{
-    chr_depth = table(factor(
-      chr_reads$region,levels = 1:chr_nregions))     
-  }
-  dimnames(chr_depth) = NULL
-  return(chr_depth)
+  summary_table[,depth:=fwd_depth+bwd_depth]
+  summary_table[,npos :=fwd_npos + bwd_npos]
+  summary_table[,label:=ifelse(fwd_depth > 0 & bwd_depth >0,
+      "both",ifelse(fwd_depth > 0,"fwd","bwd"))]
+  summary_table[,prob:=fwd_depth/depth]
+  summary_table[,fwd_dw_ratio:= fwd_depth/width]
+  summary_table[,bwd_dw_ratio:= bwd_depth/width]
+  summary_table[,dw_ratio:= depth/width]
+  return(summary_table)
 }
-
 

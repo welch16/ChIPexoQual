@@ -2,11 +2,11 @@
 
 export(bound_analysis)
 export(create_regions)
-export(depth_from_reads)
 export(extract_reads)
 export(filter_MA_plot)
 export(filter_label_plot)
 export(filter_regions_plot)
 export(reads_overlaps)
+export(summary_statistics)
 import(data.table)
 import(ggplot2)
