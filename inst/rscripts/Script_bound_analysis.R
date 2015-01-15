@@ -109,6 +109,30 @@ pdf(file = file.path(figsdir,paste0(filecodename,"_MA_plots.pdf")),height = 12,w
 u = print(plots[[5]])
 dev.off()
 
+
+
+ggsave(
+  file.path(figsdir,paste0(filecodename,"_bound_VS_fwd_strand_ratio.png")),
+  plots[[1]],height = 4,width = 6,dpi=600)
+
+ggsave(
+  file = file.path(figsdir,paste0(filecodename,"_bound_VS_depth_width__ratio.png")),
+  plots[[2]],height = 4,width = 6,dpi=600)
+
+ggsave(
+  file = file.path(figsdir,paste0(filecodename,"_bound_VS_label_area.png")),
+  plots[[3]],height = 4,width = 6,dpi=600)
+
+ggsave(
+  file = file.path(figsdir,paste0(filecodename,"_bound_VS_npos_depth_ratio.png")),
+  plots[[4]],height = 4,width = 6,dpi=600)
+
+ggsave(
+  file = file.path(figsdir,paste0(filecodename,"_MA_plots.png")),
+  plots[[5]],height = 7,width = 7,dpi=1200)
+
+
+
 # Save data
 regions = results$regions
 depth = results$depth
