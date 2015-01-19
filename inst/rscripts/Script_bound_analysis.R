@@ -110,6 +110,11 @@ u = print(plots[[5]])
 dev.off()
 
 
+pdf(file = file.path(figsdir,paste0(filecodename,"_npos_VS_depth_map.pdf")),height = 8,width = 12)
+u = print(plots[[6]])
+dev.off()
+
+
 
 ggsave(
   file.path(figsdir,paste0(filecodename,"_bound_VS_fwd_strand_ratio.png")),
@@ -131,6 +136,9 @@ ggsave(
   file = file.path(figsdir,paste0(filecodename,"_MA_plots.png")),
   plots[[5]],height = 7,width = 7,dpi=1200)
 
+ggsave(
+  file = file.path(figsdir,paste0(filecodename,"_npos_VS_depth_map.pdf")),
+  plots[[6]],height = 8,width = 12,dpi=1000)
 
 
 # Save data

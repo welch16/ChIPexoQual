@@ -120,3 +120,34 @@ filter_MA_plot <- function(lowerBounds,filtered_summary,mc,smooth=FALSE)
   return(p)
 }
 
+
+
+#' Returns a ggplot object with a map of the number of positions vs the number of reads, where the color denotes how many regions agree with that specific combination
+#'
+#' @param summary_table A data.table with the summary statistics per region containing at least the npos and depth fields
+#'
+#' @param mp Max number of positions
+#'
+#' @param md Max depth
+#'
+#' @export
+positions_reads_map <- function(summary_table,mp=Inf,md=Inf)
+{
+  df = summary_table
+  setkey(df,depth,npos)
+  mat = df[,length(chrID),by=list(depth,npos)]
+  setnames(mat,names(mat),c(names(mat)[1:2],"nr_islands"))
+  rf = colorRampPalette(rev(brewer.pal(11,'Spectral')))
+  r = rf(16)
+  max_pos = mp
+  max_depth = md
+  maxdepth = max(mat[npos <= max_pos & depth <= max_depth,list(depth)])
+  p = ggplot(mat[npos <= max_pos],aes(as.factor(npos),as.factor(depth),fill = nr_islands))+
+   geom_tile()+scale_fill_gradientn(name = "number of islands",colours = r,trans="log10",labels = trans_format('log10',math_format(10^.x)))+
+   scale_y_discrete(breaks = c(seq(0,maxdepth,by=20),maxdepth) )+
+   theme(legend.position = "top",axis.text.x = element_text(angle = 90))+xlab("number of positions per island")+
+    ylab("number of reads per island")
+  return(p)
+}
+
+

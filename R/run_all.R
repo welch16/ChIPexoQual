@@ -112,7 +112,8 @@ bound_analysis <- function(exofile,mc,
 
   summary_tables = mcmapply(.add_chr,names(summary_tables),
     summary_tables,MoreArgs = list(),SIMPLIFY=FALSE,mc.cores=mc)
-  
+
+  message("Filtering summary statistics for plots")
   filtered_summary = lapply(lowerBounds,function(x,summary_tables){
     print(x)
     filtered = mclapply(summary_tables,
@@ -120,7 +121,7 @@ bound_analysis <- function(exofile,mc,
       return(.fn_filter(lower,summary_table,"depth"))}         
       ,x,mc.cores = mc)
     return(do.call(rbind,filtered))},summary_tables)
-  
+
   plots = list()
   plots[[1]] = filter_regions_plot(lowerBounds,filtered_summary,
     "prob","fwd/(fwd + bwd)",mc)
@@ -129,6 +130,7 @@ bound_analysis <- function(exofile,mc,
   plots[[4]] = filter_regions_plot(lowerBounds,filtered_summary,
      "pbc","npos/depth",mc)
   plots[[5]] = filter_MA_plot(lowerBounds,filtered_summary,mc)
+  plots[[6]] = positions_reads_map(do.call(rbind,summary_tables),mp=100)
   
   out = list(plots = plots,regions = regions,depth = depth,boundRegions = table(plots[[3]]$data),subset_reads = subset_reads,summary_stats = summary_tables)
 
