@@ -15,11 +15,13 @@ lowerBounds = c(1,2,3,4,5,10,15,20,25,30,35,40,45,50,75,100,125,150,200,250,500,
     depth_width_ratio = (f+r) / width
     M = log(f*r/ width^2)
     A = log(f/r)
+    pbc = npos / (f + r)
 
 where:
    f = Number of forward reads that overlap a given region
    r = Number of reverse reads that overlap a given region
    width = Width of the region
+   npos = Number of unique positions in a given region
 
   and plots the variation of this statistics for all islands respect different lower bounds.
 
@@ -81,9 +83,10 @@ results = bound_analysis(exofile,mc=as.numeric(mcores))
 message("Creating directories")
 figsdir = file.path(outdir,"figs")
 datadir = file.path(outdir,"data")
-dir.create(outdir)
-dir.create(figsdir)
-dir.create(datadir)
+
+if(!file.exists(outdir))dir.create(outdir)
+if(!file.exists(figsdir)) dir.create(figsdir)
+if(!file.exists(datadir))dir.create(datadir)
 
 # Make plots
 plots = results$plots
@@ -110,11 +113,13 @@ u = print(plots[[5]])
 dev.off()
 
 
-pdf(file = file.path(figsdir,paste0(filecodename,"_npos_VS_depth_map.pdf")),height = 8,width = 12)
+pdf(file = file.path(figsdir,paste0(filecodename,"_npos_VS_depth_map.pdf")),height = 8,width = 14)
 u = print(plots[[6]])
 dev.off()
 
-
+pdf(file = file.path(figsdir,paste0(filecodename,"_dwRatio_VS_nposDepthRatio_plot.pdf")),height = 8,width = 8)
+u = print(plots[[7]])
+dev.off()
 
 ggsave(
   file.path(figsdir,paste0(filecodename,"_bound_VS_fwd_strand_ratio.png")),
@@ -138,7 +143,11 @@ ggsave(
 
 ggsave(
   file = file.path(figsdir,paste0(filecodename,"_npos_VS_depth_map.pdf")),
-  plots[[6]],height = 8,width = 12,dpi=1000)
+  plots[[6]],height = 8,width = 14,dpi=1000)
+
+ggsave(
+  file = file.path(figsdir,paste0(filecodename,"_dwRatio_VS_nposDepthRatio_plot.pdf")),
+  plots[[7]],height = 8,width = 8,dpi = 1000)
 
 
 # Save data
