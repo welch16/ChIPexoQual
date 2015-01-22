@@ -131,6 +131,13 @@ bound_analysis <- function(exofile,mc,
      "pbc","npos/depth",mc)
   plots[[5]] = filter_MA_plot(lowerBounds,filtered_summary,mc)
   plots[[6]] = positions_reads_map(do.call(rbind,summary_tables),mp=100)
+
+  rf = colorRampPalette(rev(brewer.pal(11,"Spectral")))
+  r = rf(16)
+
+  plots[[7]] = ggplot(do.call(rbind,summary_tables),aes(dw_ratio,pbc))+stat_binhex(bins = 70)+
+    scale_fill_gradientn(colours =r,trans='log10')+
+    theme(legend.position = "top")+scale_x_continuous(limits = c(-.5,10))
   
   out = list(plots = plots,regions = regions,depth = depth,boundRegions = table(plots[[3]]$data),subset_reads = subset_reads,summary_stats = summary_tables)
 
