@@ -7,7 +7,7 @@ if("--help" %in% args){
 
     Script_bound_analysis.R - Given a list of fixed lower bounds:
 
-lowerBounds = c(1,2,3,4,5,10,15,20,25,30,35,40,45,50,75,100,125,150,200,250,500,750)
+lowerBounds = c(1,2,3,4,5,10,15,20,25,30,35,40,45,50,100,150,200,250,500,750)
 
     this script, calculates the following summary statistics:
 
@@ -112,13 +112,20 @@ pdf(file = file.path(figsdir,paste0(filecodename,"_MA_plots.pdf")),height = 12,w
 u = print(plots[[5]])
 dev.off()
 
-
-pdf(file = file.path(figsdir,paste0(filecodename,"_npos_VS_depth_map.pdf")),height = 8,width = 14)
+pdf(file = file.path(figsdir,paste0(filecodename,"_dwRatio_vs_nposDepthRatio_plots.pdf")),height =12,width =12)
 u = print(plots[[6]])
 dev.off()
 
-pdf(file = file.path(figsdir,paste0(filecodename,"_dwRatio_VS_nposDepthRatio_plot.pdf")),height = 8,width = 8)
+pdf(file = file.path(figsdir,paste0(filecodename,"_npos_VS_depth_map.pdf")),height = 8,width = 14)
 u = print(plots[[7]])
+dev.off()
+
+pdf(file = file.path(figsdir,paste0(filecodename,"_MA_plot.pdf")),height = 8,width = 8)
+u = print(plots[[8]])
+dev.off()
+
+pdf(file = file.path(figsdir,paste0(filecodename,"_dwRatio_VS_nposDepthRatio_plot.pdf")),height = 8,width = 8)
+u = print(plots[[9]])
 dev.off()
 
 ggsave(
@@ -142,12 +149,20 @@ ggsave(
   plots[[5]],height = 7,width = 7,dpi=1200)
 
 ggsave(
-  file = file.path(figsdir,paste0(filecodename,"_npos_VS_depth_map.pdf")),
-  plots[[6]],height = 8,width = 14,dpi=1000)
+  file = file.path(figsdir,paste0(filecodename,"_dwRatio_vs_nposDepthRatio_plots.png")),
+  plots[[6]],height =12,width =12,dpi = 1200)
 
 ggsave(
-  file = file.path(figsdir,paste0(filecodename,"_dwRatio_VS_nposDepthRatio_plot.pdf")),
-  plots[[7]],height = 8,width = 8,dpi = 1000)
+  file = file.path(figsdir,paste0(filecodename,"_npos_VS_depth_map.png")),
+  plots[[7]],height = 8,width = 14,dpi = 1200)
+
+ggsave(
+  file = file.path(figsdir,paste0(filecodename,"_MA_plot.png")),
+  plots[[8]],height = 8,width = 8,dpi = 1200)
+
+ggsave(
+  file = file.path(figsdir,paste0(filecodename,"_dwRatio_VS_nposDepthRatio_plot.png")),
+  plots[[9]],height = 8,width = 8,dpi = 1200)
 
 
 # Save data

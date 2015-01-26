@@ -7,7 +7,7 @@ reads, creates the regions and returns a collection of plots that
 summarizes how the regions vary as they are filtered by depth}
 \usage{
 bound_analysis(exofile, mc, lowerBounds = c(1, 2, 3, 4, 5, 10, 15, 20, 25, 30,
-  35, 40, 45, 50, 75, 100, 125, 150, 200, 250, 500, 750))
+  35, 40, 45, 50, 100, 150, 200, 250, 500, 750))
 }
 \arguments{
 \item{exofile}{String that contains complete name of the reads file}
