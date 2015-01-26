@@ -29,7 +29,7 @@
 #'
 #' @export
 bound_analysis <- function(exofile,mc,
-  lowerBounds = c(1,2,3,4,5,10,15,20,25,30,35,40,45,50,75,100,125,150,200,250,500,750))
+  lowerBounds = c(1,2,3,4,5,10,15,20,25,30,35,40,45,50,100,150,200,250,500,750))
 {
   # Load reads
   param = ScanBamParam( what = "mapq")
@@ -129,15 +129,22 @@ bound_analysis <- function(exofile,mc,
   plots[[3]] = filter_label_plot(lowerBounds,filtered_summary,mc)
   plots[[4]] = filter_regions_plot(lowerBounds,filtered_summary,
      "pbc","npos/depth",mc)
-  plots[[5]] = filter_MA_plot(lowerBounds,filtered_summary,mc)
-  plots[[6]] = positions_reads_map(do.call(rbind,summary_tables),mp=100)
+  plots[[5]] = filter_scatter_plot(lowerBounds,"A","M",
+    filtered_summary,mc) + geom_abline(slope=0,intercept = 0,linetype =2)
+  plots[[6]] = filter_scatter_plot(lowerBounds,"dw_ratio","pbc",
+    filtered_summary,mc) + scale_x_continuous(limits = c(-.1,10))+ylab("npos/depth")+xlab("depth/width")
+  plots[[7]] = positions_reads_map(do.call(rbind,summary_tables),mp=100)
 
   rf = colorRampPalette(rev(brewer.pal(11,"Spectral")))
   r = rf(16)
 
-  plots[[7]] = ggplot(do.call(rbind,summary_tables),aes(dw_ratio,pbc))+stat_binhex(bins = 70)+
+  plots[[8]] = ggplot(do.call(rbind,summary_tables)[!is.infinite(A) & !is.infinite(M)],aes(A,M))+stat_binhex(bins = 70)+
+    scale_fill_gradientn(colours = r,trans = 'log10')+geom_abline(slope =0,intercept = 0,linetype =2)
+  
+  plots[[9]] = ggplot(do.call(rbind,summary_tables),aes(dw_ratio,pbc))+stat_binhex(bins = 70)+
     scale_fill_gradientn(colours =r,trans='log10')+
-    theme(legend.position = "top")+scale_x_continuous(limits = c(-.5,10))
+    theme(legend.position = "top")+scale_x_continuous(limits = c(-.1,10))+ylab("npos/depth")+xlab("depth/width")
+                                                        
   
   out = list(plots = plots,regions = regions,depth = depth,boundRegions = table(plots[[3]]$data),subset_reads = subset_reads,summary_stats = summary_tables)
 

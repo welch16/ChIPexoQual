@@ -81,9 +81,13 @@ filter_label_plot <- function(lowerBounds,filtered_summary,mc)
 }
 
 
-#' Returns a ggplot object with a collection of MA plots faceted by lower bound. It filters the labels by the islands such that the depth is greater than lowerBound
+#' Returns a ggplot object with a collection of scatter plots faceted by lower bound. It filters the labels by the islands such that the depth is greater than lowerBound
 #'
 #' @param lowerBounds An integer vector with the lower bounds used to filter
+#'
+#' @param var1 String with the name of which variable is going to be plotted in the x-axis
+#'
+#' @param var2 String with the name of which variable is going to be plotted in the y-axis
 #'
 #' @param filtered_summary A list of data.tables with the already filtered summary statistics
 #'
@@ -93,11 +97,11 @@ filter_label_plot <- function(lowerBounds,filtered_summary,mc)
 #'
 #' @export
 
-filter_MA_plot <- function(lowerBounds,filtered_summary,mc,smooth=FALSE)
+filter_scatter_plot <- function(lowerBounds,var1,var2,filtered_summary,mc,smooth=FALSE)
 {
   plot_data = mcmapply(function(lower,filtered){
     dt = data.table(bound=lower,
-      A= filtered[["A"]],M = filtered[["M"]])
+      A= filtered[[var1]],M = filtered[[var2]])
     return(dt)},lowerBounds,filtered_summary,MoreArgs = list(),
   SIMPLIFY=FALSE,mc.cores = mc)
   
@@ -110,7 +114,6 @@ filter_MA_plot <- function(lowerBounds,filtered_summary,mc,smooth=FALSE)
   p = ggplot(plot_data[!is.infinite(A) & !is.infinite(M)],aes(A,M))+stat_binhex(bins = 70)+
     facet_wrap(~bound,ncol =4)+
     scale_fill_gradientn(colours =r,trans='log10')+
-    geom_abline(slope=0,intercept = 0,linetype =2)+
     theme(legend.position = "top")
 
   if(smooth){
