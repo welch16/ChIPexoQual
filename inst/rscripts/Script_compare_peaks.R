@@ -76,10 +76,10 @@ library(RColorBrewer)
 load_all(codedir)
 
 
- ## indir = "/p/keles/ChIPexo/volume3/Analysis/Ren"
- ## filecodename = "H3k27ac"
- ## mcores = 8
- ## peaksfilename = file.path(indir,filecodename,"peaks",paste0(filecodename,"-peaks.RData"))
+## indir = "/p/keles/ChIPexo/volume3/Analysis/Ren"
+## filecodename = "H3k27ac"
+## mcores = 8
+## peaksfilename = file.path(indir,filecodename,"peaks",paste0(filecodename,"-peaks.RData"))
 ## peaksfilename = "/p/keles/ChIPexo/volume3/Analysis/Carroll/human/ER-rep1/peaks/ER-rep1-peaks.RData
 
 indir = file.path(indir,filecodename)
@@ -187,8 +187,8 @@ histograms = list()
 histograms[[1]] = ggplot(summary_stats_all,aes(prob))+geom_histogram(aes(y=..density..))+
   facet_grid(isPeak~.)+xlab("fwd strand ratio")
 histograms[[2]] = ggplot(summary_stats_all,aes(npos))+geom_histogram(aes(y=..density..))+
-  facet_grid(isPeak~.)+scale_x_continuous(limits = c(0,500))+
-  scale_x_continuous(limits = c(0,100))+xlab("number of unique positions")
+  facet_grid(isPeak~.)+xlab("number of unique positions")+
+  scale_x_continuous(limits = c(0,1e3))
 histograms[[3]] = ggplot(summary_stats_all,aes(depth))+geom_histogram(aes(y=..density..))+
   facet_grid(isPeak~.)+scale_x_continuous(limits = c(0,1000))
 histograms[[4]] = ggplot(summary_stats_all,aes(dw_ratio))+geom_histogram(aes(y=..density..))+
