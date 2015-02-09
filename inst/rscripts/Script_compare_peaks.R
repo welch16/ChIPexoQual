@@ -76,10 +76,10 @@ library(RColorBrewer)
 load_all(codedir)
 
 
- indir = "/p/keles/ChIPexo/volume3/Analysis/Ren"
- filecodename = "H3k27ac"
- mcores = 8
- peaksfilename = file.path(indir,filecodename,"peaks",paste0(filecodename,"-peaks.RData"))
+ ## indir = "/p/keles/ChIPexo/volume3/Analysis/Ren"
+ ## filecodename = "H3k27ac"
+ ## mcores = 8
+ ## peaksfilename = file.path(indir,filecodename,"peaks",paste0(filecodename,"-peaks.RData"))
 ## peaksfilename = "/p/keles/ChIPexo/volume3/Analysis/Carroll/human/ER-rep1/peaks/ER-rep1-peaks.RData
 
 indir = file.path(indir,filecodename)
@@ -169,8 +169,6 @@ peaks_all = do.call(rbind,peak_stats)
 ##     return(.fn_filter(lower,summary_table,"depth"))}         
 ##     ,x,mc.cores = mcores)
 ##   return(do.call(rbind,filtered))},summary_stats)
-
-
 
 ## positions_reads_map(peaks_all,150)
 
