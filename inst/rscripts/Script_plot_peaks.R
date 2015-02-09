@@ -75,7 +75,6 @@ message("Loading directory: ",indir)
 message("Code name: ",filecodename)
 message("Number of cores: ",mcores)
 
-message("Creating directories")
 figsdir = file.path(indir,"figs")
 datadir = file.path(indir,"data")
 
