@@ -76,8 +76,8 @@ library(RColorBrewer)
 load_all(codedir)
 
 
-## indir = "/p/keles/ChIPexo/volume3/Analysis/Ren"
-## filecodename = "H3k27ac"
+## indir = "/p/keles/ChIPexo/volume3/Analysis/Carroll/human"
+## filecodename = "ER-rep1"
 ## mcores = 8
 ## peaksfilename = file.path(indir,filecodename,"peaks",paste0(filecodename,"-peaks.RData"))
 ## peaksfilename = "/p/keles/ChIPexo/volume3/Analysis/Carroll/human/ER-rep1/peaks/ER-rep1-peaks.RData
@@ -192,11 +192,29 @@ histograms[[2]] = ggplot(summary_stats_all,aes(npos))+geom_histogram(aes(y=..den
 histograms[[3]] = ggplot(summary_stats_all,aes(depth))+geom_histogram(aes(y=..density..))+
   facet_grid(isPeak~.)+scale_x_continuous(limits = c(0,1000))
 histograms[[4]] = ggplot(summary_stats_all,aes(dw_ratio))+geom_histogram(aes(y=..density..))+
-  facet_grid(isPeak~.)+scale_x_continuous(limits = c(0,5))+
+  facet_grid(isPeak~.)+scale_x_continuous(limits = c(0,15))+
   xlab("depth/width")
 histograms[[5]] = ggplot(summary_stats_all,aes(pbc))+geom_histogram(aes(y=..density..))+
   facet_grid(isPeak~.)+scale_x_continuous(limits = c(0,1.2))+
   xlab("npos/depth")
+
+
+z_val <- function(x)
+{
+  F = ecdf(x)
+  z = qnorm(F(x))
+  return(z)
+}
+
+summary_stats_all[,z_npos := z_val(npos)]
+summary_stats_all[,z_dw_ratio:=z_val(dw_ratio)]
+summary_stats_all[,z_pbc:=z_val(pbc)]
+
+histograms[[6]] = ggplot(summary_stats_all,aes(z_npos))+geom_histogram(aes(y=..density..))+
+  facet_grid(isPeak~.)+xlab("Z-npos")
+histograms[[7]] = ggplot(summary_stats_all,aes(z_dw_ratio))+geom_histogram(aes(y=..density..))+ facet_grid(isPeak~.)+xlab("Z-dw_ratio")
+histograms[[8]] = ggplot(summary_stats_all,aes(z_pbc))+geom_histogram(aes(y=..density..))+
+  facet_grid(isPeak~.)
 
 
 pdf(file = file.path(figsdir,paste0(filecodename,"_peaks_comp_hist.pdf")))
