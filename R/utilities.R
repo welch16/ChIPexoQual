@@ -18,5 +18,13 @@
   return(summary_table)
 }
 
-
 reads2IRanges <- function(x)IRanges(start = x$start,end = x$end)
+
+Rle2data.table <- function(rle_data)
+{
+  coord = cumsum(runLength(rle_data))
+  counts = runValue(rle_data)
+  return(data.table(coord=coord,counts = counts))
+}
+
+normalize.tagcounts <- function(counts,depth)return(counts*1e6 / depth)

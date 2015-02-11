@@ -84,11 +84,8 @@ load(file.path(datadir,paste0(filecodename,"_summary_statistics.RData")))
 load(file.path(datadir,paste0(filecodename,"_reads_by_region.RData")))
 load(file.path(datadir,paste0(filecodename,"_depth.RData")))
 
-# regions,depth,reads_table and summary_stats <-- load
-
 # Get parameters
 summary_stats = do.call(rbind,summary_stats)
-#chr = names(regions)
 
 # Filter statistics
 summary_stats = summary_stats[chrID == chr]
@@ -117,59 +114,12 @@ names(chr_which) = chr
 reads_table = list(reads_table[[chr]])
 names(reads_table) = chr
 
-## reads_table = mcmapply(function(reads,ww){
-##   reads[region %in% ww$region]},
-##   reads_table,chr_which,mc.cores = mcores,SIMPLIFY=FALSE)
-
-
+# Calculates the coverage for each strand
+message("Calculating coverages")
 fwd_cover <- mapply(coverage_from_reads,chr,reads_table,
   chr_which,MoreArgs = list("+",mcores),SIMPLIFY=FALSE)
 bwd_cover <- mapply(coverage_from_reads,chr,reads_table,
   chr_which,MoreArgs = list("-",mcores),SIMPLIFY=FALSE)
-
-Rle2data.table <- function(rle_data)
-{
-  coord = cumsum(runLength(rle_data))
-  counts = runValue(rle_data)
-  return(data.table(coord=coord,counts = counts))
-}
-
-normalize.tagcounts <- function(counts,depth)return(counts*1e6 / depth)
-
-
-plot_cover <- function(fwd_cover,bwd_cover,region_start,region_end,
-                       depth,annot = NULL,chr,ext)
-{
-  
-  fwd = Rle2data.table(fwd_cover)
-  bwd = Rle2data.table(bwd_cover)
-
-  fwd$strand = "fwd"
-  bwd$strand = "bwd"
-
-  M = max(c(fwd$count,bwd$count))*1.2
-  
-  fwd$count = normalize.tagcounts(fwd$count,depth)
-  bwd$count = -normalize.tagcounts(bwd$count,depth)
-
-  annot =   paste0(names(annot),": ",round(annot,4),"\n")
-  annot = lapply(annot,function(x)x) 
-  annot = do.call(paste0,annot)
-
-  extra = grobTree(textGrob(annot, x=0.1,  y=0.75, hjust=0, gp=gpar(col="black", fontsize=12)))
-  
-  p = ggplot(data.frame(x=0,y=0))+
-    geom_step(data = fwd,aes(x=coord,y=count),colour = "red",  direction = "vh")+
-    geom_step(data = bwd,aes(x=coord,y=count),colour = "blue",direction = "hv")+
-    theme(legend.position = "none")+annotation_custom(extra)+
-    geom_abline(slope = 0,intercept = 0,linetype = 2,colour = I("black"))+
-    scale_y_continuous( limits = 1.2*1e6/depth*M * c(-1,1))+ylab("Normalized counts")+
-   scale_x_continuous(limits = c(region_start - ext,region_end +ext))+
-   ggtitle(paste0(chr,":",region_start,"-",region_end))
-
-  return(p)
-}
-
 
 filtered_regions = mcmapply(function(chr_reg,ww)chr_reg[ww[[1]]],
   list(regions[[chr]]),chr_which,SIMPLIFY=FALSE,mc.cores = mcores)
@@ -189,16 +139,7 @@ plot_regions <- function(chr,chr_fwd,chr_bwd,chr_regions,summary_stats,depth){
 
 peaks = plot_regions(chr,fwd_cover[[chr]],bwd_cover[[chr]],filtered_regions[[1]],summary_stats,depth)
 
-## rf = colorRampPalette(rev(brewer.pal(11,"Spectral")))
-## r = rf(16)
-## ggplot(summary_stats,aes(dw_ratio,pbc,colour = npos))+geom_point()+scale_color_gradientn(colours = r)
-
-## message("Saving peaks to disc")
-## save(list = "peaks",file = file.path(datadir,paste0(filecodename,"-",chr,"_peaks.RData")))
-
-
-
-## summary_stats$idx = 1:nrow(summary_stats)
+# This sorts the peaks indexed with the decreasing npos (unique number of positions)
 idd = sort(summary_stats$npos,decreasing =TRUE,index.return=TRUE)
 
 message("Plotting peaks")

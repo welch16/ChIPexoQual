@@ -153,4 +153,59 @@ positions_reads_map <- function(summary_table,mp=Inf,md=Inf)
   return(p)
 }
 
+#' Returns a ggplot object with a region's ChIP (chip, seq or exo) profile. This plot
+#' colours both strands as separate, and in particular considers negative count for the
+#' reverse strand fragments.
+#'
+#' @param fwd_cover This is an Rle object built with the \link{\code{coverage}} function
+#' from IRanges, considering only the forward strand reads
+#'
+#' @param bwd_cover This is an Rle object built with the \link{\code{coverage}} function
+#' from IRanges, considering only the reverse strand reads
+#'
+#' @param region_start This is the genomic coordinate where the region starts
+#'
+#' @param region_end This is the genomic coordinate where the region ends
+#'
+#' @param depth This is the depth of the experiment to normalize the coverage's as if
+#' they were a million reads in the experiment
+#'
+#' @param annot The summary statistics that are going to be written in the plot for
+#' comparison purposes. If annot == NULL, then doesn't write anything
+#'
+#' @param ext A number with the number of bases used to extend the plot to each side
+#'
+#' @export
 
+plot_cover <- function(fwd_cover,bwd_cover,region_start,region_end,
+                       depth,annot = NULL,chr,ext)
+{
+  
+  fwd = Rle2data.table(fwd_cover)
+  bwd = Rle2data.table(bwd_cover)
+
+  fwd$strand = "fwd"
+  bwd$strand = "bwd"
+
+  M = max(c(fwd$count,bwd$count))*1.2
+  
+  fwd$count = normalize.tagcounts(fwd$count,depth)
+  bwd$count = -normalize.tagcounts(bwd$count,depth)
+
+  annot = paste0(names(annot),": ",round(annot,4),"\n")
+  annot = lapply(annot,function(x)x) 
+  annot = do.call(paste0,annot)
+
+  extra = grobTree(textGrob(annot, x=0.1,  y=0.75, hjust=0, gp=gpar(col="black", fontsize=12)))
+  
+  p = ggplot(data.frame(x=0,y=0))+
+    geom_step(data = fwd,aes(x=coord,y=count),colour = "red",  direction = "vh")+
+    geom_step(data = bwd,aes(x=coord,y=count),colour = "blue",direction = "hv")+
+    theme(legend.position = "none")+annotation_custom(extra)+
+    geom_abline(slope = 0,intercept = 0,linetype = 2,colour = I("black"))+
+    scale_y_continuous( limits = 1.2*1e6/depth*M * c(-1,1))+ylab("Normalized counts")+
+   scale_x_continuous(limits = c(region_start - ext,region_end +ext))+
+   ggtitle(paste0(chr,":",region_start,"-",region_end))
+
+  return(p)
+}
