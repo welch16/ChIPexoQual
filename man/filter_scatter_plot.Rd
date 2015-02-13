@@ -18,7 +18,8 @@ filter_scatter_plot(lowerBounds, var1, var2, filtered_summary, mc,
 
 \item{mc}{Number of cores used}
 
-\item{smooth}{A boolean variable indicating if a loess regression line is going to be added to the plot}
+\item{smooth}{A boolean variable indicating if a loess regression line is going to be
+added to the plot}
 }
 \description{
 Returns a ggplot object with a collection of scatter plots faceted by lower bound. It filters the labels by the islands such that the depth is greater than lowerBound

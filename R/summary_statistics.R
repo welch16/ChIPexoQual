@@ -35,5 +35,59 @@ MA_values <- function(summary_table)
   return(summary_table)
 }
   
+#' Returns a list (or vector when simplify=TRUE) in the following manner:
+#' Let ‘i’ be the indices in 'SHIFT', ‘X_i = window(X, 1, length(X) - SHIFT[i])’,
+#' and ‘Y_i = window(Y, 1 + SHIFT[i], length(Y) )’. Calculates the
+#' set of ‘FUN(X_i, Y_i, ...)’ values and return the results in a convenient form
+#'
+#' @param SHIFT A non-negative integer vector of shift values.
+#'
+#' @param FUN The function, found via ‘match.fun’, to be applied to each set of
+#' shifted vectors.
+#'
+#' @param X The Vector or R vector objects to shift.
+#'
+#' @param Y The Vector or R vector objects to shift.
+#'
+#' @param ...  Further arguments for FUN
+#'
+#' @param simplify A logical value specifying whether or not the result should be
+#' simplified to a vector
+#'
+#' @export
+mcshiftapply <- function(SHIFT,FUN,X,Y,mc,...,simplify=TRUE)
+{
+    
+  FUN = match.fun(FUN)
+  N =  length(X)
+  
+  stopifnot(length(Y) == N)
+  stopifnot(length(SHIFT) > 0)
+  
+  infoX = getStartEndRunAndOffset(X, rep.int(1L ,length(SHIFT)), N - SHIFT)
+  runStartX = infoX[["start"]][["run"]]
+  offsetStartX = infoX[["start"]][["offset"]]
+  runEndX = infoX[["end"]][["run"]]
+  offsetEndX = infoX[["end"]][["offset"]]
 
-
+  infoY = getStartEndRunAndOffset(Y, 1L + SHIFT, rep.int(N, length(SHIFT)))  
+  runStartY = infoY[["start"]][["run"]]
+  offsetStartY = infoY[["start"]][["offset"]]
+  runEndY = infoY[["end"]][["run"]]
+  offsetEndY = infoY[["end"]][["offset"]]
+  
+  newX = new("Rle")
+  newY = new("Rle")
+  
+  out = mclapply(seq_len(length(SHIFT)), function(i){
+    FUN(
+      .Call2("Rle_window",X, runStartX[i],
+        runEndX[i], offsetStartX[i], offsetEndX[i], 
+        newX, PACKAGE = "S4Vectors"),
+      .Call2("Rle_window", Y, runStartY[i], runEndY[i],
+        offsetStartY[i], offsetEndY[i], newY, PACKAGE = "S4Vectors"))}
+        ,...,mc.cores = mc)
+  if(simplify)out = do.call(c,out)
+  
+  return(out)
+}

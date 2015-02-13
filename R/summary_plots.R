@@ -93,7 +93,8 @@ filter_label_plot <- function(lowerBounds,filtered_summary,mc)
 #'
 #' @param mc Number of cores used
 #'
-#' @param smooth A boolean variable indicating if a loess regression line is going to be added to the plot
+#' @param smooth A boolean variable indicating if a loess regression line is going to be
+#' added to the plot
 #'
 #' @export
 
