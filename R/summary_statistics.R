@@ -91,3 +91,28 @@ mcshiftapply <- function(SHIFT,FUN,X,Y,mc,...,simplify=TRUE)
   
   return(out)
 }
+
+
+#' Calculate the PCR bottleneck coefficient for a data set
+#'
+#' @param reads_table List of data.table with the experiment's separated reads by each region
+#'
+#' @param mcores Numeric value with the number of cores to use
+#'
+#' @export
+pbc <- function(reads_table,mcores)
+{
+  fwd_tabs = mclapply(reads_table,function(x){
+    table(x[strand == "+",(start)])},mc.cores = mcores)
+  bwd_tabs = mclapply(reads_table,function(x){
+    table(x[strand == "-",(end)])},mc.cores = mcores)
+  nUniq = sum(do.call(c,
+    mclapply(fwd_tabs,function(x)sum(x==1),mc.cores =mcores))) +
+      sum(do.call(c,
+    mclapply(bwd_tabs,function(x)sum(x==1),mc.cores = mcores)))
+  nTotal = sum(do.call(c,
+    mclapply(fwd_tabs,function(x)sum(x>=1),mc.cores =mcores))) +
+      sum(do.call(c,
+    mclapply(bwd_tabs,function(x)sum(x>=1),mc.cores = mcores)))
+  return(nUniq / nTotal)       
+}

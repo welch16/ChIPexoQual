@@ -184,17 +184,16 @@ peaks_all = do.call(rbind,peak_stats)
 ## filter_scatter_plot(lowerBounds,"dw_ratio","pbc",filtered_summary,mcores) + scale_x_continuous(limits = c(-.1,10))+ylab("npos/depth")+xlab("depth/width")
 
 histograms = list()
-histograms[[1]] = ggplot(summary_stats_all,aes(prob))+geom_histogram(aes(y=..density..))+
-  facet_grid(isPeak~.)+xlab("fwd strand ratio")
-histograms[[2]] = ggplot(summary_stats_all,aes(npos))+geom_histogram(aes(y=..density..))+
+histograms[[1]] = ggplot(summary_stats_all,aes(prob))+geom_histogram(aes(y=..density..),binwidth = diff(range(summary_stats_all[,(prob)]))/41,position="dodge")+ facet_grid(isPeak~.)+xlab("fwd strand ratio")
+histograms[[2]] = ggplot(summary_stats_all,aes(npos))+geom_histogram(aes(y=..density..),binwidth = diff(range(summary_stats_all[,(npos)]))/101,position="dodge")+
   facet_grid(isPeak~.)+xlab("number of unique positions")+
   scale_x_continuous(limits = c(0,1e3))
-histograms[[3]] = ggplot(summary_stats_all,aes(depth))+geom_histogram(aes(y=..density..))+
+histograms[[3]] = ggplot(summary_stats_all,aes(depth))+geom_histogram(aes(y=..density..),binwidth = 1000/101,position="dodge")+
   facet_grid(isPeak~.)+scale_x_continuous(limits = c(0,1000))
-histograms[[4]] = ggplot(summary_stats_all,aes(dw_ratio))+geom_histogram(aes(y=..density..))+
+histograms[[4]] = ggplot(summary_stats_all,aes(dw_ratio))+geom_histogram(aes(y=..density..),binwidth = diff(range(summary_stats_all[,(dw_ratio)]))/101,position="dodge")+
   facet_grid(isPeak~.)+scale_x_continuous(limits = c(0,15))+
   xlab("depth/width")
-histograms[[5]] = ggplot(summary_stats_all,aes(pbc))+geom_histogram(aes(y=..density..))+
+histograms[[5]] = ggplot(summary_stats_all,aes(pbc))+geom_histogram(aes(y=..density..),binwidth = diff(range(summary_stats_all[,(pbc)]))/101,position="dodge")+
   facet_grid(isPeak~.)+scale_x_continuous(limits = c(0,1.2))+
   xlab("npos/depth")
 
@@ -210,10 +209,10 @@ summary_stats_all[,z_npos := z_val(npos)]
 summary_stats_all[,z_dw_ratio:=z_val(dw_ratio)]
 summary_stats_all[,z_pbc:=z_val(pbc)]
 
-histograms[[6]] = ggplot(summary_stats_all,aes(z_npos))+geom_histogram(aes(y=..density..))+
+histograms[[6]] = ggplot(summary_stats_all,aes(z_npos))+geom_histogram(aes(y=..density..),position="dodge")+
   facet_grid(isPeak~.)+xlab("Z-npos")
-histograms[[7]] = ggplot(summary_stats_all,aes(z_dw_ratio))+geom_histogram(aes(y=..density..))+ facet_grid(isPeak~.)+xlab("Z-dw_ratio")
-histograms[[8]] = ggplot(summary_stats_all,aes(z_pbc))+geom_histogram(aes(y=..density..))+
+histograms[[7]] = ggplot(summary_stats_all,aes(z_dw_ratio))+geom_histogram(aes(y=..density..),position="dodge")+ facet_grid(isPeak~.)+xlab("Z-dw_ratio")
+histograms[[8]] = ggplot(summary_stats_all,aes(z_pbc))+geom_histogram(aes(y=..density..),position="dodge")+
   facet_grid(isPeak~.)
 
 
