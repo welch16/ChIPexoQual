@@ -97,7 +97,7 @@ cross_corr_curves = mcmapply(function(fwd,bwd,w,maxShift){
     data.table(shift = seq(-1,-maxShift,by=-1),cross.corr = cc2))
   dt$cross.corr = w * dt$cross.corr
   return(dt)  
-},fwd_cover,bwd_cover,weights,MoreArgs = list(maxShift=100),
+},fwd_cover,bwd_cover,weights,MoreArgs = list(maxShift=300),
   SIMPLIFY=FALSE,mc.cores= mcores)
 
 cc = do.call(rbind,cross_corr_curves)

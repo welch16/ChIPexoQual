@@ -35,6 +35,7 @@ bound_analysis <- function(exofile,mc,
   param = ScanBamParam( what = "mapq")
   message("Loading reads")
   reads = readGAlignmentsFromBam(exofile,param = param)
+  seqlevels(reads) = seqlevelsInUse(reads)
   depth = length(reads)  
 
   # Convert to GRanges and separate it by strand and seqnames

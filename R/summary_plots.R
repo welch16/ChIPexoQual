@@ -193,19 +193,26 @@ plot_cover <- function(fwd_cover,bwd_cover,region_start,region_end,
   fwd$count = normalize.tagcounts(fwd$count,depth)
   bwd$count = -normalize.tagcounts(bwd$count,depth)
 
-  annot = paste0(names(annot),": ",round(annot,4),"\n")
-  annot = lapply(annot,function(x)x) 
-  annot = do.call(paste0,annot)
+  if(!is.null(annot)){
+    annot = paste0(names(annot),": ",round(annot,4),"\n")
+    annot = lapply(annot,function(x)x) 
+    annot = do.call(paste0,annot)
+    extra = grobTree(textGrob(annot, x=0.1,  y=0.75, hjust=0,
+      gp=gpar(col="black", fontsize=12)))
+  }
 
-  extra = grobTree(textGrob(annot, x=0.1,  y=0.75, hjust=0, gp=gpar(col="black", fontsize=12)))
+  
   
   p = ggplot(data.frame(x=0,y=0))+
     geom_step(data = fwd,aes(x=coord,y=count),colour = "red",  direction = "vh")+
     geom_step(data = bwd,aes(x=coord,y=count),colour = "blue",direction = "hv")+
-    theme(legend.position = "none")+annotation_custom(extra)+
-    geom_abline(slope = 0,intercept = 0,linetype = 2,colour = I("black"))+
+    theme(legend.position = "none")
+  if(!is.null(annot)){
+    p = p +annotation_custom(extra)
+  }
+  p = p + geom_abline(slope = 0,intercept = 0,linetype = 2,colour = I("black"))+
     scale_y_continuous( limits = 1.2*1e6/depth*M * c(-1,1))+ylab("Normalized counts")+
-   scale_x_continuous(limits = c(region_start - ext,region_end +ext))+
+   scale_x_continuous(limits = c(region_start - ext,region_end +ext),labels = comma)+
    ggtitle(paste0(chr,":",region_start,"-",region_end))
 
   return(p)
