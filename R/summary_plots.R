@@ -206,7 +206,7 @@ plot_cover <- function(fwd_cover,bwd_cover,region_start,region_end,
   p = ggplot(data.frame(x=0,y=0))+
     geom_abline(slope = 0,intercept = 0,linetype = 2,colour = I("black"))+
     geom_step(data = fwd,aes(x=coord,y=count),colour = "red",  direction = "vh")+
-    geom_step(data = bwd,aes(x=coord,y=count),colour = "blue",direction = "hv")+
+    geom_step(data = bwd,aes(x=coord,y=count),colour = "blue",direction = "vh")+
     theme(legend.position = "none")
   if(!is.null(annot)){
     p = p +annotation_custom(extra)
