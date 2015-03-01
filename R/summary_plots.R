@@ -204,13 +204,14 @@ plot_cover <- function(fwd_cover,bwd_cover,region_start,region_end,
   
   
   p = ggplot(data.frame(x=0,y=0))+
+    geom_abline(slope = 0,intercept = 0,linetype = 2,colour = I("black"))+
     geom_step(data = fwd,aes(x=coord,y=count),colour = "red",  direction = "vh")+
     geom_step(data = bwd,aes(x=coord,y=count),colour = "blue",direction = "hv")+
     theme(legend.position = "none")
   if(!is.null(annot)){
     p = p +annotation_custom(extra)
   }
-  p = p + geom_abline(slope = 0,intercept = 0,linetype = 2,colour = I("black"))+
+  p = p +
     scale_y_continuous( limits = 1.2*1e6/depth*M * c(-1,1))+ylab("Normalized counts")+
    scale_x_continuous(limits = c(region_start - ext,region_end +ext),labels = comma)+
    ggtitle(paste0(chr,":",region_start,"-",region_end))
