@@ -54,7 +54,7 @@ load_all(codedir)
 
 ##  indir = "/p/keles/ChIPexo/volume3/Analysis/Carroll/human"
 ##  filecodename = "ER-rep1"
-##  mcores = 24
+##  mcores = 16
 
 indir = file.path(indir,filecodename)
 
@@ -78,6 +78,12 @@ pcr_coeff= pbc(reads_table,mcores)
 message("Calculating strand cross-correlation")
 weights = do.call(c,mclapply(reads_table,nrow,mc.cores = mcores))
 weights = weights / sum(weights)
+
+reads_table = mclapply(reads_table,function(x){
+    setkey(x,strand)
+    x["+",end:=start]
+    x["-",start:=end]
+    return(x)},mc.cores = mcores)
 
 
 fwd_cover = mclapply(reads_table,function(x){
