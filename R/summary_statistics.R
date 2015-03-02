@@ -116,3 +116,44 @@ pbc <- function(reads_table,mcores)
     mclapply(bwd_tabs,function(x)sum(x>=1),mc.cores = mcores)))
   return(nUniq / nTotal)       
 }
+
+#' Calculates the read depth of a collection of regions in the genome
+#'
+#' @param extract_reads, A data.table object based in a GRanges format, width an
+#'   additional column named regions which partition the reads
+#'
+#' @param mcores, A numeric value indicating the number of cores to use
+#'
+#' @export
+depth_by_region <- function(extract_reads,mcores)
+{
+  depths = mclapply(extract_reads,function(x)x[,length(seqnames),by=region],
+    mc.cores = mcores)
+  return(depths)
+}
+
+
+#' Calculates the number of unique reads for a collection of regions in the genome
+#'
+#' @param extract_reads, A data.table object based in a GRanges format, width an
+#'   additional column named regions which partition the reads
+#'
+#' @param st, A character with "+" for forward and "-" for reverse fragment reads
+#' 
+#' @param mcores, A numeric value indicating the number of cores to use
+#'
+#' @export
+npos_by_region <- function(extract_reads,st,mcores)
+{
+  npos = NULL
+  if(st == "+"){
+    npos = mclapply(extract_reads,function(x)x[,length(unique(start)),by=region],
+      mc.cores = mcores)
+  }
+  if(st == "-"){
+    npos = mclapply(extract_reads,function(x)x[,length(unique(end)),by=region],
+      mc.cores = mcores)
+  }
+  return(npos)
+}
+

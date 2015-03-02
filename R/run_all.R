@@ -71,19 +71,14 @@ bound_analysis <- function(exofile,mc,
   chr_Nregions = mclapply(regions,length,mc.cores = mc)
 
   message("Calculating region depths")
-  fwd_depths = mclapply(fwd_reads,
-    function(reads)reads[,length(seqnames),by=region],mc.cores = mc) 
-  bwd_depths = mclapply(bwd_reads,
-    function(reads)reads[,length(seqnames),by=region],mc.cores = mc)
+  fwd_depths = depth_by_region(fwd_reads,mc)
+  bwd_depths = depth_by_region(bwd_reads,mc)
 
   # Calculate number of positions
   message("Calculating region's number of unique positions")
-  fwd_npos = mclapply(fwd_reads,
-    function(reads)reads[,length(unique(start)),by=region],
-    mc.cores = mc)
-  bwd_npos = mclapply(bwd_reads,
-    function(reads)reads[,length(unique(end)),by=region],
-    mc.cores = mc)
+  fwd_npos = npos_by_region(fwd_reads,"+",mc)
+  bwd_npos = npos_by_region(bwd_reads,"-",mc)
+
   widths = mclapply(regions,function(region){
     data.table(region = 1:length(region),V1 = width(region))},
     mc.cores = mc)
