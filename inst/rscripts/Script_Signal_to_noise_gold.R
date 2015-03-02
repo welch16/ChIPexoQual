@@ -62,9 +62,9 @@ library(parallel)
 library(data.table)
 library(RColorBrewer)
 
- indir = "/p/keles/ChIPexo/volume3/Analysis/Ren"
- familycodename = "ren_h3k4me1"
- mcores = 16
+ ## indir = "/p/keles/ChIPexo/volume3/Analysis/Ren"
+ ## familycodename = "ren_h3k4me1"
+ ## mcores = 16
 
 load_all(codedir)
 
