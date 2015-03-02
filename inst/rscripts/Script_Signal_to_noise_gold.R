@@ -263,6 +263,7 @@ plots = mclapply(lowerBounds,function(x,gold_set){
   p  = ggplot(gold_set[npos > x],aes(dw_ratio,pbc))+stat_binhex(bins=50)+
     scale_fill_gradientn(colours =r,trans = 'log10')+facet_grid(.~sample)+
     scale_x_continuous(limits = c(-.1,10))+theme(legend.position ="top")+
+    scale_y_continuous(limits = c(0,1))+
     xlab("average read coverage")+ylab("unique read coverage rate")+
     ggtitle(paste0("npos > ",x))
   return(p)},gold_set,mc.cores = mcores)
@@ -273,13 +274,14 @@ u = lapply(plots,print)
 dev.off()
 
 
-plots = mclapply(lowerBounds,function(x,gold_set){
+plots = mclapply(lowerBounds[-c(1:5)],function(x,gold_set){
   p  = ggplot(gold_set[npos > x],aes(dw_ratio,pbc,colour = prob))+
     geom_point(alpha = I(9/10),shape = 20,size=2)+
     facet_grid(.~sample)+
     scale_color_gradient2(midpoint = .5,mid = "navyblue",low = "goldenrod",
       high = "goldenrod",guide= "colourbar",breaks = seq(-.25,1.25,by=.25))+
     scale_x_continuous(limits = c(-.1,10))+theme(legend.position ="top")+
+    scale_y_continuous(limits = c(0,1))+      
     xlab("average read coverage")+ylab("unique read coverage rate")+
     ggtitle(paste0("npos > ",x))
   return(p)},gold_set,mc.cores = mcores)
