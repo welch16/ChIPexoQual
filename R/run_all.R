@@ -120,15 +120,16 @@ bound_analysis <- function(exofile,mc,
 
   plots = list()
   plots[[1]] = filter_regions_plot(lowerBounds,filtered_summary,
-    "prob","fwd/(fwd + bwd)",mc)
-  plots[[2]] = filter_regions_plot(lowerBounds,filtered_summary,"dw_ratio","depth/width",mc,TRUE)
+    "prob","forward strand ratio",mc)
+  plots[[2]] = filter_regions_plot(lowerBounds,filtered_summary,"dw_ratio","average read coverage",mc,TRUE)
   plots[[3]] = filter_label_plot(lowerBounds,filtered_summary,mc)
   plots[[4]] = filter_regions_plot(lowerBounds,filtered_summary,
-     "pbc","npos/depth",mc)
+     "pbc","unique read coverage rate",mc)
   plots[[5]] = filter_scatter_plot(lowerBounds,"A","M",
     filtered_summary,mc) + geom_abline(slope=0,intercept = 0,linetype =2)
   plots[[6]] = filter_scatter_plot(lowerBounds,"dw_ratio","pbc",
-    filtered_summary,mc) + scale_x_continuous(limits = c(-.1,10))+ylab("npos/depth")+xlab("depth/width")
+    filtered_summary,mc) + scale_x_continuous(limits = c(-.1,10))+
+    ylab("unique read coverage rate")+xlab("avrage read coverage")
   plots[[7]] = positions_reads_map(do.call(rbind,summary_tables),mp=100)
 
   rf = colorRampPalette(rev(brewer.pal(11,"Spectral")))
@@ -139,7 +140,7 @@ bound_analysis <- function(exofile,mc,
   
   plots[[9]] = ggplot(do.call(rbind,summary_tables),aes(dw_ratio,pbc))+stat_binhex(bins = 70)+
     scale_fill_gradientn(colours =r,trans='log10')+
-    theme(legend.position = "top")+scale_x_continuous(limits = c(-.1,10))+ylab("npos/depth")+xlab("depth/width")
+    theme(legend.position = "top")+scale_x_continuous(limits = c(-.1,10))+ylab("unique read coverage rate")+xlab("average read coverage")
                                                         
   
   out = list(plots = plots,regions = regions,depth = depth,boundRegions = table(plots[[3]]$data),subset_reads = subset_reads,summary_stats = summary_tables)

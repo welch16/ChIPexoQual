@@ -39,7 +39,7 @@ filter_regions_plot <- function(lowerBounds,filtered_summary,
   p = ggplot(plot_data,aes(bound,measurement,colour=bound))+
     geom_boxplot(outlier.colour = alpha("black",1/50))+
     theme(legend.position = "none")+
-    ylab(measure_label)
+    ylab(measure_label)+xlab("least possible depth")
 
   if(log){
     p = p + scale_y_log10(  labels=trans_format('log10',
@@ -75,7 +75,7 @@ filter_label_plot <- function(lowerBounds,filtered_summary,mc)
     geom_bar(position = "fill")+
     scale_fill_brewer(palette = "Set1")+
     theme(legend.position = "bottom")+
-    ylab("proportion by label")
+    ylab("proportion by label")+xlab("least possible depth")
   
   return(p) 
 }

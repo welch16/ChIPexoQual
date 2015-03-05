@@ -256,7 +256,7 @@ gold_set = stack_summaries(summaries)
 rf = colorRampPalette(rev(brewer.pal(11,"Spectral")))
 r = rf(16)
 
-lowerBounds = c(1,2,3,4,5,10,15,20,25,30,35,40,45,50,100,150)
+lowerBounds = c(0,1,2,3,4,5,10,15,20,25,50,75,100,125,150)
 
 
 plots = mclapply(lowerBounds,function(x,gold_set){
@@ -274,7 +274,7 @@ u = lapply(plots,print)
 dev.off()
 
 
-plots = mclapply(lowerBounds[-c(1:5)],function(x,gold_set){
+plots = mclapply(lowerBounds[-c(1:6)],function(x,gold_set){
   p  = ggplot(gold_set[npos > x],aes(dw_ratio,pbc,colour = prob))+
     geom_point(alpha = I(9/10),shape = 20,size=2)+
     facet_grid(.~sample)+
