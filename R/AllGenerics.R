@@ -14,3 +14,8 @@ setGeneric("height",
 setGeneric("depth",
   function(object)standardGeneric("depth")
 )           
+
+##' @export
+setGeneric("summary_stats",
+  function(object)standardGeneric("summary_stats")
+)           
