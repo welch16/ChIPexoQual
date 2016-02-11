@@ -9,21 +9,12 @@ The pipeline considers:
 1 - Given a set of reads (in bam file format), is going to build a
 collection of regions that separates the genome
 
-2 - For each region is going to calculate a summary statistic designed
-to asses a particular bias in the generation of ChIP-exo data set
+2 - For each region is going to calculate a collection of summary
+statistics to asses biases that are specific to the generation of
+ChIP-exo data.
 
-3 - With the summary statistics is going to build diagnostic plots
-that asses the quality of the data set
+3 - Using those summary statistics it creates diagnostics plots to
+help understand the behavior of those biases.
 
-The package contains other tools that aren't specific to the pipeline,
-but useful to asses whether the pipeline is effective as an quality
-assessment tool like:
-
-1 - Label the regions in the partition when they overlap any of the
-peaks in a previously defined peak list from a ChIP-seq experiment
-(with the same conditions)
-
-2 - Calculate some of the current ENCODE quality metrics for a
-ChIP-exp dataset
 
 
