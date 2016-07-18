@@ -1,20 +1,25 @@
 
-## ChIPexoQual
+ChIPexoQual
+===========
 
-The idea of this codes is to build a package with a quality control
-pipeline for ChIP-exo data sets.
+ChIPexoQual provides a quality control pipeline of ChIP-exo nexus/data. It allows the quick evaluation of ChIP-exo/nexus data quality by directly operating on aligned read files and without requiring any complex statistical modelling or intensive computation such as identification of potential binding regions/events. This enables its broad application and versatile utility, and provide easy data evaluation before any statistical analysis for identifying binding events. 
 
-The pipeline considers:
+The overall pipeline follows the steps:
 
-1 - Given a set of reads (in bam file format), is going to build a
-collection of regions that separates the genome
+1. Partitions the reference genome into islands representing overlapping clusters of reads separated by gaps. 
+2. Calculates a set of summary statistics.
+3. Visualize the data with a collection of diagnostic plots aimed at quantifying ChIP enrichment and strand imbalance.
+4. Generates quantitative summaries of these diagnostic plots.
 
-2 - For each region is going to calculate a collection of summary
-statistics to asses biases that are specific to the generation of
-ChIP-exo data.
+To install the package, it is easiest to use:
 
-3 - Using those summary statistics it creates diagnostics plots to
-help understand the behavior of those biases.
+```
+#install.packages("devtools")
+library(devtools)
+install_github("keleslab/ChIPexoQual")
+```
 
+References
+==========
 
-
+Welch R, Chung D, Grass J, Landick R, and Keles S. "Data Exploration, Quality Control, and Statistical Analysis of ChIP-exo/nexus Experiments" (in preparation)
