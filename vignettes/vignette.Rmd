@@ -1,0 +1,35 @@
+---
+title: "ChIPexoQual: A quality control pipeline for ChIP-exo/nexus data."
+author: |
+        | Rene Welch and Sunduz Keles
+        | Department of Statistics, University of Wisconsin-Madison
+output: 
+    BiocStyle::html_document
+vignette: >
+    %\VignetteIndexEntry{Vignette Title}
+    %\VignetteEngine{knitr::rmarkdown}
+    %\VignetteEncoding{UTF-8}  
+---
+    
+```{r style, echo = FALSE, results = 'asis'}
+
+BiocStyle::markdown(css.files = c('custom.css'))
+
+```
+
+```{r load,include=TRUE,echo=TRUE,eval=FALSE}
+
+    library(ChIPexoQual)
+
+```
+
+# Overview
+
+
+
+# SessionInfo
+
+```{r info,include=TRUE,echo =TRUE,eval=TRUE}
+sessionInfo()
+```
+
