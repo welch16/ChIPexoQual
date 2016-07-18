@@ -14,6 +14,13 @@ setClass("ExoData",
              nreads = 0L
          ))
 
+setValidity("ExoData",
+            function(object){
+                all(names(mcols(object)) == c("f","r","fpos","rpos","d","u",
+                                   "ARC","URC","FSR","M","A","label"))
+            }
+        )
+
 ##' ExoData object and constructors
 ##'
 ##' \code{ExoData} is a subclass of \code{GenomicRanges}, used to asses the 
