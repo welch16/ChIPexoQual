@@ -13,11 +13,25 @@ Depends:
     parallel,
     GenomicRanges (>= 1.14.4),
     GenomicAlignments (>= 1.0.1),
+    data.table (>= 1.9.7),
     ggplot2 (>= 1.0),
     knitr (>= 1.6)
 Imports:
-    data.table (>= 1.9.2)
+    IRanges (>= 1.6),
+    S4Vectors (>= 0.10),
+    biovizBase (>= 1.20)
 VignetteBuilder: knitr
 Suggests:
-    BiocStyle
+    knitr (>= 1.10),
+    BiocStyle,
+    rmarkdown,
+    testthat
+VignetteBuilder: knitr
+biocViews: 
+    ChIPSeq,
+    ChIPExo,
+    Sequencing,
+    Transcription,
+    Visualization,
+    QualityControl
 RoxygenNote: 5.0.1
