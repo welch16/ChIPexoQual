@@ -7,7 +7,7 @@
 \title{ExoData object and constructors}
 \usage{
 ExoData(file, height = 1, mc.cores = getOption("mc.cores", 2L),
-  save_reads = FALSE)
+  save_reads = FALSE, nregions = 1000, ntimes = 1000)
 }
 \arguments{
 \item{file}{a character value with location of the bam file with the aligned
@@ -21,6 +21,13 @@ i.e. at most how many child processes will be run simultaneously.}
 
 \item{save_reads}{a logical value to indicate if the reads are stored in the
 \code{ExoData} object. The default value is \code{FALSE}.}
+
+\item{nregions}{a numeric value indicating the number of regions sampled to 
+estimate the quality parameter distributions. The default value is 1e3.}
+
+\item{ntimes}{a numeric value indicating the number of times that regions are 
+sampled to estimate the quality parameter distributions. The default value
+is 1e3.}
 }
 \value{
 \code{ExoData} returns a \code{ExoData} object which contains the

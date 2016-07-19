@@ -1,3 +1,6 @@
+##' @importFrom biovizBase flatGrl
+NULL
+
 
 ##' @rdname ExoData
 ##' @export
@@ -6,12 +9,16 @@ setClass("ExoData",
          representation = representation(
              file = "character",
              cover = "RleList",
-             nreads = "numeric"
+             nreads = "numeric",
+             reads = "GRanges",
+             param_dist = "list"
          ),
          prototype = prototype(
              file = "",
-             cover = "RleList",
-             nreads = 0L
+             cover = RleList(),
+             nreads = 0L,
+             reads = GRanges(),
+             param_dist = list()
          ))
 
 setValidity("ExoData",
@@ -32,6 +39,11 @@ setValidity("ExoData",
 ##' of the experiment into a set of regions.
 ##' @param mc.cores a numeric value with the number of cores to use,
 ##' i.e. at most how many child processes will be run simultaneously.
+##' @param nregions a numeric value indicating the number of regions sampled to 
+##' estimate the quality parameter distributions. The default value is 1e3.
+##' @param ntimes a numeric value indicating the number of times that regions are 
+##' sampled to estimate the quality parameter distributions. The default value
+##' is 1e3.
 ##' @param save_reads a logical value to indicate if the reads are stored in the
 ##' \code{ExoData} object. The default value is \code{FALSE}.
 ##' @return \code{ExoData} returns a \code{ExoData} object which contains the
@@ -48,7 +60,7 @@ setValidity("ExoData",
 ##' @rdname ExoData
 ##' @export
 ExoData = function(file , height = 1 ,mc.cores = getOption("mc.cores",2L),
-                   save_reads = FALSE)
+                   save_reads = FALSE,nregions = 1e3,ntimes = 1e3)
 {
     
     stopifnot(is.character(file),file.exists(file))
@@ -64,8 +76,12 @@ ExoData = function(file , height = 1 ,mc.cores = getOption("mc.cores",2L),
     cover = coverage(freads) + coverage(breads)
     
     rlist = slice(cover,lower = height,rangesOnly = TRUE)
-    freads = split(freads,seqnames(freads))
-    breads = split(breads,seqnames(breads))
+
+    freads = split(freads,as.character(seqnames(freads)))
+    breads = split(breads,as.character(seqnames(breads)))
+    
+    freads = GRangesList(freads[names(rlist)])
+    breads = GRangesList(breads[names(rlist)])
 
     stats = mcmapply(calculate_summary,rlist,freads,breads,
                  mc.cores = mc.cores , SIMPLIFY = FALSE)
@@ -73,8 +89,33 @@ ExoData = function(file , height = 1 ,mc.cores = getOption("mc.cores",2L),
     
     mcols(regions) = do.call(rbind,stats)
     nreads = sum(vapply(freads,length,1)) + sum(vapply(breads, length, 1))
+        
+    if(save_reads){
+        freads = biovizBase::flatGrl(freads)
+        mcols(freads) = NULL
+        breads = biovizBase::flatGrl(breads)
+        mcols(breads) = NULL
+        reads = c(freads,breads)
+    }else{
+        reads = GRanges()
+    }
     
-    new("ExoData",regions,file = file,cover = cover,nreads = nreads)
+    
+    DT = data.table(as.data.frame(mcols(regions)))
+    DT = DT[,list(d,u)]
+    DT = DT[,w := width(regions)]
+
+    param_list = lapply(seq_len(ntimes),.calculate_param_dist,DT,nregions)
+                          
+    param = rbindlist(param_list)
+
+    rm(param_list,DT)
+    param_dist = list("beta1" = param[term == "u",(estimate)] ,
+                      "beta2" = param[term == "w",(estimate)])
+    
+    new("ExoData",regions,file = file,cover = cover,
+        nreads = nreads,reads = reads,
+        param_dist = param_dist)
 }
 
 # ##' ChIP-exo experiment class description.

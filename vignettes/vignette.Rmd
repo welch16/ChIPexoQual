@@ -13,7 +13,8 @@ vignette: >
     
 ```{r style, echo = FALSE, results = 'asis'}
 
-BiocStyle::markdown(css.files = c('custom.css'))
+    library(BiocStyle)
+    markdown(css.files = c('custom.css'))
 
 ```
 
@@ -25,7 +26,7 @@ BiocStyle::markdown(css.files = c('custom.css'))
 
 # Overview
 
-
+`r Biocpkg("ChIPexoQual")` provides a quality control pipeline 
 
 # SessionInfo
 
