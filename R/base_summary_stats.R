@@ -1,5 +1,7 @@
 ##' @importFrom S4Vectors DataFrame
 ##' @importFrom broom tidy
+##' @importFrom IRanges start end
+##' @importFrom stats lm
 NULL
 
 ##' Calculate the summary statistics for each region
