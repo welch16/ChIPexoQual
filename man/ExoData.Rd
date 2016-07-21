@@ -6,12 +6,16 @@
 \alias{ExoData-class}
 \title{ExoData object and constructors}
 \usage{
-ExoData(file, height = 1, mc.cores = getOption("mc.cores", 2L),
-  save_reads = FALSE, nregions = 1000, ntimes = 1000)
+ExoData(file = NULL, reads = NULL, height = 1,
+  mc.cores = getOption("mc.cores", 2L), save_reads = FALSE,
+  nregions = 1000, ntimes = 100, verbose = FALSE)
 }
 \arguments{
 \item{file}{a character value with location of the bam file with the aligned
 reads.}
+
+\item{reads}{a \code{GAlignments} object with the aligned reads of a ChIP-exo
+sample. It is meant to be used instead of \code{file}.}
 
 \item{height}{a numeric value indicating the value used to slice the coverage
 of the experiment into a set of regions.}
@@ -27,7 +31,10 @@ estimate the quality parameter distributions. The default value is 1e3.}
 
 \item{ntimes}{a numeric value indicating the number of times that regions are 
 sampled to estimate the quality parameter distributions. The default value
-is 1e3.}
+is 1e2.}
+
+\item{verbose}{a logical value indicating if the user want to receive progress
+details. The default value is FALSE.}
 }
 \value{
 \code{ExoData} returns a \code{ExoData} object which contains the
@@ -39,7 +46,6 @@ of summary statistics used to asses the quality of a ChIP-exo/nexus sample.
 quality of ChIP-exo/nexus sample.
 }
 \examples{
-
 a = 1
 
 }
