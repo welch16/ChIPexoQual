@@ -25,6 +25,7 @@ Imports:
     biovizBase (>= 1.20),
     broom (>= 0.4)
 Suggests:
+    ChIPexoQualExample (>= 1.00),
     knitr (>= 1.10),
     BiocStyle,
     rmarkdown,
