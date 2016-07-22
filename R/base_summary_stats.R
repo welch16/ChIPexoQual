@@ -46,11 +46,11 @@ calculate_summary <- function(region,freads,breads)
     M = log2(fwd) + log2(bwd) - 2 * log2(w)
     A = log2(fwd / bwd)
     
-    lab = ifelse(fwd > 0  & bwd > 0,"both",ifelse(fwd > 0,"fwd","bwd"))
+    # lab = ifelse(fwd > 0  & bwd > 0,"both",ifelse(fwd > 0,"fwd","bwd"))
     
     stats = DataFrame("f"=fwd,"r"=bwd,"fpos"=fpos,"rpos"=bpos,"d"=d,
-                 "u"=u,"ARC"=arc,"URC"=urc,"FSR"=fsr,"M"=M,"A"=A,
-                 "label"=lab)
+                 "u"=u,"ARC"=arc,"URC"=urc,"FSR"=fsr,"M"=M,"A"=A)
+                 # "label"=lab)
     stats
 }
 
@@ -72,8 +72,6 @@ calculate_summary <- function(region,freads,breads)
 ##' @rdname .calculate_param_dist
 ##' @name .calculate_param_dist
 ##' 
-##' @examples 
-##' a = 1
 .calculate_param_dist = function(i,stats,nregions)
 {
     dt = stats[sample(.N,nregions)]

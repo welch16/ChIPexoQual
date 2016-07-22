@@ -33,6 +33,32 @@ setGeneric(".MA_DT",
                 standardGeneric(".MA_DT")
 )
 
+##' .FSR_dist_DT methods
+##' 
+##' \code{.FSR_dist_DT} return a \code{data.table} with the info. necessary 
+##' to generate the FSR distribution plot to analyze strand imbalance in 
+##' ChIP-exo data.
+##' 
+##' @param object A \code{ExoData} object.
+##' @param quantiles A numeric vector with the quantiles used to estimate the
+##' FSR distribution at a given depth. The default value is 
+##' \code(c(0,.25,.5,.75,1)).
+##' @param depth_values A numeric vector indicating the regions with depth 
+##' less or equal to, that are going to be filtered out. The defaulta values 
+##' are \code{seq_len(300)}.
+##' @param both_strand A logical value indicating if the \code{data.table} 
+##' contains only regions with reads aligned to both strand or all. The default
+##' value is \code{FALSE}.
+##' @return A \code{data.table} with three columns: depth, quantiles and FSR.
+##' @rdname .FSR_dist_DT
+##' @docType methods
+##' @examples
+##' a = 1
+setGeneric(".FSR_dist_DT",
+           function(object,...)
+               standardGeneric(".FSR_dist_DT"))
+
+
 ##' .ARC_URC_DT methods
 ##' 
 ##' \code{.ARC_URC_DT} returns a \code{data.table} with the info. to generate
@@ -105,8 +131,6 @@ setGeneric("beta2",
 setGeneric("param_dist",
            function(object)
                standardGeneric("param_dist"))
-
-
 
 
 

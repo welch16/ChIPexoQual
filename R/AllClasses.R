@@ -23,7 +23,7 @@ setClass("ExoData",
 setValidity("ExoData",
             function(object){
                 all(names(mcols(object)) == c("f","r","fpos","rpos","d","u",
-                                   "ARC","URC","FSR","M","A","label"))
+                                   "ARC","URC","FSR","M","A"))
             }
         )
 

@@ -67,7 +67,7 @@ setMethod(".ARC_URC_DT",
               
               DT = data.table(ARC = object$ARC , URC = object$URC)
               if(both_strand){
-                  DT = DT[ as.character(object$label) == "both"]
+                  DT = DT[ object$f > 0 & object$r > 0]
               }
               DT
               
@@ -76,3 +76,25 @@ setMethod(".ARC_URC_DT",
 ##' @rdname .FSR_dist-methods
 ##' @aliases .FSR_dist
 ##' @docType methods
+setMethod(".FSR_dist_DT",
+          signature = signature(object = "ExoData"),
+          definition = function(object,quantiles = c(0,.25,.5,.75,1),
+                                depth_values = seq_len(300),
+                                both_strand = FALSE){
+              
+              base_DT = data.table(d = object$d , FSR = object$FSR)
+              
+              if(both_strand){
+                  base_DT = base_DT[object$f > 0 & object$r > 0]
+              }
+              
+              DT_list = lapply(depth_values,.filter_quantiles,
+                               base_DT,quantiles)
+              rbindlist(DT_list)
+              
+          })
+
+
+
+
+
