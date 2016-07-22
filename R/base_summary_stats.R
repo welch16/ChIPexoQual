@@ -13,14 +13,10 @@ NULL
 ##' @return stats a \code{DataFrame} object with the summary statistics necessary
 ##' for the \code{ExoData}
 ##' 
-##' @export
+##' @rdname .calculate_summary
+##' @name .calculate_summary
 ##' 
-##' @rdname calculate_summary
-##' @name calculate_summary
-##' 
-##' @examples 
-##' a = 1
-calculate_summary <- function(region,freads,breads)
+.calculate_summary <- function(region,freads,breads)
 {
     ## fix formats and stuff
     width(freads) = 1; width(breads) = 1
@@ -45,12 +41,9 @@ calculate_summary <- function(region,freads,breads)
     
     M = log2(fwd) + log2(bwd) - 2 * log2(w)
     A = log2(fwd / bwd)
-    
-    # lab = ifelse(fwd > 0  & bwd > 0,"both",ifelse(fwd > 0,"fwd","bwd"))
-    
+
     stats = DataFrame("f"=fwd,"r"=bwd,"fpos"=fpos,"rpos"=bpos,"d"=d,
                  "u"=u,"ARC"=arc,"URC"=urc,"FSR"=fsr,"M"=M,"A"=A)
-                 # "label"=lab)
     stats
 }
 

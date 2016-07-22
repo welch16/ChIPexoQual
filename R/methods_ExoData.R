@@ -1,4 +1,4 @@
-##' @importFrom data.table as.data.table
+##' @import S4Vectors
 NULL
 
 ##' @rdname beta1-methods
@@ -30,7 +30,8 @@ setMethod("param_dist",
           signature = signature(object = "ExoData"),
           definition = function(object = "ExoData"){
               
-              as.data.table(object@param_dist)
+              DataFrame(beta1 = object@param_dist[["beta1"]],
+                        beta2 = object@param_dist[["beta2"]])
               
           })
 
@@ -45,56 +46,70 @@ setMethod("nreads",
           }
 )
 
-##' @rdname .MA_DT-methods
-##' @aliases .MA_DT
+##' @rdname .MA_DF-methods
+##' @aliases .MA_DF
 ##' @docType methods
-setMethod(".MA_DT",
+setMethod(".MA_DF",
           signature = signature(object = "ExoData"),
           definition = function(object){
               
-              DT = data.table(M = object$M,A = object$A)
-              DT = DT[!is.infinite(A)]
-              DT
+              A = NULL
+              
+              DF = mcols(object)[,c("M","A")]
+              DF = subset(DF,!is.infinite(A))
+              DF
              
           })
 
-##' @rdname .ARC_URC_DT-methods
-##' @aliases .ARC_URC_DT
+##' @rdname .ARC_URC_DF-methods
+##' @aliases .ARC_URC_DF
 ##' @docType methods
-setMethod(".ARC_URC_DT",
+setMethod(".ARC_URC_DF",
           signature = signature(object = "ExoData"),
           definition = function(object,both_strand = FALSE){
               
-              DT = data.table(ARC = object$ARC , URC = object$URC)
+              f = NULL; r = NULL
+              
+              DF = mcols(object)[,c("ARC","URC","f","r")]
               if(both_strand){
-                  DT = DT[ object$f > 0 & object$r > 0]
+                  DF = subset(DF,f > 0 & r > 0)
               }
-              DT
+              DF[,c("ARC","URC")]
               
           })
 
-##' @rdname .FSR_dist-methods
-##' @aliases .FSR_dist
+##' @rdname .FSR_dist_DF-methods
+##' @aliases .FSR_dist_DF
 ##' @docType methods
-setMethod(".FSR_dist_DT",
+setMethod(".FSR_dist_DF",
           signature = signature(object = "ExoData"),
           definition = function(object,quantiles = c(0,.25,.5,.75,1),
-                                depth_values = seq_len(300),
+                                depth_values = seq_len(50),
                                 both_strand = FALSE){
               
-              base_DT = data.table(d = object$d , FSR = object$FSR)
+              f = NULL; r = NULL
               
+              base_DF = mcols(object)[,c("f","r","d","FSR")]
+
               if(both_strand){
-                  base_DT = base_DT[object$f > 0 & object$r > 0]
+                  base_DF = subset(base_DF,f > 0 & r > 0)
               }
               
-              DT_list = lapply(depth_values,.filter_quantiles,
-                               base_DT,quantiles)
-              rbindlist(DT_list)
-              
+              DF_list = lapply(depth_values,.filter_quantiles,
+                               base_DF,quantiles)
+              do.call(rbind,DF_list)
           })
 
+##' @rdname .region_comp_DF-methods
+##' @aliases .region_comp_DF
+##' @docType methods
+setMethod(".region_comp_DF",
+          signature = signature(object = "ExoData"),
+          definition = function(object,depth_values = seq_len(50)){
+              
+              base_DF = mcols(object)[,c("f","r","d")]
+              DF_list = lapply(depth_values,.filter_region_comp,
+                               base_DF)
+              do.call(rbind,DF_list)
 
-
-
-
+          }) 

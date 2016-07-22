@@ -1,7 +1,8 @@
 ##' @importFrom biovizBase flatGrl
 ##' @importFrom Rsamtools ScanBamParam
 ##' @importFrom Rsamtools scanBamFlag
-##' @importFrom GenomicAlignments readGAlignments
+##' @importFrom GenomicAlignments readGAlignments 
+##' @importFrom GenomicRanges GRanges
 NULL
 
 
@@ -109,16 +110,22 @@ ExoData = function(file = NULL, reads = NULL , height = 1 ,mc.cores = getOption(
     if(any(vapply(rlist,length,0L) ==  0)){
         chr = names(which(vapply(rlist,length,0L) > 0))
         rlist = rlist[chr]
+    }else{
+        chr = names(rlist)
     }
+    
 
     freads = split(freads,as.character(seqnames(freads)))
     breads = split(breads,as.character(seqnames(breads)))
     
-    freads = GRangesList(freads[names(rlist)])
-    breads = GRangesList(breads[names(rlist)])
+    freads = freads[chr]
+    breads = breads[chr]
+    
+#     freads = GRangesList(freads[chr])
+#     breads = GRangesList(breads[chr])
 
     if(verbose) message("Calculating summary statistics")
-    stats = mcmapply(calculate_summary,rlist,freads,breads,
+    stats = mcmapply(.calculate_summary,rlist,freads,breads,
                  mc.cores = mc.cores , SIMPLIFY = FALSE)
     regions = as(rlist,"GRanges")
     
