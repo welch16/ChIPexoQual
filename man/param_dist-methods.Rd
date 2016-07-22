@@ -14,15 +14,17 @@ param_dist(object)
 \item{object}{a \code{ExoData} object.}
 }
 \value{
-A \code{data.table} with the fitted values of \eqn{\beta_1} and 
+A \code{DataFrame} with the fitted values of \eqn{\beta_1} and 
 \eqn{\beta_2}.
 }
 \description{
-\code{param_dist} returns a \code{data.table} with all the estimated 
+\code{param_dist} returns a \code{DataFrame} with all the estimated 
 coefficients in the \eqn{d_i  = \beta_1 u_i + \beta_2 w_i + \epsilon_i} models 
 fitted by \code{ChIPexoQual}
 }
 \examples{
-a = 1
+library(ChIPexoQualExample)
+data(exampleExoData)
+param_dist(exampleExoData[[1]])
 }
 
