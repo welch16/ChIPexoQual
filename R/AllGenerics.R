@@ -53,7 +53,9 @@ setGeneric(".MA_DF",
 ##' @rdname .FSR_dist_DF-methods
 ##' @docType methods
 setGeneric(".FSR_dist_DF",
-           function(object,...)
+           function(object,quantiles,
+                    depth_values,
+                    both_strand)
                standardGeneric(".FSR_dist_DF"))
 
 ##' .region_comp_DF methods
@@ -73,7 +75,7 @@ setGeneric(".FSR_dist_DF",
 ##' @rdname .region_comp_DF-methods
 ##' @docType methods
 setGeneric(".region_comp_DF",
-           function(object,...)
+           function(object,depth_values)
                standardGeneric(".region_comp_DF"))
 
 
@@ -85,14 +87,13 @@ setGeneric(".region_comp_DF",
 ##' 
 ##' @param object A \code{ExoData} object.
 ##' @param both_strand A logical value indicating if the \code{DataFrame} 
-##' contains only regions with reads aligned to both strand or all. The default
-##' value is \code{FALSE}.
+##' contains only regions with reads aligned to both strand or all.
 ##' 
 ##' @return A \code{DataFrame} with two columns: ARC and URC
 ##' @docType methods
 ##' @rdname .ARC_URC_DF-methods
 setGeneric(".ARC_URC_DF",
-           function(object,...)
+           function(object,both_strand)
                standardGeneric(".ARC_URC_DF")
 ) 
 
