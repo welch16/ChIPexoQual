@@ -65,8 +65,9 @@ setMethod(".MA_DF",
 ##' @aliases .ARC_URC_DF
 ##' @docType methods
 setMethod(".ARC_URC_DF",
-          signature = signature(object = "ExoData"),
-          definition = function(object,both_strand = FALSE){
+          signature = signature(object = "ExoData",
+                                both_strand = "logical"),
+          definition = function(object,both_strand){
               
               f = NULL; r = NULL
               
@@ -83,9 +84,9 @@ setMethod(".ARC_URC_DF",
 ##' @docType methods
 setMethod(".FSR_dist_DF",
           signature = signature(object = "ExoData"),
-          definition = function(object,quantiles = c(0,.25,.5,.75,1),
-                                depth_values = seq_len(50),
-                                both_strand = FALSE){
+          definition = function(object,quantiles,
+                                depth_values,
+                                both_strand){
               
               f = NULL; r = NULL
               
@@ -105,7 +106,7 @@ setMethod(".FSR_dist_DF",
 ##' @docType methods
 setMethod(".region_comp_DF",
           signature = signature(object = "ExoData"),
-          definition = function(object,depth_values = seq_len(50)){
+          definition = function(object,depth_values){
               
               base_DF = mcols(object)[,c("f","r","d")]
               DF_list = lapply(depth_values,.filter_region_comp,

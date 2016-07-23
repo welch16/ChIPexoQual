@@ -2,6 +2,7 @@
 ##' @importFrom broom tidy
 ##' @importFrom IRanges start end
 ##' @importFrom stats lm
+##' @importFrom data.table .N
 NULL
 
 ##' Calculate the summary statistics for each region

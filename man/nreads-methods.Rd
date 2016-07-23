@@ -20,6 +20,8 @@ The number of reads in the \code{ExoData} object.
 \code{nreads} returns the number of reads in the object.
 }
 \examples{
-a = 1
+library(ChIPexoQualExample)
+data(exampleExoData)
+nreads(exampleExoData[[1]])
 }
 

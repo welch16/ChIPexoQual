@@ -3,7 +3,7 @@ Type: Package
 Title: ChIPexoQual
 Version: 1.0
 Date: 2016-07-18
-Author: Rene Welch <welch@stat.wisc.edu>
+Author: Rene Welch, Dongjun Chung, Sunduz Keles
 Maintainer: Rene Welch <welch@stat.wisc.edu>
 Description: Package with a quality control pipeline for ChIP-exo/nexus data.
 URL: https:github.com/keleslab/ChIPexoQual
@@ -14,7 +14,7 @@ Depends:
     GenomicAlignments (>= 1.0.1),
     data.table (>= 1.9.7),
     ggplot2 (>= 1.0)
-Imports:
+Imports: 
     methods,
     GenomeInfoDb,
     stats,
@@ -23,7 +23,11 @@ Imports:
     IRanges (>= 1.6),
     S4Vectors (>= 0.10),
     biovizBase (>= 1.20),
-    broom (>= 0.4)
+    broom (>= 0.4),
+    RColorBrewer (>= 1.1),
+    dplyr (>= 0.5),
+    scales (>= 0.4.0),
+    viridis (>= 0.3)
 Suggests:
     ChIPexoQualExample (>= 1.00),
     knitr (>= 1.10),
