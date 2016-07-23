@@ -18,15 +18,27 @@ vignette: >
 
 ```
 
-```{r load,include=TRUE,echo=TRUE,eval=FALSE}
+```{r extraload,include = FALSE,echo = FALSE,eval = TRUE}
+    
+    library(dplyr)
 
-    library(ChIPexoQual)
+```    
+    
+# Overview
+
+
+
+```{r load,include=TRUE,echo=TRUE,eval=TRUE}
+
+    library(ChIPexoQual,quietly = TRUE)
+    library(ChIPexoQualExample,quietly = TRUE)
 
 ```
 
-# Overview
 
-`r Biocpkg("ChIPexoQual")` provides a quality control pipeline 
+
+
+
 
 # SessionInfo
 

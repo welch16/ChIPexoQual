@@ -3,6 +3,11 @@
 ##' @importFrom Rsamtools scanBamFlag
 ##' @importFrom GenomicAlignments readGAlignments 
 ##' @importFrom GenomicRanges GRanges
+##' @importFrom parallel mclapply mcmapply
+##' @importFrom IRanges slice
+##' @importFrom data.table ":=" rbindlist
+##' @import  methods
+##' @import  GenomeInfoDb
 NULL
 
 
@@ -143,6 +148,7 @@ ExoData = function(file = NULL, reads = NULL , height = 1 ,mc.cores = getOption(
     }else{
         reads = GRanges()
     }
+    d = NULL; u = NULL; w = NULL
     
     if(verbose) message("Calculating quality scores distribution")
     DT = data.table(as.data.frame(mcols(regions)))
@@ -153,6 +159,8 @@ ExoData = function(file = NULL, reads = NULL , height = 1 ,mc.cores = getOption(
                           
     param = rbindlist(param_list)
 
+    estimate = NULL; term = NULL
+    
     rm(param_list,DT)
     param_dist = list("beta1" = param[term == "u",(estimate)] ,
                       "beta2" = param[term == "w",(estimate)])

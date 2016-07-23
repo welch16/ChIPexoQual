@@ -5,7 +5,7 @@
 \title{FSR_dist_plot}
 \usage{
 FSR_dist_plot(..., names_input = NULL, quantiles = c(0, 0.25, 0.5, 0.75, 1),
-  depth_values = seq_len(50), both_strand = FALSE)
+  depth_values = seq_len(30), both_strand = FALSE)
 }
 \arguments{
 \item{...}{a \code{list} of \code{ExoData} objects, or several 
@@ -39,7 +39,6 @@ ChIP-exo data.
 \examples{
 library(ChIPexoQualExample)
 data(exampleExoData)
-FSR_dist_plot(exampleExoData)
 FSR_dist_plot(exampleExoData[[1]],exampleExoData[[2]])
 }
 

@@ -100,10 +100,10 @@ NULL
 ##' @examples 
 ##' library(ChIPexoQualExample)
 ##' data(exampleExoData)
-##' MA_plot(exampleExoData)
-##' MA_plot(exampleExoData[[1]],exampleExoData[[2]])
+##' MA_plot(exampleExoData[[1]])
 MA_plot = function(...,names_input = NULL)
 {
+    M = NULL; A = NULL; .x = NULL
     args = unlist(list(...))
     if(!is.null(names_input)){
         stopifnot(length(names_input) == length(args))
@@ -149,7 +149,7 @@ MA_plot = function(...,names_input = NULL)
 ##' @examples 
 ##' library(ChIPexoQualExample)
 ##' data(exampleExoData)
-##' ARC_URC_plot(exampleExoData[[1]],exampleExoData[[2]])
+##' ARC_URC_plot(exampleExoData[[1]])
 ARC_URC_plot = function(...,names_input = NULL,both_strand = FALSE)
 {
     ARC = NULL; URC = NULL; .x = NULL
@@ -207,13 +207,14 @@ ARC_URC_plot = function(...,names_input = NULL,both_strand = FALSE)
 ##' @examples 
 ##' library(ChIPexoQualExample)
 ##' data(exampleExoData)
-##' FSR_dist_plot(exampleExoData)
 ##' FSR_dist_plot(exampleExoData[[1]],exampleExoData[[2]])
 FSR_dist_plot = function(...,names_input = NULL,
                          quantiles = c(0,.25,.5,.75,1),
-                         depth_values = seq_len(50),
+                         depth_values = seq_len(30),
                          both_strand = FALSE)
 {
+    d = NULL; FSR = NULL
+    
     args = unlist(list(...))
     if(!is.null(names_input)){
         stopifnot(length(names_input) == length(args))
@@ -257,11 +258,12 @@ FSR_dist_plot = function(...,names_input = NULL,
 ##' @examples 
 ##' library(ChIPexoQualExample)
 ##' data(exampleExoData)
-##' region_comp_plot(exampleExoData)
 ##' region_comp_plot(exampleExoData[[1]],exampleExoData[[2]])
 region_comp_plot = function(...,names_input = NULL,
-                            depth_values = seq_len(30))
+                            depth_values = seq_len(15))
 {
+    lab = NULL; d = NULL; prob = NULL
+    
     args = unlist(list(...))
     if(!is.null(names_input)){
         stopifnot(length(names_input) == length(args))

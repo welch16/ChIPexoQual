@@ -1,6 +1,6 @@
 ##' @importFrom S4Vectors DataFrame
 ##' @importFrom broom tidy
-##' @importFrom IRanges start end
+##' @importFrom IRanges start end IRanges
 ##' @importFrom stats lm
 ##' @importFrom data.table .N
 NULL

@@ -25,7 +25,6 @@ analyze the strand imbalance in ChIP-exo data.
 \examples{
 library(ChIPexoQualExample)
 data(exampleExoData)
-MA_plot(exampleExoData)
-MA_plot(exampleExoData[[1]],exampleExoData[[2]])
+MA_plot(exampleExoData[[1]])
 }
 

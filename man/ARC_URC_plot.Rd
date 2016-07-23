@@ -29,6 +29,6 @@ URC plot to analyze enrichment and library complexity in ChIP-exo data.
 \examples{
 library(ChIPexoQualExample)
 data(exampleExoData)
-ARC_URC_plot(exampleExoData[[1]],exampleExoData[[2]])
+ARC_URC_plot(exampleExoData[[1]])
 }
 

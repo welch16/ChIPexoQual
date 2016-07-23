@@ -4,7 +4,7 @@
 \alias{region_comp_plot}
 \title{region_comp_plot}
 \usage{
-region_comp_plot(..., names_input = NULL, depth_values = seq_len(30))
+region_comp_plot(..., names_input = NULL, depth_values = seq_len(15))
 }
 \arguments{
 \item{...}{a \code{list} of \code{ExoData} objects, or several 
@@ -29,7 +29,6 @@ Region Composition plot to analyze strand imbalance in ChIP-exo data.
 \examples{
 library(ChIPexoQualExample)
 data(exampleExoData)
-region_comp_plot(exampleExoData)
 region_comp_plot(exampleExoData[[1]],exampleExoData[[2]])
 }
 
