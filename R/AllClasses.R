@@ -76,6 +76,7 @@ ExoData = function(file = NULL, reads = NULL , height = 1 ,mc.cores = getOption(
     if(is.null(file) & is.null(reads)){
         stop("Both 'file' and 'reads' are NULL")
     }
+
     if(!is.null(file))stopifnot(is.character( file),file.exists(file))
     
     if(!is.null(reads))stopifnot(class(reads) %in% c("GAlignments","GRanges"))
@@ -105,8 +106,8 @@ ExoData = function(file = NULL, reads = NULL , height = 1 ,mc.cores = getOption(
         file = ""
     }
     
-    freads = as(freads,"GRanges")
-    breads = as(breads,"GRanges")
+    if(class(freads) == "GAlignments")freads = as(freads,"GRanges")
+    if(class(breads) == "GAlignments")breads = as(breads,"GRanges")
     
     cover = coverage(freads) + coverage(breads)
     
@@ -165,7 +166,8 @@ ExoData = function(file = NULL, reads = NULL , height = 1 ,mc.cores = getOption(
     param_dist = list("beta1" = param[term == "u",(estimate)] ,
                       "beta2" = param[term == "w",(estimate)])
     
-    metadata(regions) = list("file"=file,"nreads"=nreads)
+    metadata(regions) = list("file"=file,"nreads"=nreads,
+                             "ntimes"=ntimes,"nregions"=nregions)
     if(verbose) message("Done!")
     new("ExoData",regions,cover = cover,
         reads = reads,
