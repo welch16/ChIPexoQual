@@ -7,7 +7,7 @@
 ##' @importFrom viridis viridis
 ##' @importFrom RColorBrewer brewer.pal
 ##' @importFrom dplyr desc arrange
-##' @importFrom gridExtra grid.arrange
+##' @import hexbin
 NULL
 
 ##' Calculates the FSR distribution of all regions with depth > value
