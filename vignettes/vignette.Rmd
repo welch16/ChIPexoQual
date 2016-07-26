@@ -5,6 +5,7 @@ author: |
         | Department of Statistics, University of Wisconsin-Madison
 output: 
     BiocStyle::html_document
+bibliography: biblio.bib    
 vignette: >
     %\VignetteIndexEntry{Vignette Title}
     %\VignetteEngine{knitr::rmarkdown}
@@ -20,29 +21,126 @@ vignette: >
 
 ```{r extraload,include = FALSE,echo = FALSE,eval = TRUE}
     
-    library(dplyr)
+    library(dplyr,quietly = TRUE)
+    library(parallel)
+    library(ChIPexoQual)
+    library(ChIPexoQualExample)
 
 ```    
     
 # Overview
 
+In this vignette, we provide a brief overview of two R packages: `r Biocpkg("ChIPexoQual")` and `r Biocexptpkg("ChIPexoQualExample")`. The first contains a quality control (QC) pipeline to asses the quality of a ChIP-exo sample and the second contains aligned read files and the results obtained by evaluating those files with the pipeline. To load the packages we use:
 
-
-```{r load,include=TRUE,echo=TRUE,eval=TRUE}
+```{r load,include=TRUE,echo=FALSE,eval=TRUE}
 
     library(ChIPexoQual,quietly = TRUE)
     library(ChIPexoQualExample,quietly = TRUE)
 
 ```
 
+`r Biocpkg("ChIPexoQual")` takes a set of aligned reads from a ChIP-exo (or ChIP-nexus) experiment as input and performs the following steps:
 
+1. Identify read islands, i.e., overlapping clusters of reads separated by gaps, from read coverage.
+2. Compute $D_i$, number of reads in island $i$, and $U_i$, number of island $i$ positions with at least one aligning read, $i=1, \cdots, I$.
+    * For each island $i$, $i=1, \cdots, I$, compute island  statistics:
+$$ 
+ \begin{align*}
+    \mbox{ARC}_i &= \frac{D_i}{W_i}, \quad \mbox{URC}_i = \frac{U_i}{D_i},  \\
+    %\mbox{URC}_i &= \frac{U_i}{D_i}, \\
+    \mbox{FSR}_i &= \frac{(\text{Number of forward strand reads aligning to
+      island $i$})}{D_i},
+ \end{align*} 
+$$
+ 
+    where $W_i$ denotes the width of island $i$,.
+3. Generate diagnostic plots (i) URC vs. ARC plot; (ii) Region Composition plot; (iii) FSR distribution plot.
+4. Randomly sample $M$ (at least 1000) islands and fit,
+$$    
+\begin{align*}
+D_i = \beta_1 U_i + \beta_2 W_i + \varepsilon_i,
+\end{align*}
+$$
+where $\varepsilon_i$ denotes the independent error term.  Repeat this process $B$ times and generate box plots of estimated $\beta_1$ and $\beta_2$.
 
+The data available in `r Biocexptpkg("ChIPexoQualExample")`, was originally published by [@exoillumina], and we are only presenting the aligned reads in **chr1**. An analysis of the complete samples is present in [@qcpipeline].
+
+# Creating an **ExoData** object:
+
+The minimum input to use `r Biocpkg("ChIPexoQual")` are the aligned reads of a ChIP-exo/nexus experiment. `r Biocpkg("ChIPexoQual")` accepts either the name of the bam file or the reads in a *GAlignments* object:
+
+```{r ex1,include=TRUE,echo=TRUE,eval=TRUE}
+    
+    files = list.files(system.file("extdata",
+        package = "ChIPexoQualExample"),full.names = TRUE)
+    basename(files[1])
+    ex1 = ExoData(file = files[1],mc.cores = 2L)
+    ex1
+
+```
+
+Similarly, for this example we can read the bam file and use *ExoData* again, clearly we are obtaining the same results:
+
+```{r ex2,include=TRUE,echo=TRUE,eval=TRUE}
+    
+    reads = readGAlignments(files[1],param = NULL)
+    ex2 = ExoData(reads = reads,mc.cores = 2L)
+    identical(GRanges(ex1),GRanges(ex2))
+    
+```    
+For the rest of the vignette, we are goig to use an evaluation of `r Biocpkg("ChIPexoQual")` of the bam files available in `r Biocexptpkg("ChIPexoQualExample")`:
+
+```{r load_exdata,include=TRUE,echo=TRUE,eval=TRUE}
+    
+    data("exampleExoData") 
+
+```
+
+## Enrichment analysis and library complexity:
+
+To create the *ARC vs URC plot* propossed in [@qcpipeline], we use the **ARC_URC_plot** function. This function allows to visually compare diffent samples:
+
+```{r ARC1,include=TRUE,echo=TRUE,eval=TRUE,warning=FALSE,fig.height=4,fig.width=9,results='markup'}
+    
+    ARC_URC_plot(exampleExoData,names_input = paste("Rep",1:3,sep = "-"))
+    
+```    
+
+Usually for a given sample, this plot is going to show any of the 3 behaviours shown above. In all three panels we can observe two arms: the first with low **Average Read Coefficient (ARC)** and varying **Unique Read Coefficient (URC)**; and the second where the **URC** decreases as the **ARC** increases. The first and third replicates exhibit a defined decreasing trend in URC as the ARC increases. This indicates that these samples exhibit a higher ChIP enrichment than the second replicate. On the other hand, the overall URC level from the first two replicates is higher than that of the third replicate, elucidating that the libraries for the first two replicates are more complex than that of the third replicate.
+ 
+## Strand imbalance
+
+To create the *FSR distribution* and *Region Composition* plots suggested in [@qcpipeline], we use the **FSR_dist_plot** and **region_comp_plot** respectively. 
+
+```{r strand1,include=TRUE,echo=TRUE,eval=TRUE,warning=FALSE,results="markup",fig.height=4}
+
+    p1 = region_comp_plot(exampleExoData,names_input = paste("Rep",1:3,sep = "-"),
+        depth_values = seq_len(50))
+    p2 = FSR_dist_plot(exampleExoData,names_input = paste("Rep",1:3,sep = "-"),
+        quantiles = c(.25,.5,.75),depth_values = seq_len(100))
+    gridExtra::grid.arrange(p1,p2,nrow = 1)
+    
+```
+
+The left panel shows the *Region Composition plot* and the right panel shows the *Forward Strand Ratio (FSR) distribution plot* which highlight specific problems with replicates 2 and 3. The *Region Composition plot* exhibits apparent decreasing trends in the proportions of regions formed by fragments in one exclusive strand. High quality experiments tend to show exponential decay in the proportion of single stranded regions, while for the lower quality experiments, the trend may be linear or even constant. The FSR distributions of both of replicates 2 and 3 are more spread around their respective medians. The rate at which the FSR distribution becomes more centralized around the median indicates the aforementioned lower enrichment in the second replicate and the low complexity in the third one, the assymetric behaviour of the second replicate is characteristic of low enrichment, while the constant values of replicate three for low minimum number of reads indicate that in replicate 3 regions there are islands composed with reads aligned to very few unique positions.
+
+All the plots function in `r Biocpkg("ChIPexoQual")` allow a list or several separate **ExoData** objects. This allows to explore island subsets for each replicate, for example to show that the first arm may is composed of regions formed by reads aligned to few positions, we can make the following plot:
+
+```{r ARC2,include=TRUE,echo=TRUE,eval=TRUE,warning=FALSE,fig.height=4,fig.width=9,results='markup'}
+    
+    ARC_URC_plot(exampleExoData[[1]],
+                 subset(exampleExoData[[1]],u > 10),
+                 subset(exampleExoData[[1]],u > 20),
+                 names_input = c("All", "u > 10", "u > 20"))
+    
+```    
 
 
 
 # SessionInfo
 
 ```{r info,include=TRUE,echo =TRUE,eval=TRUE}
-sessionInfo()
+sessionInfo("ChIPexoQual")
 ```
 
+# References

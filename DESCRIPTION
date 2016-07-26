@@ -27,7 +27,8 @@ Imports:
     RColorBrewer (>= 1.1),
     dplyr (>= 0.5),
     scales (>= 0.4.0),
-    viridis (>= 0.3)
+    viridis (>= 0.3),
+    hexbin (>= 1.27)
 Suggests:
     ChIPexoQualExample (>= 1.00),
     knitr (>= 1.10),
