@@ -3,7 +3,7 @@ library(ChIPexoQual)
 library(ChIPexoQualExample)
 library(parallel)
 
-context("ExoData object")
+context("ExoData object is generated correctly with reads and files")
 
 files = list.files(system.file("extdata",package = "ChIPexoQualExample"),
                    full.names = TRUE)
@@ -117,3 +117,63 @@ test_that("Writing correct nr. of reads in metadata",
               expect_identical(
                   nreads(reads_exo[[3]]),depths[[3]])
           })
+
+test_that("Reads returns the same .MA_DF output",
+          {
+              expect_identical(
+                  .MA_DF(reads_exo[[1]]),.MA_DF(exampleExoData[[1]]))
+              expect_identical(
+                  .MA_DF(reads_exo[[2]]),.MA_DF(exampleExoData[[2]]))
+              expect_identical(
+                  .MA_DF(reads_exo[[3]]),.MA_DF(exampleExoData[[3]]))
+              
+          })
+
+test_that("Reads returns the same .ARC_URC_DF output",
+          {
+              expect_identical(
+                  .ARC_URC_DF(reads_exo[[1]],TRUE),
+                  .ARC_URC_DF(exampleExoData[[1]],TRUE))
+              expect_identical(
+                  .ARC_URC_DF(reads_exo[[2]],TRUE),
+                  .ARC_URC_DF(exampleExoData[[2]],TRUE))
+              expect_identical(
+                  .ARC_URC_DF(reads_exo[[3]],FALSE),
+                  .ARC_URC_DF(exampleExoData[[3]],FALSE))
+          })
+
+test_that("Reads returns the same .FSR_dist_DF output",
+          {
+              quantiles = c(.25,.5,.75)
+              depth_values = seq_len(25)
+              expect_identical(
+                  .FSR_dist_DF(reads_exo[[1]],quantiles = quantiles,
+                               depth_values = depth_values,
+                               both_strand = TRUE),
+                  .FSR_dist_DF(exampleExoData[[1]],quantiles,
+                                depth_values,TRUE))
+              expect_identical(
+                  .FSR_dist_DF(reads_exo[[2]],quantiles = quantiles,
+                               depth_values = depth_values,
+                               both_strand = FALSE),
+                  .FSR_dist_DF(exampleExoData[[2]],quantiles,
+                               depth_values,FALSE))
+          })
+
+test_that("Reads returns the same .region_comp_DF output",
+          {
+              depth_values = seq_len(10)
+              expect_identical(
+                  .region_comp_DF(reads_exo[[1]],depth_values),
+                  .region_comp_DF(exampleExoData[[1]],depth_values)
+              )
+              expect_identical(
+                  .region_comp_DF(reads_exo[[2]],depth_values),
+                  .region_comp_DF(exampleExoData[[2]],depth_values)
+              )
+              expect_identical(
+                  .region_comp_DF(reads_exo[[3]],depth_values),
+                  .region_comp_DF(exampleExoData[[3]],depth_values)
+              )
+          })
+
