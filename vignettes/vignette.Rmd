@@ -1,17 +1,20 @@
 ---
 title: "ChIPexoQual: A quality control pipeline for ChIP-exo/nexus data."
 author: |
-        | Rene Welch and Sunduz Keles
+        | Rene Welch and S&#252;nd&#252;z Kele&#351;
         | Department of Statistics, University of Wisconsin-Madison
 output: 
     BiocStyle::html_document
 bibliography: biblio.bib    
+biblio-style: plain
 vignette: >
     %\VignetteIndexEntry{Vignette Title}
     %\VignetteEngine{knitr::rmarkdown}
     %\VignetteEncoding{UTF-8}  
 ---
-    
+
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+
 ```{r style, echo = FALSE, results = 'asis'}
 
     library(BiocStyle)
@@ -31,12 +34,12 @@ vignette: >
     
 # Overview
 
-In this vignette, we provide a brief overview of two R packages: `r Biocpkg("ChIPexoQual")` and `r Biocexptpkg("ChIPexoQualExample")`. The first contains a quality control (QC) pipeline to asses the quality of a ChIP-exo sample and the second contains aligned read files and the results obtained by evaluating those files with the pipeline. To load the packages we use:
+In this vignette, we provide a brief overview of the `r Biocpkg("ChIPexoQual")` package. This package provides a statistical quality control (QC) pipeline, that enable the exploration and analysis of ChIP-exo/nexus experiments. Additionally, we used the reads aligned to **chr1** of the FoxA1 in mouse liver ChIP-exo experiment [@exoillumina] to illustrate the use of the pipeline. To load the packages we use:
 
-```{r load,include=TRUE,echo=FALSE,eval=TRUE}
+```{r load,include=TRUE,echo=TRUE,eval=FALSE}
 
-    library(ChIPexoQual,quietly = TRUE)
-    library(ChIPexoQualExample,quietly = TRUE)
+    library(ChIPexoQual)
+    library(ChIPexoQualExample)
 
 ```
 
@@ -64,7 +67,7 @@ D_i = \beta_1 U_i + \beta_2 W_i + \varepsilon_i,
 $$
 where $\varepsilon_i$ denotes the independent error term.  Repeat this process $B$ times and generate box plots of estimated $\beta_1$ and $\beta_2$.
 
-The data available in `r Biocexptpkg("ChIPexoQualExample")`, was originally published by [@exoillumina], and we are only presenting the aligned reads in **chr1**. An analysis of the complete samples is present in [@qcpipeline].
+We analyzed a larger collection of ChIP-exo/nexus experiments in [@qcpipeline] including complete versions of this samples.
 
 # Creating an **ExoData** object:
 
@@ -77,19 +80,14 @@ The minimum input to use `r Biocpkg("ChIPexoQual")` are the aligned reads of a C
     basename(files[1])
     ex1 = ExoData(file = files[1],mc.cores = 2L)
     ex1
-
-```
-
-Similarly, for this example we can read the bam file and use *ExoData* again, clearly we are obtaining the same results:
-
-```{r ex2,include=TRUE,echo=TRUE,eval=TRUE}
-    
     reads = readGAlignments(files[1],param = NULL)
     ex2 = ExoData(reads = reads,mc.cores = 2L)
     identical(GRanges(ex1),GRanges(ex2))
-    
-```    
-For the rest of the vignette, we are goig to use an evaluation of `r Biocpkg("ChIPexoQual")` of the bam files available in `r Biocexptpkg("ChIPexoQualExample")`:
+
+
+```
+
+For the rest of the vignette, we are going to use an evaluation of `r Biocpkg("ChIPexoQual")` of the bam files available in `r Biocexptpkg("ChIPexoQualExample")`, which can be loaded by using:
 
 ```{r load_exdata,include=TRUE,echo=TRUE,eval=TRUE}
     
@@ -99,7 +97,7 @@ For the rest of the vignette, we are goig to use an evaluation of `r Biocpkg("Ch
 
 ## Enrichment analysis and library complexity:
 
-To create the *ARC vs URC plot* propossed in [@qcpipeline], we use the **ARC_URC_plot** function. This function allows to visually compare diffent samples:
+To create the *ARC vs URC plot* proposed in [@qcpipeline], we use the **ARC_URC_plot** function. This function allows to visually compare different samples:
 
 ```{r ARC1,include=TRUE,echo=TRUE,eval=TRUE,warning=FALSE,fig.height=4,fig.width=9,results='markup'}
     
@@ -107,7 +105,7 @@ To create the *ARC vs URC plot* propossed in [@qcpipeline], we use the **ARC_URC
     
 ```    
 
-Usually for a given sample, this plot is going to show any of the 3 behaviours shown above. In all three panels we can observe two arms: the first with low **Average Read Coefficient (ARC)** and varying **Unique Read Coefficient (URC)**; and the second where the **URC** decreases as the **ARC** increases. The first and third replicates exhibit a defined decreasing trend in URC as the ARC increases. This indicates that these samples exhibit a higher ChIP enrichment than the second replicate. On the other hand, the overall URC level from the first two replicates is higher than that of the third replicate, elucidating that the libraries for the first two replicates are more complex than that of the third replicate.
+Usually for a given sample, this plot is going to show any of the 3 behaviors shown above. In all three panels we can observe two arms: the first with low **Average Read Coefficient (ARC)** and varying **Unique Read Coefficient (URC)**; and the second where the **URC** decreases as the **ARC** increases. The first and third replicates exhibit a defined decreasing trend in URC as the ARC increases. This indicates that these samples exhibit a higher ChIP enrichment than the second replicate. On the other hand, the overall URC level from the first two replicates is higher than that of the third replicate, elucidating that the libraries for the first two replicates are more complex than that of the third replicate.
  
 ## Strand imbalance
 
@@ -123,7 +121,7 @@ To create the *FSR distribution* and *Region Composition* plots suggested in [@q
     
 ```
 
-The left panel shows the *Region Composition plot* and the right panel shows the *Forward Strand Ratio (FSR) distribution plot* which highlight specific problems with replicates 2 and 3. The *Region Composition plot* exhibits apparent decreasing trends in the proportions of regions formed by fragments in one exclusive strand. High quality experiments tend to show exponential decay in the proportion of single stranded regions, while for the lower quality experiments, the trend may be linear or even constant. The FSR distributions of both of replicates 2 and 3 are more spread around their respective medians. The rate at which the FSR distribution becomes more centralized around the median indicates the aforementioned lower enrichment in the second replicate and the low complexity in the third one, the assymetric behaviour of the second replicate is characteristic of low enrichment, while the constant values of replicate three for low minimum number of reads indicate that in replicate 3 regions there are islands composed with reads aligned to very few unique positions.
+The left panel shows the *Region Composition plot* and the right panel shows the *Forward Strand Ratio (FSR) distribution plot* which highlight specific problems with replicates 2 and 3. The *Region Composition plot* exhibits apparent decreasing trends in the proportions of regions formed by fragments in one exclusive strand. High quality experiments tend to show exponential decay in the proportion of single stranded regions, while for the lower quality experiments, the trend may be linear or even constant. The FSR distributions of both of replicates 2 and 3 are more spread around their respective medians. The rate at which the FSR distribution becomes more centralized around the median indicates the aforementioned lower enrichment in the second replicate and the low complexity in the third one, the asymmetric behavior of the second replicate is characteristic of low enrichment, while the constant values of replicate three for low minimum number of reads indicate that in replicate 3 regions there are islands composed with reads aligned to very few unique positions.
 
 ### Further exploration of ChIP-exo data
 
@@ -151,15 +149,13 @@ The distribution of the parameters of this model is built by sampling **nregions
 
 ```{r param_dist,include=TRUE,echo=TRUE,eval=TRUE,warning=FALSE,results="markup",fig.height=2.5}
     
-    p1 = param_dist_boxplot(exampleExoData,which_param = "beta1",
-            names_input = paste("Rep",1:3,sep = "-"))
-    p2 = param_dist_boxplot(exampleExoData,which_param = "beta2",
-            names_input = paste("Rep",1:3,sep = "-"))
+    p1 = param_dist_boxplot(exampleExoData,which_param = "beta1", names_input = paste("Rep",1:3,sep = "-"))
+    p2 = param_dist_boxplot(exampleExoData,which_param = "beta2", names_input = paste("Rep",1:3,sep = "-"))
     grid.arrange(p1,p2,nrow = 1)
 
 ```
 
-Further detaills over this analysis are in [@qcpipeline]. In short, when the ChIP-exo/nexus sample is not deeply sequenced, high values of $\hat{\beta}_1$ indicate that the library complexity is low. On the other hand, lower values correspond to higher quality ChIP-exo experiments. We concluded that samples with estimated $\hat{\beta_1} \leq 10$ seem to be high quality samples. Similarly, samples with estimated $\hat{\beta_2} \approx 0$ can be considered high quality samples. The estimated values for these parameters can be accessed with the **beta1**, **beta2** and **param_dist** methods. For example, using the **median** to summarize these parameter distributions, we conclude that these three replicates (in **chr1**) are high quality samples.
+Further details over this analysis are in [@qcpipeline]. In short, when the ChIP-exo/nexus sample is not deeply sequenced, high values of $\hat{\beta}_1$ indicate that the library complexity is low. On the other hand, lower values correspond to higher quality ChIP-exo experiments. We concluded that samples with estimated $\hat{\beta_1} \leq 10$ seem to be high quality samples. Similarly, samples with estimated $\hat{\beta_2} \approx 0$ can be considered high quality samples. The estimated values for these parameters can be accessed with the **beta1**, **beta2** and **param_dist** methods. For example, using the **median** to summarize these parameter distributions, we conclude that these three replicates (in **chr1**) are high quality samples:
 
 ```{r param_eval,include=TRUE,echo=TRUE,eval=TRUE}
     
@@ -168,7 +164,9 @@ Further detaills over this analysis are in [@qcpipeline]. In short, when the ChI
 
 ```
 
+# Conclusions
 
+We presented a systematic exploration of a ChIP-exo experiment and show how to use the QC pipeline provided in `r Biocpkg("ChIPexoQual")`.  ChIPexoQual takes aligned reads as input and automatically generates several diagnostic plots and summary measures that enable assessing enrichment and library complexity. The implications of the diagnostic plots and the summary measures align well with more elaborate analysis that is computationally more expensive to perform and/or requires additional imputes that often may not be available. 
 
 # SessionInfo
 
