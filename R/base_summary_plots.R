@@ -115,7 +115,7 @@ MA_plot = function(...,names_input = NULL)
                           nsamples)
     names(MA_list) = NULL
     MA_DF = .name_and_join(MA_list,nms)
-    r = viridis::viridis(1e3, option = "D")
+    r = viridis(1e3, option = "D")
     p = ggplot(MA_DF,aes(M,A))+stat_binhex(bins = 70)+
         scale_fill_gradientn(colours = r,trans = 'log10',
             labels=trans_format('log10',math_format(10^.x)) )+
