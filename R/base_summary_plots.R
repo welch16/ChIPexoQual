@@ -245,7 +245,7 @@ FSR_dist_plot = function(...,names_input = NULL,
 ##' @param ... a \code{list} of \code{ExoData} objects, or several 
 ##' \code{ExoData} objects by themselves.
 ##' @param names_input a character vector with the names to use in the
-##' plot. If it is empty \code{FSR_dist_plot} is going to create the names
+##' plot. If it is empty \code{region_comp_plot} is going to create the names
 ##' as the names of the list when they are available or is going to 
 ##' name them as Sample: 1 ,... , Sample: k.
 ##' @param depth_values a numeric vector indicating the regions with depth 
@@ -288,3 +288,63 @@ region_comp_plot = function(...,names_input = NULL,
     p
     
 }
+
+##' param_dist_boxplot 
+##' 
+##' \code{param_dist_boxplot} returns a \code{ggplot} object with a 
+##' boxplot comparing the \code{ntimes} estimations of the chosen 
+##' parameter.
+##' 
+##' @param ... a \code{list} of \code{ExoData} objects, or several 
+##' \code{ExoData} objects by themselves.
+##' @param which_param a character value with either \code{"beta1"} or 
+##' \code{"beta2"} that determines which paramters in the model 
+##' d_i ~ u_i + w_i to plot. The default value is \code{"beta1"}.
+##' @param names_input a character vector with the names to use in the
+##' plot. If it is empty \code{param_dist_boxplot} is going to create the 
+##' names as the names of the list when they are available or is going to 
+##' name them as Sample: 1 ,... , Sample: k.
+##' 
+##' @return A \code{ggplot2} object with the boxplot of the chosen 
+##' parameter
+##' @rdname param_dist_boxplot
+##' @name param_dist_boxplot
+##' @export
+##' @examples 
+##' library(ChIPexoQualExample)
+##' data(exampleExoData)
+##' param_dist_boxplot(exampleExoData[[1]],exampleExoData[[2]])
+param_dist_boxplot = function(...,names_input = NULL,
+                            which_param = "beta1")
+{
+    lab = NULL; d = NULL; prob = NULL
+    
+    stopifnot(which_param %in% c("beta1","beta2"))
+    args = unlist(list(...))
+    if(!is.null(names_input)){
+        stopifnot(length(names_input) == length(args))
+    }
+    param_list = lapply(args,param_dist)
+    nsamples = length(param_list)
+    nms = .generate_names(names_input,names(param_list), 
+                          nsamples)
+    names(param_list) = NULL
+    param_DF = .name_and_join(param_list,nms)
+    param_DF$beta2 = - param_DF$beta2
+    p <- ggplot(param_DF,
+                aes_string(x = "sample",
+                           y = which_param))+
+        geom_boxplot()+
+        theme_bw()+
+        theme(legend.position = "top",
+              axis.title.y = element_text(angle = 0))
+    if(which_param == "beta1"){
+        p = p + ylab(expression(beta[1]))+
+            geom_abline(slope = 0,intercept = 10,linetype = 2)
+    }else{
+        p = p + ylab(expression(beta[2]))+
+            geom_abline(slope = 0,intercept = 0,linetype = 2)
+    }
+    p+xlab("Sample")
+}
+

@@ -11,7 +11,7 @@ region_comp_plot(..., names_input = NULL, depth_values = seq_len(15))
 \code{ExoData} objects by themselves.}
 
 \item{names_input}{a character vector with the names to use in the
-plot. If it is empty \code{FSR_dist_plot} is going to create the names
+plot. If it is empty \code{region_comp_plot} is going to create the names
 as the names of the list when they are available or is going to 
 name them as Sample: 1 ,... , Sample: k.}
 
