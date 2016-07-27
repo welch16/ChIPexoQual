@@ -1,22 +1,46 @@
 Package: ChIPexoQual
 Type: Package
 Title: ChIPexoQual
-Version: 1.0
-Date: 2014-12-12
-Author: Rene Welch <welch@stat.wisc.edu>
+Version: 0.99.0
+Date: 2016-07-18
+Author: Rene Welch, Dongjun Chung, Sunduz Keles
 Maintainer: Rene Welch <welch@stat.wisc.edu>
-Description: Package with quality controls for ChIP-exo data set
-URL: https:github.com/welch16/profile
-License: MIT + file LICENSE
+Description: Package with a quality control pipeline for ChIP-exo/nexus data.
+URL: https:github.com/keleslab/ChIPexoQual
+License: GPL (>=2)
 Depends:
-    R (>= 3.0.0),
+    R (>= 3.3.0),
+    GenomicAlignments (>= 1.0.1)
+Imports: 
+    methods,
+    GenomeInfoDb,
+    stats,
     parallel,
     GenomicRanges (>= 1.14.4),
-    GenomicAlignments (>= 1.0.1),
     ggplot2 (>= 1.0),
-    knitr (>= 1.6)
-Imports:
-    data.table (>= 1.9.2)
-VignetteBuilder: knitr
+    data.table (>= 1.9.7),
+    Rsamtools (>= 1.16.1),
+    IRanges (>= 1.6),
+    S4Vectors (>= 0.10),
+    biovizBase (>= 1.20),
+    broom (>= 0.4),
+    RColorBrewer (>= 1.1),
+    dplyr (>= 0.5),
+    scales (>= 0.4.0),
+    viridis (>= 0.3),
+    hexbin (>= 1.27),
 Suggests:
-    BiocStyle
+    ChIPexoQualExample (>= 1.00),
+    knitr (>= 1.10),
+    BiocStyle,
+    rmarkdown,
+    gridExtra (>= 2.2),
+    testthat
+VignetteBuilder: knitr
+biocViews: 
+    ChIPexo,
+    Sequencing,
+    Transcription,
+    Visualization,
+    QualityControl
+RoxygenNote: 5.0.1
