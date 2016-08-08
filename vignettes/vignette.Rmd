@@ -87,7 +87,7 @@ The minimum input to use `r Biocpkg("ChIPexoQual")` are the aligned reads of a C
 
 ```
 
-For the rest of the vignette, we are going to use **ExoData** object for the three replicates. These objects are available in `r Biocexptpkg("ChIPexoQualExample")`, and can be loaded by using:
+For the rest of the vignette, we are going to use **ExoData** object for the three replicates. These objects can be loaded by using:
 
 ```{r load_exdata,include=TRUE,echo=TRUE,eval=TRUE}
     
