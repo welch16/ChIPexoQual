@@ -1,7 +1,7 @@
 Package: ChIPexoQual
 Type: Package
 Title: ChIPexoQual
-Version: 0.99.2
+Version: 0.99.3
 Date: 2016-07-18
 Author: Rene Welch, Dongjun Chung, Sunduz Keles
 Maintainer: Rene Welch <welch@stat.wisc.edu>
@@ -30,7 +30,7 @@ Imports:
     viridis (>= 0.3),
     hexbin (>= 1.27),
 Suggests:
-    ChIPexoQualExample (>= 1.00),
+    ChIPexoQualExample (>= 0.99.1),
     knitr (>= 1.10),
     BiocStyle,
     rmarkdown,
