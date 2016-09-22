@@ -27,8 +27,7 @@ A \code{ggplot2} object with the Region Composition plot.
 Region Composition plot to analyze strand imbalance in ChIP-exo data.
 }
 \examples{
-library(ChIPexoQualExample)
-data(exampleExoData)
-region_comp_plot(exampleExoData[[1]],exampleExoData[[2]])
+data(exoExample)
+region_comp_plot(exoExample)
 }
 

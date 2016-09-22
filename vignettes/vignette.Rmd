@@ -87,11 +87,18 @@ The minimum input to use `r Biocpkg("ChIPexoQual")` are the aligned reads of a C
 
 ```
 
-For the rest of the vignette, we are going to use **ExoData** object for the three replicates. These objects can be loaded by using:
+For the rest of the vignette, we generate an **ExoData** object for each replicate:
 
-```{r load_exdata,include=TRUE,echo=TRUE,eval=TRUE}
+```{r pre_create,include=FALSE,echo=FALSE,eval = TRUE}
     
-    data("exampleExoData") 
+    rm(reads,ex1,ex2)
+    
+```
+
+```{r create_exdata,include=TRUE,echo=TRUE,eval=TRUE}
+    
+    files = files[grep("bai",files,invert = TRUE)] ## ignore index files
+    exampleExoData = lapply(files,ExoData,mc.cores = 2L)
 
 ```
 

@@ -29,8 +29,7 @@ boxplot comparing the \code{ntimes} estimations of the chosen
 parameter.
 }
 \examples{
-library(ChIPexoQualExample)
-data(exampleExoData)
-param_dist_boxplot(exampleExoData[[1]],exampleExoData[[2]])
+data(exoExample)
+param_dist_boxplot(exoExample)
 }
 

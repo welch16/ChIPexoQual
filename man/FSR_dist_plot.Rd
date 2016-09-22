@@ -37,8 +37,7 @@ Strand Ratio distribution plot to analyze strand imbalance in
 ChIP-exo data.
 }
 \examples{
-library(ChIPexoQualExample)
-data(exampleExoData)
-FSR_dist_plot(exampleExoData[[1]],exampleExoData[[2]])
+data(exoExample)
+FSR_dist_plot(exoExample)
 }
 

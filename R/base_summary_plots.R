@@ -99,9 +99,8 @@ NULL
 ##' @name MA_plot
 ##' @export
 ##' @examples 
-##' library(ChIPexoQualExample)
-##' data(exampleExoData)
-##' MA_plot(exampleExoData[[1]])
+##' data(exoExample)
+##' MA_plot(exoExample)
 MA_plot = function(...,names_input = NULL)
 {
     M = NULL; A = NULL; .x = NULL
@@ -148,9 +147,8 @@ MA_plot = function(...,names_input = NULL)
 ##' @name ARC_URC_plot
 ##' @export
 ##' @examples 
-##' library(ChIPexoQualExample)
-##' data(exampleExoData)
-##' ARC_URC_plot(exampleExoData[[1]])
+##' data(exoExample)
+##' ARC_URC_plot(exoExample)
 ARC_URC_plot = function(...,names_input = NULL,both_strand = FALSE)
 {
     ARC = NULL; URC = NULL; .x = NULL
@@ -206,9 +204,8 @@ ARC_URC_plot = function(...,names_input = NULL,both_strand = FALSE)
 ##' @name FSR_dist_plot
 ##' @export
 ##' @examples 
-##' library(ChIPexoQualExample)
-##' data(exampleExoData)
-##' FSR_dist_plot(exampleExoData[[1]],exampleExoData[[2]])
+##' data(exoExample)
+##' FSR_dist_plot(exoExample)
 FSR_dist_plot = function(...,names_input = NULL,
                          quantiles = c(0,.25,.5,.75,1),
                          depth_values = seq_len(30),
@@ -257,9 +254,8 @@ FSR_dist_plot = function(...,names_input = NULL,
 ##' @name region_comp_plot
 ##' @export
 ##' @examples 
-##' library(ChIPexoQualExample)
-##' data(exampleExoData)
-##' region_comp_plot(exampleExoData[[1]],exampleExoData[[2]])
+##' data(exoExample)
+##' region_comp_plot(exoExample)
 region_comp_plot = function(...,names_input = NULL,
                             depth_values = seq_len(15))
 {
@@ -311,9 +307,8 @@ region_comp_plot = function(...,names_input = NULL,
 ##' @name param_dist_boxplot
 ##' @export
 ##' @examples 
-##' library(ChIPexoQualExample)
-##' data(exampleExoData)
-##' param_dist_boxplot(exampleExoData[[1]],exampleExoData[[2]])
+##' data(exoExample)
+##' param_dist_boxplot(exoExample)
 param_dist_boxplot = function(...,names_input = NULL,
                             which_param = "beta1")
 {

@@ -23,8 +23,7 @@ A \code{ggplot2} object with the MA plot.
 analyze the strand imbalance in ChIP-exo data.
 }
 \examples{
-library(ChIPexoQualExample)
-data(exampleExoData)
-MA_plot(exampleExoData[[1]])
+data(exoExample)
+MA_plot(exoExample)
 }
 

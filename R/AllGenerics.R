@@ -10,9 +10,8 @@
 ##' @docType methods
 ##' @rdname nreads-methods
 ##' @examples
-##' library(ChIPexoQualExample)
-##' data(exampleExoData)
-##' nreads(exampleExoData[[1]])
+##' data(exoExample)
+##' nreads(exoExample)
 setGeneric("nreads",
            function(object)
                standardGeneric("nreads")
@@ -110,9 +109,8 @@ setGeneric(".ARC_URC_DF",
 ##' @rdname beta1-methods
 ##' @export
 ##' @examples 
-##' library(ChIPexoQualExample)
-##' data(exampleExoData)
-##' beta1(exampleExoData[[1]])
+##' data(exoExample)
+##' beta1(exoExample)
 setGeneric("beta1",
            function(object)
                standardGeneric("beta1"))
@@ -130,9 +128,8 @@ setGeneric("beta1",
 ##' @rdname beta2-methods
 ##' @export
 ##' @examples
-##' library(ChIPexoQualExample)
-##' data(exampleExoData)
-##' beta2(exampleExoData[[1]])
+##' data(exoExample)
+##' beta2(exoExample)
 setGeneric("beta2",
            function(object)
                standardGeneric("beta2"))
@@ -151,9 +148,8 @@ setGeneric("beta2",
 ##' @rdname param_dist-methods
 ##' @export
 ##' @examples 
-##' library(ChIPexoQualExample)
-##' data(exampleExoData)
-##' param_dist(exampleExoData[[1]])
+##' data(exoExample)
+##' param_dist(exoExample)
 setGeneric("param_dist",
            function(object)
                standardGeneric("param_dist"))

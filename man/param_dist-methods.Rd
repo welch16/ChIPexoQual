@@ -23,8 +23,7 @@ coefficients in the \eqn{d_i  = \beta_1 u_i + \beta_2 w_i + \epsilon_i} models
 fitted by \code{ChIPexoQual}
 }
 \examples{
-library(ChIPexoQualExample)
-data(exampleExoData)
-param_dist(exampleExoData[[1]])
+data(exoExample)
+param_dist(exoExample)
 }
 

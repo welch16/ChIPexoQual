@@ -46,7 +46,11 @@ of summary statistics used to asses the quality of a ChIP-exo/nexus sample.
 quality of ChIP-exo/nexus sample.
 }
 \examples{
-a = 1
+\dontrun{
+files = list.files(system.file("extdata",package = "ChIPexoQualExample"),
+    full.names = TRUE)
+ExoData(files[1],mc.cores = 2L)
+}
 
 }
 

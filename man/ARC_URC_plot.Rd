@@ -27,8 +27,7 @@ A \code{ggplot2} object with the ARC vs URC plot.
 URC plot to analyze enrichment and library complexity in ChIP-exo data.
 }
 \examples{
-library(ChIPexoQualExample)
-data(exampleExoData)
-ARC_URC_plot(exampleExoData[[1]])
+data(exoExample)
+ARC_URC_plot(exoExample)
 }
 
