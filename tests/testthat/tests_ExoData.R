@@ -66,14 +66,14 @@ test_that("Writing correct nr. of reads in metadata",
 
 test_that("Reads returns the same .MA_DF output",
           {
-              expect_identical(
+              expect_equal(
                   .MA_DF(reads_exo),.MA_DF(exoExample))
               
           })
 
 test_that("Reads returns the same .ARC_URC_DF output",
           {
-              expect_identical(
+              expect_equal(
                   .ARC_URC_DF(reads_exo,FALSE),
                   .ARC_URC_DF(exoExample,FALSE))
           })
@@ -82,7 +82,7 @@ test_that("Reads returns the same .FSR_dist_DF output",
           {
               quantiles = c(.25,.5,.75)
               depth_values = seq_len(25)
-              expect_identical(
+              expect_equal(
                   .FSR_dist_DF(reads_exo,quantiles = quantiles,
                                depth_values = depth_values,
                                both_strand = FALSE),
@@ -93,7 +93,7 @@ test_that("Reads returns the same .FSR_dist_DF output",
 test_that("Reads returns the same .region_comp_DF output",
           {
               depth_values = seq_len(10)
-              expect_identical(
+              expect_equal(
                   .region_comp_DF(reads_exo,depth_values),
                   .region_comp_DF(exoExample,depth_values)
               )

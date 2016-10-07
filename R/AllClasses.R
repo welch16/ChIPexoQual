@@ -55,19 +55,20 @@ setValidity("ExoData",
 ##' \code{ExoData} object. The default value is \code{FALSE}.
 ##' @param verbose a logical value indicating if the user want to receive progress
 ##' details. The default value is FALSE.
-##' @return \code{ExoData} returns a \code{ExoData} object which contains the
-##' aggregated coverage of the experiment, the set of islands and a collection
-##' of summary statistics used to asses the quality of a ChIP-exo/nexus sample.
+##' @return It returns an \code{ExoData} object with the regions obtained after
+##' partitioning the genome and the summary statistics for each region. If the
+##' \code{save_reads} parameter is \code{TRUE} then it contains a \code{GRanges}
+##' object with the reads of the ChIP-exo experiment.
 ##' @aliases ExoData ExoData-class
 ##'
 ##' @docType class
 ##'
 ##' @examples
-##' \dontrun{
+##' 
 ##' files = list.files(system.file("extdata",package = "ChIPexoQualExample"),
 ##'     full.names = TRUE)
-##' ExoData(files[1],mc.cores = 2L)
-##' }
+##' ExoData(files[5],mc.cores = 2L)
+##' 
 ##'
 ##' @rdname ExoData
 ##' @export
