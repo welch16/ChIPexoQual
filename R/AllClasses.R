@@ -3,11 +3,11 @@
 ##' @importFrom Rsamtools scanBamFlag
 ##' @importFrom GenomicAlignments readGAlignments 
 ##' @importFrom GenomicRanges GRanges
-##' @importFrom parallel mclapply mcmapply
 ##' @importFrom IRanges slice
 ##' @importFrom data.table ":=" rbindlist
 ##' @import  methods
 ##' @import  GenomeInfoDb
+##' @import BiocParallel
 NULL
 
 
@@ -74,6 +74,7 @@ setValidity("ExoData",
 ExoData = function(file = NULL, reads = NULL , height = 1 ,mc.cores = getOption("mc.cores",2L),
                    save_reads = FALSE,nregions = 1e3,ntimes = 1e2,verbose = FALSE)
 {
+    
     if(!is.null(file) & !is.null(reads)){
         stop("Both 'file' and 'reads' are available, can't use both.")
     }
@@ -135,18 +136,24 @@ ExoData = function(file = NULL, reads = NULL , height = 1 ,mc.cores = getOption(
 #     breads = GRangesList(breads[chr])
 
     if(verbose) message("Calculating summary statistics")
-    stats = mcmapply(.calculate_summary,rlist,freads,breads,
-                 mc.cores = mc.cores , SIMPLIFY = FALSE)
-    regions = as(rlist,"GRanges")
     
+    if(Sys.info()[["sysname"]] == "Windows"){
+        snow = SnowParam(workers = mc.cores, type = "SOCK")
+        stats = bpmapply(.calculate_summary,rlist,freads,breads,
+                         BPPARAM = snow,SIMPLIFY = FALSE)       
+    }else{
+        stats = bpmapply(.calculate_summary,rlist,freads,breads,
+            BPPARAM = MulticoreParam(workers = mc.cores),
+            SIMPLIFY = FALSE)       
+    }
+    
+    regions = as(rlist,"GRanges")
     mcols(regions) = do.call(rbind,stats)
     nreads = sum(vapply(freads,length,1)) + sum(vapply(breads, length, 1))
-        
+    
     if(save_reads){
-        freads = as(freads,"GRanges")
         freads = biovizBase::flatGrl(freads)
         mcols(freads) = NULL
-        breads = as
         breads = biovizBase::flatGrl(breads)
         mcols(breads) = NULL
         reads = c(freads,breads)

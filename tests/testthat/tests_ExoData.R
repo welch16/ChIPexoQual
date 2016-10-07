@@ -35,6 +35,14 @@ test_that("ExoData is s4 class",
               expect_s4_class(reads_exo,"ExoData")
           })
 
+test_that("Non-error with save_reads argument",
+          {
+              expect_s4_class(
+                  ExoData(file = files,save_reads = TRUE),
+                  "ExoData"
+              )
+          })
+
 test_that("At least one position in every island",
           {
               expect_true(
