@@ -7,6 +7,8 @@
 ##' \item ChIPexo_carroll_FoxA1_mouse_rep3_chr1.bam
 ##' }
 ##' 
+##' @return An \code{ExoData} object with the 3rd replicate of the FoxA1 
+##' experiment from \code{ChIPExoQualExample}.
 ##' @docType data
 ##' @name exoExample
 ##' @usage data(exoExample)

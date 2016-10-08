@@ -8,6 +8,10 @@
 \usage{
 data(exoExample)
 }
+\value{
+An \code{ExoData} object with the 3rd replicate of the FoxA1 
+experiment from \code{ChIPExoQualExample}.
+}
 \description{
 \code{ExoData} object, generated with \code{ChIPexoQual} and the
 file:
