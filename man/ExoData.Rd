@@ -7,8 +7,8 @@
 \title{ExoData object and constructors}
 \usage{
 ExoData(file = NULL, reads = NULL, height = 1,
-  mc.cores = getOption("mc.cores", 2L), save_reads = FALSE,
-  nregions = 1000, ntimes = 100, verbose = FALSE)
+  mc.cores = getOption("mc.cores", 2L), save.reads = FALSE,
+  nregions = 1000, ntimes = 100, verbose = TRUE)
 }
 \arguments{
 \item{file}{a character value with location of the bam file with the aligned
@@ -23,7 +23,7 @@ of the experiment into a set of regions.}
 \item{mc.cores}{a numeric value with the number of cores to use,
 i.e. at most how many child processes will be run simultaneously.}
 
-\item{save_reads}{a logical value to indicate if the reads are stored in the
+\item{save.reads}{a logical value to indicate if the reads are stored in the
 \code{ExoData} object. The default value is \code{FALSE}.}
 
 \item{nregions}{a numeric value indicating the number of regions sampled to 
@@ -39,7 +39,7 @@ details. The default value is FALSE.}
 \value{
 It returns an \code{ExoData} object with the regions obtained after
 partitioning the genome and the summary statistics for each region. If the
-\code{save_reads} parameter is \code{TRUE} then it contains a \code{GRanges}
+\code{save.reads} parameter is \code{TRUE} then it contains a \code{GRanges}
 object with the reads of the ChIP-exo experiment.
 }
 \description{
