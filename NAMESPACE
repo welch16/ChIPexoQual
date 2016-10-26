@@ -3,6 +3,7 @@
 export(ARCvURCDataFrame)
 export(ARCvURCplot)
 export(ExoData)
+export(ExoDataSubsampling)
 export(FSRDistDataFrame)
 export(FSRDistplot)
 export(MADataFrame)

@@ -171,6 +171,29 @@ Further details over this analysis are in Welch et. al 2016 (submitted). In shor
 
 ```
 
+## Subsampling reads from the experiment to asses quality
+
+For convenience, we added the function `ExoDataSubsampling`, that performs the analysis suggested by Welch et. al 2016 (submitted) when the experiment is deeply sequenced. To use this function, we proceed as follows:
+
+```{r subsamping,include=TRUE,echo=TRUE,eval=TRUE}
+
+    sample.depth = seq(1e5,2e5,5e4)
+    exoList = ExoDataSubsampling(file = files[3],sample.depth = sample.depth,
+                       verbose=FALSE)
+
+```
+
+The output of `ExoDataSubsampling` is a list of `ExoData` objects, therefore its output can be used with any of the plotting functions to asses the quality of the samples. For example, using we may use `paramDistBoxplot` to get the following figures:
+
+```{r subsamplots,include=TRUE,echo=TRUE,eval=TRUE,warning=FALSE,results="markup",fig.height=2.5}
+    
+    p1 = paramDistBoxplot(exoList,which.param = "beta1")
+    p2 = paramDistBoxplot(exoList,which.param = "beta2")
+    grid.arrange(p1,p2,nrow = 1)
+
+```
+
+
 # Conclusions
 
 We presented a systematic exploration of a ChIP-exo experiment and show how to use the QC pipeline provided in `r Biocpkg("ChIPexoQual")`.  ChIPexoQual takes aligned reads as input and automatically generates several diagnostic plots and summary measures that enable assessing enrichment and library complexity. The implications of the diagnostic plots and the summary measures align well with more elaborate analysis that is computationally more expensive to perform and/or requires additional imputes that often may not be available. 

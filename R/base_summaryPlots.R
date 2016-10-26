@@ -456,7 +456,8 @@ paramDistBoxplot = function(...,names.input = NULL,
         geom_boxplot()+
         theme_bw()+
         theme(legend.position = "top",
-              axis.title.y = element_text(angle = 0))
+              axis.title.y = element_text(angle = 0),
+              axis.text.x = element_text(angle = 30,hjust = 1))
     if(which.param == "beta1"){
         p = p + ylab(expression(beta[1]))+
             geom_abline(slope = 0,intercept = 10,linetype = 2)

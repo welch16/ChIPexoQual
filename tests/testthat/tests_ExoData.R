@@ -99,3 +99,12 @@ test_that("Reads returns the same regionCompDataFrame output",
               )
           })
 
+test_that("Error when the provided sample.depth is greater than available 
+          number of reads",
+          {
+              expect_error(ExoDataSubsampling(reads = reads_exo,
+                                              sample.depth = depths + 100))
+              
+          })
+
+
