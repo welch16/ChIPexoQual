@@ -107,4 +107,9 @@ test_that("Error when the provided sample.depth is greater than available
               
           })
 
+test_that("Error when sample.depth is not numeric",
+          {
+              expect_error(ExoDataSubsampling(reads = reads_exo,
+                                              sample.depth = c("1","2")))
+          })
 
