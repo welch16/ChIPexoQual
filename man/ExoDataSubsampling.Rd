@@ -49,9 +49,9 @@ of \code{ExoData} objects
 }
 \examples{
 
-files = list.files(system.file("extdata",package = "ChIPexoQualExample"),
+files <- list.files(system.file("extdata",package = "ChIPexoQualExample"),
     full.names = TRUE)
-sample.depth = seq(1e5,2e5,5e4)
+sample.depth <- seq(1e5,2e5,5e4)
 ExoDataSubsampling(file = files[5],sample.depth = sample.depth)
 
 }

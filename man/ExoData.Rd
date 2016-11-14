@@ -48,7 +48,7 @@ quality of ChIP-exo/nexus sample.
 }
 \examples{
 
-files = list.files(system.file("extdata",package = "ChIPexoQualExample"),
+files <- list.files(system.file("extdata",package = "ChIPexoQualExample"),
     full.names = TRUE)
 ExoData(files[5],mc.cores = 2L)
 

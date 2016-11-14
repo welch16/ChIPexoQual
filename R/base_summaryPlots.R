@@ -1,13 +1,12 @@
 ##' @importFrom stats quantile
-##' @import S4Vectors
-##' @import ggplot2
-##' @import GenomicRanges
-##' @import scales
-##' @importFrom data.table data.table
+##' @importFrom S4Vectors subset mcols DataFrame "metadata<-" metadata
+##' @importFrom scales alpha trans_format math_format
 ##' @importFrom viridis viridis
 ##' @importFrom RColorBrewer brewer.pal
 ##' @importFrom dplyr desc arrange
-##' @import hexbin
+##' @importFrom hexbin hexbin
+##' @import ggplot2
+##' @import GenomicRanges
 NULL
 
 ##' Calculates the FSR distribution of all regions with depth > value
@@ -24,12 +23,12 @@ NULL
 ##' @rdname filterQuantiles
 ##' @name filterQuantiles
 ##' 
-filterQuantiles = function(value,DF,quantiles)
+filterQuantiles <- function(value,DF,quantiles)
 {
     depth <- NULL
-    dist = S4Vectors::subset(DF,depth > value)
-    quant = quantile(dist$FSR,probs = quantiles)
-    names(quant) = NULL
+    dist <- S4Vectors::subset(DF,depth > value)
+    quant <- quantile(dist$FSR,probs = quantiles)
+    names(quant) <- NULL
     DataFrame(depth = value ,quantiles , FSR = quant)
 }    
 
@@ -47,36 +46,36 @@ filterQuantiles = function(value,DF,quantiles)
 ##' @rdname filterRegionComp
 ##' @name filterRegionComp
 ##' 
-filterRegionComp = function(value,DF)
+filterRegionComp <- function(value,DF)
 {
     depth <- NULL
-    DF = S4Vectors::subset(DF,depth > value)
-    lab = c("both","fwd","bwd")
-    tabl = table(fwd = factor(DF$fwdReads > 0,levels = c(TRUE,FALSE)) ,
+    DF <- S4Vectors::subset(DF,depth > value)
+    lab <- c("both","fwd","bwd")
+    tabl <- table(fwd = factor(DF$fwdReads > 0,levels = c(TRUE,FALSE)) ,
                  bwd = factor(DF$revReads > 0,levels = c(TRUE,FALSE)))
-    counts = c(tabl[1,1],tabl[1,2],tabl[2,1])
-    props = counts / sum(counts)
+    counts <- c(tabl[1,1],tabl[1,2],tabl[2,1])
+    props <- counts / sum(counts)
     DataFrame(depth = value,lab,prob = props )
 }
 
-generateNames = function(names.input,nms, length){
+generateNames <- function(names.input,nms, length){
 
     if(is.null(names.input)){
         if(is.null(nms)){
-            nms = paste0("Sample: ",seq_len(length))
+            nms <- paste0("Sample: ",seq_len(length))
         }
     }else{
-        nms = names.input
+        nms <- names.input
     }
     nms
 }
 
-nameJoin = function(my_list,nms){
+nameJoin <- function(my_list,nms){
     
-    DF = do.call(rbind,my_list)
-    nms = mapply(rep,nms,each = vapply(my_list,nrow,1L),SIMPLIFY = FALSE)
-    nms = do.call(c,nms)
-    DF$sample = nms
+    DF <- do.call(rbind,my_list)
+    nms <- mapply(rep,nms,each = vapply(my_list,nrow,1L),SIMPLIFY = FALSE)
+    nms <- do.call(c,nms)
+    DF$sample <- nms
     data.table(as.data.frame(DF))
     
 }
@@ -95,11 +94,11 @@ nameJoin = function(my_list,nms){
 ##' @examples 
 ##' data(exoExample)
 ##' MADataFrame(exoExample)
-MADataFrame = function(object)
+MADataFrame <- function(object)
 {
     A <- NULL
-    DF = mcols(object)[,c("M","A")]
-    DF = subset(DF,!is.infinite(A))
+    DF <- mcols(object)[,c("M","A")]
+    DF <- subset(DF,!is.infinite(A))
     DF
     
 }
@@ -123,28 +122,31 @@ MADataFrame = function(object)
 ##' @examples 
 ##' data(exoExample)
 ##' MAplot(exoExample)
-MAplot = function(...,names.input = NULL)
+MAplot <- function(...,names.input = NULL)
 {
     M <- A <- .x <- NULL
-    args = unlist(list(...))
+    args <- unlist(list(...))
     if(!is.null(names.input)){
         stopifnot(length(names.input) == length(args))
     }
-    MA_list = lapply(args,MADataFrame)
-    nsamples = length(MA_list)
-    nms = generateNames(names.input,names(MA_list), 
+    MA_list <- lapply(args,MADataFrame)
+    nsamples <- length(MA_list)
+    nms <- generateNames(names.input,names(MA_list), 
                           nsamples)
-    names(MA_list) = NULL
-    MA_DF = nameJoin(MA_list,nms)
-    r = viridis(1e3, option = "D")
-    p = ggplot(MA_DF,aes(M,A))+stat_binhex(bins = 70)+
+    names(MA_list) <- NULL
+    MA_DF <- nameJoin(MA_list,nms)
+    r <- viridis(1e3, option = "D")
+    
+    theme_set(theme_bw())
+    
+    p <- ggplot(MA_DF,aes(M,A))+stat_binhex(bins = 70)+
         scale_fill_gradientn(colours = r,trans = 'log10',
             labels=trans_format('log10',math_format(10^.x)) )+
-        theme_bw()+theme(legend.position = "top")
+        theme(legend.position = "top")
     if(nsamples <= 3){
-        p = p + facet_wrap( ~ sample,nrow = 1)
+        p <- p + facet_wrap( ~ sample,nrow = 1)
     }else{
-        p = p + facet_wrap( ~ sample,ncol = 4)
+        p <- p + facet_wrap( ~ sample,ncol = 4)
     }
     p
 }
@@ -172,12 +174,11 @@ ARCvURCDataFrame = function(object,both.strand)
 {
     fwdReads <- revReads <-  NULL
     
-    DF = mcols(object)[,c("ARC","URC","fwdReads","revReads")]
+    DF <- mcols(object)[,c("ARC","URC","fwdReads","revReads")]
     if(both.strand){
-        DF = subset(DF,fwdReads > 0 & revReads > 0)
+        DF <- subset(DF,fwdReads > 0 & revReads > 0)
     }
     DF[,c("ARC","URC")]
-    
 }
 
 
@@ -203,33 +204,36 @@ ARCvURCDataFrame = function(object,both.strand)
 ##' @examples 
 ##' data(exoExample)
 ##' ARCvURCplot(exoExample)
-ARCvURCplot = function(...,names.input = NULL,both.strand = FALSE)
+ARCvURCplot <- function(...,names.input = NULL,both.strand = FALSE)
 {
     
     ARC <- URC <- .x <- NULL
     
-    args = unlist(list(...))
+    args <- unlist(list(...))
     if(!is.null(names.input)){
         stopifnot(length(names.input) == length(args))
     }
     
-    ARCvURCList = lapply(args,ARCvURCDataFrame,both.strand)
-    nsamples = length(ARCvURCList)
-    nms = generateNames(names.input,names(ARCvURCList), 
+    ARCvURCList <- lapply(args,ARCvURCDataFrame,both.strand)
+    nsamples <- length(ARCvURCList)
+    nms <- generateNames(names.input,names(ARCvURCList), 
                           nsamples)
-    names(ARCvURCList) = NULL
-    ARCvURCDataFrame = nameJoin(ARCvURCList,nms)
-    r = viridis(1e3, option = "D")
-    p = ggplot(ARCvURCDataFrame,aes(ARC,URC))+stat_binhex(bins = 50)+
+    names(ARCvURCList) <- NULL
+    ARCvURCDataFrame <- nameJoin(ARCvURCList,nms)
+    r <- viridis(1e3, option = "D")
+    
+    theme_set(theme_bw())
+    
+    p <- ggplot(ARCvURCDataFrame,aes(ARC,URC))+stat_binhex(bins = 50)+
         scale_fill_gradientn(colours = r,trans = 'log10',
                              labels=trans_format('log10',math_format(10^.x)) )+
-        theme_bw()+theme(legend.position = "top")
+        theme(legend.position = "top")
     if(nsamples <= 3){
-        p = p + facet_wrap( ~ sample,nrow = 1)
+        p <- p + facet_wrap( ~ sample,nrow = 1)
     }else{
-        p = p + facet_wrap( ~ sample,ncol = 4)
+        p <- p + facet_wrap( ~ sample,ncol = 4)
     }
-    p = p + xlim(0,3)+ylim(0,1)
+    p <- p + xlim(0,3)+ylim(0,1)
     p
 }
 
@@ -256,18 +260,18 @@ ARCvURCplot = function(...,names.input = NULL,both.strand = FALSE)
 ##' data(exoExample)
 ##' FSRDistDataFrame(exoExample,quantiles = c(.25,.5,.75),
 ##'   depth.values = seq_len(25),both.strand = FALSE)
-FSRDistDataFrame = function(object,quantiles,depth.values,
+FSRDistDataFrame <- function(object,quantiles,depth.values,
                                 both.strand)
 {
     fwdReads <- revReads <- NULL
     
-    baseDF = mcols(object)[,c("fwdReads","revReads","depth","FSR")]
+    baseDF <- mcols(object)[,c("fwdReads","revReads","depth","FSR")]
     
     if(both.strand){
-        baseDF = subset(baseDF,fwdReads > 0 & revReads > 0)
+        baseDF <- subset(baseDF,fwdReads > 0 & revReads > 0)
     }
     
-    DFlist = lapply(depth.values,filterQuantiles,
+    DFlist <- lapply(depth.values,filterQuantiles,
                     baseDF,quantiles)
     do.call(rbind,DFlist)
 }
@@ -302,28 +306,31 @@ FSRDistDataFrame = function(object,quantiles,depth.values,
 ##' @examples 
 ##' data(exoExample)
 ##' FSRDistplot(exoExample)
-FSRDistplot = function(...,names.input = NULL,
+FSRDistplot <- function(...,names.input = NULL,
                          quantiles = c(0,.25,.5,.75,1),
                          depth.values = seq_len(30),
                          both.strand = FALSE)
 {
     depth <- FSR <- NULL
     
-    args = unlist(list(...))
+    args <- unlist(list(...))
     if(!is.null(names.input)){
         stopifnot(length(names.input) == length(args))
     }
-    FSRList = lapply(args,FSRDistDataFrame,quantiles,
+    FSRList <- lapply(args,FSRDistDataFrame,quantiles,
                       depth.values,
                       both.strand)
-    nsamples = length(FSRList)
-    nms = generateNames(names.input,names(FSRList), 
+    nsamples <- length(FSRList)
+    nms <- generateNames(names.input,names(FSRList), 
                           nsamples)
-    names(FSRList) = NULL
-    FSRDataFrame = nameJoin(FSRList,nms)
+    names(FSRList) <- NULL
+    FSRDataFrame <- nameJoin(FSRList,nms)
+    
+    theme_set(theme_bw())
+    
     p <- ggplot(FSRDataFrame,aes(depth,FSR,colour = as.factor(quantiles)))+
         geom_line(size = 1)+
-        theme_bw()+theme(legend.position = "top")+facet_grid(sample ~ .)+
+        theme(legend.position = "top")+facet_grid(sample ~ .)+
         scale_color_brewer(palette = "Dark2",name = "")+
         xlab("Minimum number of reads")+ylab("Forward Strand Ratio \n (FSR)")+
         ylim(0,1)
@@ -348,10 +355,10 @@ FSRDistplot = function(...,names.input = NULL,
 ##' @examples 
 ##' data(exoExample)
 ##' regionCompDataFrame(exoExample,seq_len(10))
-regionCompDataFrame = function(object,depth.values)
+regionCompDataFrame <- function(object,depth.values)
 {
-    baseDF = mcols(object)[,c("fwdReads","revReads","depth")]
-    DataFrameList = lapply(depth.values,filterRegionComp,
+    baseDF <- mcols(object)[,c("fwdReads","revReads","depth")]
+    DataFrameList <- lapply(depth.values,filterRegionComp,
                            baseDF)
     do.call(rbind,DataFrameList)
 }
@@ -378,28 +385,31 @@ regionCompDataFrame = function(object,depth.values)
 ##' @examples 
 ##' data(exoExample)
 ##' regionCompplot(exoExample)
-regionCompplot = function(...,names.input = NULL,
+regionCompplot <- function(...,names.input = NULL,
                             depth.values = seq_len(15))
 {
     lab <- depth <- prob <- NULL
     
-    args = unlist(list(...))
+    args <- unlist(list(...))
     if(!is.null(names.input)){
         stopifnot(length(names.input) == length(args))
     }
-    regionList = lapply(args,regionCompDataFrame,depth.values)
-    nsamples = length(regionList)
-    nms = generateNames(names.input,names(regionList), 
+    regionList <- lapply(args,regionCompDataFrame,depth.values)
+    nsamples <- length(regionList)
+    nms <- generateNames(names.input,names(regionList), 
                           nsamples)
-    names(regionList) = NULL
-    regionDataFrame = nameJoin(regionList,nms)
-    r = brewer.pal(name = "Set1",3)
-    regionDataFrame = regionDataFrame[,lab := 
+    names(regionList) <- NULL
+    regionDataFrame <- nameJoin(regionList,nms)
+    r <- brewer.pal(name = "Set1",3)
+    regionDataFrame <- regionDataFrame[,lab := 
         factor(lab,levels = c("both","fwd","bwd"))]
+    
+    theme_set(theme_bw())
+    
     p <- ggplot(arrange(regionDataFrame,lab, desc(prob)),
                   aes(depth,prob,fill = lab))+
         geom_bar(stat = "identity")+
-        theme_bw()+theme(legend.position = "top")+
+        theme(legend.position = "top")+
         facet_grid(sample ~ .)+
         scale_fill_brewer(palette = "Pastel1",name = "Strand composition")+
         xlab("Minimum number of reads")+ylab("Proportion of regions")
@@ -432,24 +442,24 @@ regionCompplot = function(...,names.input = NULL,
 ##' @examples 
 ##' data(exoExample)
 ##' paramDistBoxplot(exoExample)
-paramDistBoxplot = function(...,names.input = NULL,
+paramDistBoxplot <- function(...,names.input = NULL,
                             which.param = "beta1")
 {
 
     lab <- depth <- prob <- NULL
     
     stopifnot(which.param %in% c("beta1","beta2"))
-    args = unlist(list(...))
+    args <- unlist(list(...))
     if(!is.null(names.input)){
         stopifnot(length(names.input) == length(args))
     }
-    paramList = lapply(args,paramDist)
-    nsamples = length(paramList)
-    nms = generateNames(names.input,names(paramList), 
+    paramList <- lapply(args,paramDist)
+    nsamples <- length(paramList)
+    nms <- generateNames(names.input,names(paramList), 
                           nsamples)
-    names(paramList) = NULL
-    paramDataFrame = nameJoin(paramList,nms)
-    paramDataFrame$beta2 = - paramDataFrame$beta2
+    names(paramList) <- NULL
+    paramDataFrame <- nameJoin(paramList,nms)
+    paramDataFrame$beta2 <- - paramDataFrame$beta2
     p <- ggplot(paramDataFrame,
                 aes_string(x = "sample",
                            y = which.param))+
@@ -459,10 +469,10 @@ paramDistBoxplot = function(...,names.input = NULL,
               axis.title.y = element_text(angle = 0),
               axis.text.x = element_text(angle = 30,hjust = 1))
     if(which.param == "beta1"){
-        p = p + ylab(expression(beta[1]))+
+        p <- p + ylab(expression(beta[1]))+
             geom_abline(slope = 0,intercept = 10,linetype = 2)
     }else{
-        p = p + ylab(expression(beta[2]))+
+        p <- p + ylab(expression(beta[2]))+
             geom_abline(slope = 0,intercept = 0,linetype = 2)
     }
     p+xlab("Sample")

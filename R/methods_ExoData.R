@@ -1,6 +1,3 @@
-##' @import S4Vectors
-NULL
-
 ##' @rdname beta1-methods
 ##' @aliases beta1
 ##' @docType methods

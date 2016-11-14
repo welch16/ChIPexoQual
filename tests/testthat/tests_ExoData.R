@@ -5,15 +5,15 @@ library(parallel)
 
 context("ExoData object is generated correctly with reads and files")
 
-files = list.files(system.file("extdata",package = "ChIPexoQualExample"),
+files <- list.files(system.file("extdata",package = "ChIPexoQualExample"),
                    full.names = TRUE)
-files = files[grep("bai",files,invert = TRUE)]
-files = files[3]
-reads = readGAlignments(files,param = NULL)
+files <- files[grep("bai",files,invert = TRUE)]
+files <- files[3]
+reads <- readGAlignments(files,param = NULL)
 data("exoExample")
 
-depths = nreads(exoExample)
-reads_exo = ExoData(reads = reads,mc.cores = 2L,verbose = FALSE)
+depths <- nreads(exoExample)
+reads_exo <- ExoData(reads = reads,mc.cores = 2L,verbose = FALSE)
 
 test_that("Error on ExoData non-arguments",
           {
@@ -80,8 +80,8 @@ test_that("Reads returns the same ARCvURCDataFrame output",
 
 test_that("Reads returns the same FSRDistDataFrame output",
           {
-              quantiles = c(.25,.5,.75)
-              depth_values = seq_len(25)
+              quantiles <- c(.25,.5,.75)
+              depth_values <- seq_len(25)
               expect_equal(
                   FSRDistDataFrame(reads_exo,quantiles = quantiles,
                                depth.values = depth_values,
@@ -92,7 +92,7 @@ test_that("Reads returns the same FSRDistDataFrame output",
 
 test_that("Reads returns the same regionCompDataFrame output",
           {
-              depth_values = seq_len(10)
+              depth_values <- seq_len(10)
               expect_equal(
                   regionCompDataFrame(reads_exo,depth_values),
                   regionCompDataFrame(exoExample,depth_values)

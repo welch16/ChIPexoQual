@@ -8,8 +8,8 @@ data("exoExample")
 
 test_that("MA_plot error when the length of names is different from input",
           {
-              n = 2
-              u = as.character(runif(n))
+              n <- 2
+              u <- as.character(runif(n))
               expect_error(
                   MAplot(exoExample,names.input = u)
               )
@@ -18,8 +18,8 @@ test_that("MA_plot error when the length of names is different from input",
 test_that("ARC_URC_plot error when the length of names  
           is different from input",
           {
-              n = 2
-              u = as.character(runif(n))
+              n <- 2
+              u <- as.character(runif(n))
               expect_error(
                   ARCvURCplot(exoExample,names.input = u)
               )
@@ -28,8 +28,8 @@ test_that("ARC_URC_plot error when the length of names
 test_that("FSR_dist_plot error when the length of names is different 
           from input",
           {
-              n = 2
-              u = as.character(runif(n))
+              n <- 2
+              u <- as.character(runif(n))
               expect_error(
                   FSRDistplot(exoExample,names.input = u)
               )
@@ -38,8 +38,8 @@ test_that("FSR_dist_plot error when the length of names is different
 test_that("region_comp_plot error when the length of names is different 
           from input",
           {
-              n = 2
-              u = as.character(runif(n))
+              n <- 2
+              u <- as.character(runif(n))
               expect_error(
                   regionCompplot(exoExample,names_input = u)
               )
@@ -49,8 +49,8 @@ test_that("region_comp_plot error when the length of names is different
 test_that("param_dist_boxplot error when the length of names is different 
           from input",
           {
-              n = 2
-              u = as.character(runif(n))
+              n <- 2
+              u <- as.character(runif(n))
               expect_error(
                   paramDistBoxplot(exoExample,names_input = u)
               )

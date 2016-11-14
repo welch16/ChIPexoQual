@@ -1,8 +1,6 @@
-##' @importFrom S4Vectors DataFrame
 ##' @importFrom broom tidy
 ##' @importFrom IRanges start end IRanges
 ##' @importFrom stats lm
-##' @importFrom data.table .N
 NULL
 
 ## Calculate the summary statistics for each region
@@ -22,32 +20,32 @@ NULL
 calculateSummary <- function(region,fwdReads,revReads)
 {
     ## fix formats and stuff
-    width(fwdReads) = 1
-    width(revReads) = 1
+    width(fwdReads) <- 1
+    width(revReads) <- 1
     
-    fwdReads = ranges(fwdReads)
-    revReads = ranges(revReads)
+    fwdReads <- ranges(fwdReads)
+    revReads <- ranges(revReads)
     
-    fwd = countOverlaps(region,fwdReads)
-    rev = countOverlaps(region,revReads)
+    fwd <- countOverlaps(region,fwdReads)
+    rev <- countOverlaps(region,revReads)
     
-    fpos = IRanges(unique(start(fwdReads)),width = 1)
-    rpos = IRanges(unique(end(revReads)),width = 1)
-    fpos = countOverlaps(region,fpos)
-    rpos = countOverlaps(region,rpos)
-    w = width(region)    
+    fpos <- IRanges(unique(start(fwdReads)),width = 1)
+    rpos <- IRanges(unique(end(revReads)),width = 1)
+    fpos <- countOverlaps(region,fpos)
+    rpos <- countOverlaps(region,rpos)
+    w <- width(region)    
     
-    d = fwd + rev
-    u = fpos + rpos
+    d <- fwd + rev
+    u <- fpos + rpos
     
-    arc = d /w 
-    urc = u / d 
-    fsr = fwd / d
+    arc <- d /w 
+    urc <- u / d 
+    fsr <- fwd / d
     
-    M = log2(fwd) + log2(rev) - 2 * log2(w)
-    A = log2(fwd / rev)
+    M <- log2(fwd) + log2(rev) - 2 * log2(w)
+    A <- log2(fwd / rev)
 
-    stats = DataFrame("fwdReads"=fwd,"revReads"= rev,
+    stats <- DataFrame("fwdReads"=fwd,"revReads"= rev,
                       "fwdPos"=fpos,"revPos"=rpos,
                       "depth"=d,"uniquePos" = u,
                       "ARC"=arc,"URC"=urc,
@@ -73,9 +71,9 @@ calculateSummary <- function(region,fwdReads,revReads)
 ##' @rdname calculateParamDist
 ##' @name calculateParamDist
 ## 
-calculateParamDist = function(i,stats,nregions)
+calculateParamDist <- function(i,stats,nregions)
 {
-    dt = stats[sample(.N,nregions)]
-    model = lm(depth ~ 0 + uniquePos + width , data = dt)
+    dt <- stats[sample(.N,nregions)]
+    model <- lm(depth ~ 0 + uniquePos + width , data = dt)
     data.table(broom::tidy(model))
 }

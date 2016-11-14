@@ -27,14 +27,14 @@
 ##'
 ##' @examples
 ##' 
-##' files = list.files(system.file("extdata",package = "ChIPexoQualExample"),
+##' files <- list.files(system.file("extdata",package = "ChIPexoQualExample"),
 ##'     full.names = TRUE)
-##' sample.depth = seq(1e5,2e5,5e4)
+##' sample.depth <- seq(1e5,2e5,5e4)
 ##' ExoDataSubsampling(file = files[5],sample.depth = sample.depth)
 ##'
 ##' @rdname ExoDataSubsampling
 ##' @export
-ExoDataSubsampling = function(file = NULL, reads = NULL,
+ExoDataSubsampling <- function(file = NULL, reads = NULL,
                               sample.depth = NULL,
                               height = 1, 
                               nregions = 1000,
@@ -43,7 +43,7 @@ ExoDataSubsampling = function(file = NULL, reads = NULL,
                               save.reads = FALSE,
                               mc.cores = getOption("mc.cores",2L))
 {
-    ExoList = NULL
+    ExoList <- NULL
     if(!is.null(file) & !is.null(reads)){
         stop("Both 'file' and 'reads' are available, can't use both.")
     }else if(is.null(file) & is.null(reads)  ){
@@ -53,19 +53,19 @@ ExoDataSubsampling = function(file = NULL, reads = NULL,
             stopifnot(file.exists(file))
             stopifnot(!is.null(sample.depth))
             stopifnot(is.numeric(sample.depth))
-            reads = readGAlignments(file,param = NULL)
+            reads <- readGAlignments(file,param = NULL)
             
         }
-        depth = length(reads)
+        depth <- length(reads)
         if(any(sample.depth > depth)){
             stop("There are values in 'sample.depth' greater than the
                 experiments depth, please consider smaller values 
                 in 'sample.depth'")
         }
         
-        auxOpt = getOption("scipen")
+        auxOpt <- getOption("scipen")
         options(scipen = 999)
-        ExoList = lapply(sample.depth,
+        ExoList <- lapply(sample.depth,
                  function(n,reads,height,nregions,ntimes,
                     verbose,save.reads,mc.cores ){
                     if(verbose){
@@ -73,7 +73,8 @@ ExoDataSubsampling = function(file = NULL, reads = NULL,
                                 prettyNum(n,big.mark = ","),
                                 " reads")
                     }
-                    sampleReads = sample(reads,n)
+                    if(verbose)message("Sampling reads.")
+                    sampleReads <- sample(reads,n)
                     ExoData(reads = sampleReads,
                         height = height,nregions = nregions,
                         ntimes = ntimes,verbose = verbose,
@@ -81,7 +82,7 @@ ExoDataSubsampling = function(file = NULL, reads = NULL,
                         mc.cores = mc.cores)
                     },reads,height,nregions,ntimes,
             verbose,save.reads,mc.cores)
-        names(ExoList) = paste(prettyNum(as.character(sample.depth),big.mark = ","),
+        names(ExoList) <- paste(prettyNum(as.character(sample.depth),big.mark = ","),
                     "reads")
         options(scipen = auxOpt)
     }
