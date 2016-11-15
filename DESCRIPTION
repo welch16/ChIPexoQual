@@ -2,11 +2,11 @@ Package: ChIPexoQual
 Type: Package
 Title: ChIPexoQual
 Version: 0.99.11
-Date: 2016-07-18
 Author: Rene Welch, Dongjun Chung, Sunduz Keles
 Maintainer: Rene Welch <welch@stat.wisc.edu>
 Description: Package with a quality control pipeline for ChIP-exo/nexus data.
 URL: https:github.com/keleslab/ChIPexoQual
+BugReports: https://github.com/welch16/ChIPexoQual/issues
 License: GPL (>=2)
 Depends:
     R (>= 3.3.0),
