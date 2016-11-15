@@ -64,38 +64,38 @@ test_that("Writing correct nr. of reads in metadata",
                   nreads(reads_exo),depths)
           })
 
-test_that("Reads returns the same MADataFrame output",
+test_that("Reads returns the same .MADataFrame output",
           {
               expect_equal(
-                  MADataFrame(reads_exo),MADataFrame(exoExample))
+                  .MADataFrame(reads_exo),.MADataFrame(exoExample))
               
           })
 
-test_that("Reads returns the same ARCvURCDataFrame output",
+test_that("Reads returns the same .ARCvURCDataFrame output",
           {
               expect_equal(
-                  ARCvURCDataFrame(reads_exo,FALSE),
-                  ARCvURCDataFrame(exoExample,FALSE))
+                  .ARCvURCDataFrame(reads_exo,FALSE),
+                  .ARCvURCDataFrame(exoExample,FALSE))
           })
 
-test_that("Reads returns the same FSRDistDataFrame output",
+test_that("Reads returns the same .FSRDistDataFrame output",
           {
               quantiles <- c(.25,.5,.75)
               depth_values <- seq_len(25)
               expect_equal(
-                  FSRDistDataFrame(reads_exo,quantiles = quantiles,
+                  .FSRDistDataFrame(reads_exo,quantiles = quantiles,
                                depth.values = depth_values,
                                both.strand = FALSE),
-                  FSRDistDataFrame(exoExample,quantiles,
+                  .FSRDistDataFrame(exoExample,quantiles,
                                depth_values,FALSE))
           })
 
-test_that("Reads returns the same regionCompDataFrame output",
+test_that("Reads returns the same .regionCompDataFrame output",
           {
               depth_values <- seq_len(10)
               expect_equal(
-                  regionCompDataFrame(reads_exo,depth_values),
-                  regionCompDataFrame(exoExample,depth_values)
+                  .regionCompDataFrame(reads_exo,depth_values),
+                  .regionCompDataFrame(exoExample,depth_values)
               )
           })
 

@@ -20,10 +20,10 @@ NULL
 ##' 
 ##' @return a \code{DataFrame} with three columns depth, quantiles and FSR.
 ##' 
-##' @rdname filterQuantiles
-##' @name filterQuantiles
+##' @rdname .filterQuantiles
+##' @name .filterQuantiles
 ##' 
-filterQuantiles <- function(value,DF,quantiles)
+.filterQuantiles <- function(value,DF,quantiles)
 {
     depth <- NULL
     dist <- S4Vectors::subset(DF,depth > value)
@@ -43,10 +43,10 @@ filterQuantiles <- function(value,DF,quantiles)
 ##' 
 ##' @return a \code{DataFrame} with three columns d, label and prob.
 ##' 
-##' @rdname filterRegionComp
-##' @name filterRegionComp
+##' @rdname .filterRegionComp
+##' @name .filterRegionComp
 ##' 
-filterRegionComp <- function(value,DF)
+.filterRegionComp <- function(value,DF)
 {
     depth <- NULL
     DF <- S4Vectors::subset(DF,depth > value)
@@ -58,7 +58,7 @@ filterRegionComp <- function(value,DF)
     DataFrame(depth = value,lab,prob = props )
 }
 
-generateNames <- function(names.input,nms, length){
+.generateNames <- function(names.input,nms, length){
 
     if(is.null(names.input)){
         if(is.null(nms)){
@@ -70,7 +70,7 @@ generateNames <- function(names.input,nms, length){
     nms
 }
 
-nameJoin <- function(my_list,nms){
+.nameJoin <- function(my_list,nms){
     
     DF <- do.call(rbind,my_list)
     nms <- mapply(rep,nms,each = vapply(my_list,nrow,1L),SIMPLIFY = FALSE)
@@ -80,7 +80,7 @@ nameJoin <- function(my_list,nms){
     
 }
 
-##' MADataFrame
+##' .MADataFrame
 ##' 
 ##' Returns a \code{DataFrame} with the info. to generate a MA
 ##' plot to analyze the strand imbalance in ChIP-exo data.
@@ -88,13 +88,12 @@ nameJoin <- function(my_list,nms){
 ##' @param object A \code{ExoData} object.
 ##' 
 ##' @return A \code{DataFrame} with two columns: M and A.
-##' @rdname MADataFrame
-##' @name MADataFrame
-##' @export
+##' @rdname .MADataFrame
+##' @name .MADataFrame
 ##' @examples 
 ##' data(exoExample)
-##' MADataFrame(exoExample)
-MADataFrame <- function(object)
+##' .MADataFrame(exoExample)
+.MADataFrame <- function(object)
 {
     A <- NULL
     DF <- mcols(object)[,c("M","A")]
@@ -129,12 +128,12 @@ MAplot <- function(...,names.input = NULL)
     if(!is.null(names.input)){
         stopifnot(length(names.input) == length(args))
     }
-    MA_list <- lapply(args,MADataFrame)
+    MA_list <- lapply(args,.MADataFrame)
     nsamples <- length(MA_list)
-    nms <- generateNames(names.input,names(MA_list), 
+    nms <- .generateNames(names.input,names(MA_list), 
                           nsamples)
     names(MA_list) <- NULL
-    MA_DF <- nameJoin(MA_list,nms)
+    MA_DF <- .nameJoin(MA_list,nms)
     r <- viridis(1e3, option = "D")
     
     theme_set(theme_bw())
@@ -151,9 +150,9 @@ MAplot <- function(...,names.input = NULL)
     p
 }
 
-##' ARCvURCDataFrame
+##' .ARCvURCDataFrame
 ##' 
-##' \code{ARCvURCDataFrame} returns a \code{DataFrame} object with the ARC and
+##' \code{.ARCvURCDataFrame} returns a \code{DataFrame} object with the ARC and
 ##' URC columns used to plot enrichment and library complexity in ChIP-exo data.
 ##' 
 ##' @param object a \code{ExoData} object.
@@ -163,14 +162,14 @@ MAplot <- function(...,names.input = NULL)
 ##' 
 ##' @return A \code{DataFrame} with the ARC and URC columns of the \code{ExoData}
 ##' object.
-##' @rdname ARCvURCDataFrame
-##' @name ARCvURCDataFrame
-##' @export
+##' @rdname .ARCvURCDataFrame
+##' @name .ARCvURCDataFrame
+## @export
 ##' @examples 
 ##' data(exoExample)
-##' ARCvURCDataFrame(exoExample,both.strand = FALSE)
-##' ARCvURCDataFrame(exoExample,both.strand = TRUE)
-ARCvURCDataFrame = function(object,both.strand)
+##' .ARCvURCDataFrame(exoExample,both.strand = FALSE)
+##' .ARCvURCDataFrame(exoExample,both.strand = TRUE)
+.ARCvURCDataFrame = function(object,both.strand)
 {
     fwdReads <- revReads <-  NULL
     
@@ -214,17 +213,17 @@ ARCvURCplot <- function(...,names.input = NULL,both.strand = FALSE)
         stopifnot(length(names.input) == length(args))
     }
     
-    ARCvURCList <- lapply(args,ARCvURCDataFrame,both.strand)
+    ARCvURCList <- lapply(args,.ARCvURCDataFrame,both.strand)
     nsamples <- length(ARCvURCList)
-    nms <- generateNames(names.input,names(ARCvURCList), 
+    nms <- .generateNames(names.input,names(ARCvURCList), 
                           nsamples)
     names(ARCvURCList) <- NULL
-    ARCvURCDataFrame <- nameJoin(ARCvURCList,nms)
+    .ARCvURCDataFrame <- .nameJoin(ARCvURCList,nms)
     r <- viridis(1e3, option = "D")
     
     theme_set(theme_bw())
     
-    p <- ggplot(ARCvURCDataFrame,aes(ARC,URC))+stat_binhex(bins = 50)+
+    p <- ggplot(.ARCvURCDataFrame,aes(ARC,URC))+stat_binhex(bins = 50)+
         scale_fill_gradientn(colours = r,trans = 'log10',
                              labels=trans_format('log10',math_format(10^.x)) )+
         theme(legend.position = "top")
@@ -237,9 +236,9 @@ ARCvURCplot <- function(...,names.input = NULL,both.strand = FALSE)
     p
 }
 
-##' FSRDistDataFrame
+##' .FSRDistDataFrame
 ##' 
-##' \code{FSRDistDataFrame} returns a \code{DataFrame} object with the Forward 
+##' \code{.FSRDistDataFrame} returns a \code{DataFrame} object with the Forward 
 ##' Strand Ratio distribution of the \code{ExoData} object to analyze strand 
 ##' imbalance in ChIP-exo data.
 ##' 
@@ -253,14 +252,14 @@ ARCvURCplot <- function(...,names.input = NULL,both.strand = FALSE)
 ##' 
 ##' @return A \code{DataFrame} object with the FSR distribution of the 
 ##' \code{ExoData} object.
-##' @rdname FSRDistDataFrame
-##' @name FSRDistDataFrame
-##' @export
+##' @rdname .FSRDistDataFrame
+##' @name .FSRDistDataFrame
+## @export
 ##' @examples 
 ##' data(exoExample)
-##' FSRDistDataFrame(exoExample,quantiles = c(.25,.5,.75),
+##' .FSRDistDataFrame(exoExample,quantiles = c(.25,.5,.75),
 ##'   depth.values = seq_len(25),both.strand = FALSE)
-FSRDistDataFrame <- function(object,quantiles,depth.values,
+.FSRDistDataFrame <- function(object,quantiles,depth.values,
                                 both.strand)
 {
     fwdReads <- revReads <- NULL
@@ -271,7 +270,7 @@ FSRDistDataFrame <- function(object,quantiles,depth.values,
         baseDF <- subset(baseDF,fwdReads > 0 & revReads > 0)
     }
     
-    DFlist <- lapply(depth.values,filterQuantiles,
+    DFlist <- lapply(depth.values,.filterQuantiles,
                     baseDF,quantiles)
     do.call(rbind,DFlist)
 }
@@ -317,14 +316,14 @@ FSRDistplot <- function(...,names.input = NULL,
     if(!is.null(names.input)){
         stopifnot(length(names.input) == length(args))
     }
-    FSRList <- lapply(args,FSRDistDataFrame,quantiles,
+    FSRList <- lapply(args,.FSRDistDataFrame,quantiles,
                       depth.values,
                       both.strand)
     nsamples <- length(FSRList)
-    nms <- generateNames(names.input,names(FSRList), 
+    nms <- .generateNames(names.input,names(FSRList), 
                           nsamples)
     names(FSRList) <- NULL
-    FSRDataFrame <- nameJoin(FSRList,nms)
+    FSRDataFrame <- .nameJoin(FSRList,nms)
     
     theme_set(theme_bw())
     
@@ -337,9 +336,9 @@ FSRDistplot <- function(...,names.input = NULL,
     p
 }
 
-##' regionCompDataFrame
+##' .regionCompDataFrame
 ##' 
-##' \code{regionCompDataFrame} returns a \code{DataFrame} with the info. 
+##' \code{.regionCompDataFrame} returns a \code{DataFrame} with the info. 
 ##' necessary to generate the Region Composition plot to analyze strand
 ##' imbalance in ChIP-exo data.
 ##' 
@@ -349,16 +348,16 @@ FSRDistplot <- function(...,names.input = NULL,
 ##' are \code{seq_len(50)}.
 ##' @return A \code{DataFrame} with three columns: depth, label and propotion
 ##' of regions at a given depth level with the respective label.
-##' @rdname regionCompDataFrame
-##' @name regionCompDataFrame
-##' @export
+##' @rdname .regionCompDataFrame
+##' @name .regionCompDataFrame
+## @export
 ##' @examples 
 ##' data(exoExample)
-##' regionCompDataFrame(exoExample,seq_len(10))
-regionCompDataFrame <- function(object,depth.values)
+##' .regionCompDataFrame(exoExample,seq_len(10))
+.regionCompDataFrame <- function(object,depth.values)
 {
     baseDF <- mcols(object)[,c("fwdReads","revReads","depth")]
-    DataFrameList <- lapply(depth.values,filterRegionComp,
+    DataFrameList <- lapply(depth.values,.filterRegionComp,
                            baseDF)
     do.call(rbind,DataFrameList)
 }
@@ -394,12 +393,12 @@ regionCompplot <- function(...,names.input = NULL,
     if(!is.null(names.input)){
         stopifnot(length(names.input) == length(args))
     }
-    regionList <- lapply(args,regionCompDataFrame,depth.values)
+    regionList <- lapply(args,.regionCompDataFrame,depth.values)
     nsamples <- length(regionList)
-    nms <- generateNames(names.input,names(regionList), 
+    nms <- .generateNames(names.input,names(regionList), 
                           nsamples)
     names(regionList) <- NULL
-    regionDataFrame <- nameJoin(regionList,nms)
+    regionDataFrame <- .nameJoin(regionList,nms)
     r <- brewer.pal(name = "Set1",3)
     regionDataFrame <- regionDataFrame[,lab := 
         factor(lab,levels = c("both","fwd","bwd"))]
@@ -455,10 +454,10 @@ paramDistBoxplot <- function(...,names.input = NULL,
     }
     paramList <- lapply(args,paramDist)
     nsamples <- length(paramList)
-    nms <- generateNames(names.input,names(paramList), 
+    nms <- .generateNames(names.input,names(paramList), 
                           nsamples)
     names(paramList) <- NULL
-    paramDataFrame <- nameJoin(paramList,nms)
+    paramDataFrame <- .nameJoin(paramList,nms)
     paramDataFrame$beta2 <- - paramDataFrame$beta2
     p <- ggplot(paramDataFrame,
                 aes_string(x = "sample",
