@@ -1,14 +1,14 @@
 ##' @importFrom biovizBase flatGrl
-##' @importFrom Rsamtools ScanBamParam
-##' @importFrom Rsamtools scanBamFlag
+##' @importFrom Rsamtools ScanBamParam scanBamFlag
 ##' @importFrom GenomicAlignments readGAlignments 
 ##' @importFrom GenomicRanges GRanges
-##' @importFrom parallel mclapply mcmapply
 ##' @importFrom IRanges slice
-##' @importFrom data.table ":=" rbindlist
+##' @importFrom data.table ":=" rbindlist .N data.table as.data.table
+##' @importFrom BiocParallel SnowParam bpmapply MulticoreParam
 ##' @import  methods
 ##' @import  GenomeInfoDb
 NULL
+
 
 
 ##' @rdname ExoData
@@ -18,18 +18,20 @@ setClass("ExoData",
          representation = representation(
              cover = "RleList",
              reads = "GRanges",
-             param_dist = "list"
+             paramDist = "list"
          ),
          prototype = prototype(
              cover = RleList(),
              reads = GRanges(),
-             param_dist = list()
+             paramDist = list()
          ))
 
 setValidity("ExoData",
             function(object){
-                all(names(mcols(object)) == c("f","r","fpos","rpos","d","u",
-                                   "ARC","URC","FSR","M","A"))
+                all(names(mcols(object)) == c("fwdReads","revReads",
+                                              "fwdPos","revPos",
+                                              "depth","uniquePos",
+                                              "ARC","URC","FSR","M","A"))
             }
         )
 
@@ -51,25 +53,33 @@ setValidity("ExoData",
 ##' @param ntimes a numeric value indicating the number of times that regions are 
 ##' sampled to estimate the quality parameter distributions. The default value
 ##' is 1e2.
-##' @param save_reads a logical value to indicate if the reads are stored in the
+##' @param save.reads a logical value to indicate if the reads are stored in the
 ##' \code{ExoData} object. The default value is \code{FALSE}.
 ##' @param verbose a logical value indicating if the user want to receive progress
 ##' details. The default value is FALSE.
-##' @return \code{ExoData} returns a \code{ExoData} object which contains the
-##' aggregated coverage of the experiment, the set of islands and a collection
-##' of summary statistics used to asses the quality of a ChIP-exo/nexus sample.
+##' @return It returns an \code{ExoData} object with the regions obtained after
+##' partitioning the genome and the summary statistics for each region. If the
+##' \code{save.reads} parameter is \code{TRUE} then it contains a \code{GRanges}
+##' object with the reads of the ChIP-exo experiment.
 ##' @aliases ExoData ExoData-class
 ##'
 ##' @docType class
 ##'
 ##' @examples
-##' a = 1
+##' 
+##' files <- list.files(system.file("extdata",package = "ChIPexoQualExample"),
+##'     full.names = TRUE)
+##' ExoData(files[5],mc.cores = 2L)
+##' 
 ##'
 ##' @rdname ExoData
 ##' @export
-ExoData = function(file = NULL, reads = NULL , height = 1 ,mc.cores = getOption("mc.cores",2L),
-                   save_reads = FALSE,nregions = 1e3,ntimes = 1e2,verbose = FALSE)
+ExoData <- function(file = NULL, reads = NULL , height = 1 ,
+                   mc.cores = getOption("mc.cores",2L),
+                   save.reads = FALSE,nregions = 1e3,ntimes = 1e2,
+                   verbose = TRUE)
 {
+    
     if(!is.null(file) & !is.null(reads)){
         stop("Both 'file' and 'reads' are available, can't use both.")
     }
@@ -82,7 +92,7 @@ ExoData = function(file = NULL, reads = NULL , height = 1 ,mc.cores = getOption(
     if(!is.null(reads))stopifnot(class(reads) %in% c("GAlignments","GRanges"))
     
     stopifnot(is.numeric(height),height >= 1)
-    stopifnot(is.logical(save_reads))
+    stopifnot(is.logical(save.reads))
     
     if(verbose){
         if(is.null(file))message("Using 'reads' argument")
@@ -91,85 +101,87 @@ ExoData = function(file = NULL, reads = NULL , height = 1 ,mc.cores = getOption(
     if(!is.null(file)){
         if(verbose) message("Creating ExoData object using aligned reads in ",file)
     }
-    if(verbose) message("Keeping reads in object: ",ifelse(save_reads,"Yes","No"))
-    if(verbose) message("Loading experiment reads")
+    if(verbose) message("Keeping reads in object: ",ifelse(save.reads,"Yes","No"))
     
     if(!is.null(file)){
-        param_fwd = ScanBamParam(flag = scanBamFlag(isMinusStrand = FALSE))
-        param_bwd = ScanBamParam(flag = scanBamFlag(isMinusStrand = TRUE))    
+        if(verbose) message("Loading experiment reads")
+        paramFwd <- ScanBamParam(flag = scanBamFlag(isMinusStrand = FALSE))
+        paramRev <- ScanBamParam(flag = scanBamFlag(isMinusStrand = TRUE))    
         
-        freads = readGAlignments(file,param = param_fwd)
-        breads = readGAlignments(file,param = param_bwd)
+        fwdReads <- readGAlignments(file,param = paramFwd)
+        revReads <- readGAlignments(file,param = paramRev)
     }else{
-        freads = subset(reads,as.character(strand(reads)) == "+")
-        breads = subset(reads,as.character(strand(reads)) == "-")
-        file = ""
+        fwdReads <- subset(reads,as.character(strand(reads)) == "+")
+        revReads <- subset(reads,as.character(strand(reads)) == "-")
+        file <- ""
     }
     
-    if(class(freads) == "GAlignments")freads = as(freads,"GRanges")
-    if(class(breads) == "GAlignments")breads = as(breads,"GRanges")
+    if(class(fwdReads) == "GAlignments")fwdReads <- as(fwdReads,"GRanges")
+    if(class(revReads) == "GAlignments")revReads <- as(revReads,"GRanges")
     
-    cover = coverage(freads) + coverage(breads)
+    cover <- coverage(fwdReads) + coverage(revReads)
     
-    rlist = slice(cover,lower = height,rangesOnly = TRUE)
+    rlist <- slice(cover,lower = height,rangesOnly = TRUE)
     
     if(any(vapply(rlist,length,0L) ==  0)){
-        chr = names(which(vapply(rlist,length,0L) > 0))
-        rlist = rlist[chr]
+        chr <- names(which(vapply(rlist,length,0L) > 0))
+        rlist <- rlist[chr]
     }else{
-        chr = names(rlist)
+        chr <- names(rlist)
     }
     
-
-    freads = split(freads,as.character(seqnames(freads)))
-    breads = split(breads,as.character(seqnames(breads)))
+    fwdReads <- split(fwdReads,as.character(seqnames(fwdReads)))
+    revReads <- split(revReads,as.character(seqnames(revReads)))
     
-    freads = freads[chr]
-    breads = breads[chr]
+    fwdReads <- fwdReads[chr]
+    revReads <- revReads[chr]
     
-#     freads = GRangesList(freads[chr])
-#     breads = GRangesList(breads[chr])
-
     if(verbose) message("Calculating summary statistics")
-    stats = mcmapply(.calculate_summary,rlist,freads,breads,
-                 mc.cores = mc.cores , SIMPLIFY = FALSE)
-    regions = as(rlist,"GRanges")
     
-    mcols(regions) = do.call(rbind,stats)
-    nreads = sum(vapply(freads,length,1)) + sum(vapply(breads, length, 1))
-        
-    if(save_reads){
-        freads = as(freads,"GRanges")
-        freads = biovizBase::flatGrl(freads)
-        mcols(freads) = NULL
-        breads = as
-        breads = biovizBase::flatGrl(breads)
-        mcols(breads) = NULL
-        reads = c(freads,breads)
+    if(Sys.info()[["sysname"]] == "Windows"){
+        snow <- SnowParam(workers = mc.cores, type = "SOCK")
+        stats <- bpmapply(calculateSummary,rlist,fwdReads,revReads,
+                         BPPARAM = snow,SIMPLIFY = FALSE)       
     }else{
-        reads = GRanges()
+        stats <- bpmapply(calculateSummary,rlist,fwdReads,revReads,
+            BPPARAM = MulticoreParam(workers = mc.cores),
+            SIMPLIFY = FALSE)       
     }
-    d = NULL; u = NULL; w = NULL
+
+    regions <- as(rlist,"GRanges")
+    mcols(regions) <- do.call(rbind,stats)
+    nreads <- sum(vapply(fwdReads,length,1)) + sum(vapply(revReads, length, 1))
+    
+    if(save.reads){
+        fwdReads <- biovizBase::flatGrl(fwdReads)
+        mcols(fwdReads) <- NULL
+        revReads <- biovizBase::flatGrl(revReads)
+        mcols(revReads) <- NULL
+        reads <- c(fwdReads,revReads)
+    }else{
+        reads <- GRanges()
+    }
+    depth <- uniquePos <- width <-  NULL
     
     if(verbose) message("Calculating quality scores distribution")
-    DT = data.table(as.data.frame(mcols(regions)))
-    DT = DT[,list(d,u)]
-    DT = DT[,w := width(regions)]
+    DT <- data.table(as.data.frame(mcols(regions)))
+    DT <- DT[,list(depth,uniquePos)]
+    DT <- DT[,width := width(regions)]
 
-    param_list = lapply(seq_len(ntimes),.calculate_param_dist,DT,nregions)
+    paramList <- lapply(seq_len(ntimes),calculateParamDist,DT,nregions)
                           
-    param = rbindlist(param_list)
+    param <- rbindlist(paramList)
 
-    estimate = NULL; term = NULL
+    estimate <- term <- NULL
     
-    rm(param_list,DT)
-    param_dist = list("beta1" = param[term == "u",(estimate)] ,
-                      "beta2" = param[term == "w",(estimate)])
+    rm(paramList,DT)
+    paramDist <- list("beta1" = param[term == "uniquePos",(estimate)] ,
+                      "beta2" = param[term == "width",(estimate)])
     
-    metadata(regions) = list("file"=file,"nreads"=nreads,
+    metadata(regions) <- list("file"=file,"nreads"=nreads,
                              "ntimes"=ntimes,"nregions"=nregions)
     if(verbose) message("Done!")
     new("ExoData",regions,cover = cover,
         reads = reads,
-        param_dist = param_dist)
+        paramDist = paramDist)
 }

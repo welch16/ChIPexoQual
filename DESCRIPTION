@@ -1,12 +1,12 @@
 Package: ChIPexoQual
 Type: Package
 Title: ChIPexoQual
-Version: 0.99.0
-Date: 2016-07-18
+Version: 0.99.11
 Author: Rene Welch, Dongjun Chung, Sunduz Keles
 Maintainer: Rene Welch <welch@stat.wisc.edu>
 Description: Package with a quality control pipeline for ChIP-exo/nexus data.
 URL: https:github.com/keleslab/ChIPexoQual
+BugReports: https://github.com/welch16/ChIPexoQual/issues
 License: GPL (>=2)
 Depends:
     R (>= 3.3.0),
@@ -15,10 +15,10 @@ Imports:
     methods,
     GenomeInfoDb,
     stats,
-    parallel,
+    BiocParallel,
     GenomicRanges (>= 1.14.4),
     ggplot2 (>= 1.0),
-    data.table (>= 1.9.7),
+    data.table (>= 1.9.6),
     Rsamtools (>= 1.16.1),
     IRanges (>= 1.6),
     S4Vectors (>= 0.10),
@@ -30,7 +30,7 @@ Imports:
     viridis (>= 0.3),
     hexbin (>= 1.27),
 Suggests:
-    ChIPexoQualExample (>= 1.00),
+    ChIPexoQualExample (>= 0.99.1),
     knitr (>= 1.10),
     BiocStyle,
     rmarkdown,
@@ -38,7 +38,7 @@ Suggests:
     testthat
 VignetteBuilder: knitr
 biocViews: 
-    ChIPexo,
+    ChIPSeq,
     Sequencing,
     Transcription,
     Visualization,

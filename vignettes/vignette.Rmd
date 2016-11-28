@@ -25,7 +25,7 @@ vignette: >
 ```{r extraload,include = FALSE,echo = FALSE,eval = TRUE}
     
     library(dplyr,quietly = TRUE)
-    library(parallel)
+    library(BiocParallel)
     library(gridExtra)
     library(ChIPexoQual)
     library(ChIPexoQualExample)
@@ -78,20 +78,26 @@ The minimum input to use `r Biocpkg("ChIPexoQual")` are the aligned reads of a C
     files = list.files(system.file("extdata",
         package = "ChIPexoQualExample"),full.names = TRUE)
     basename(files[1])
-    ex1 = ExoData(file = files[1],mc.cores = 2L)
+    ex1 = ExoData(file = files[1],mc.cores = 2L,verbose = FALSE)
     ex1
     reads = readGAlignments(files[1],param = NULL)
-    ex2 = ExoData(reads = reads,mc.cores = 2L)
+    ex2 = ExoData(reads = reads,mc.cores = 2L,verbose = FALSE)
     identical(GRanges(ex1),GRanges(ex2))
-
 
 ```
 
-For the rest of the vignette, we are going to use **ExoData** object for the three replicates. These objects are available in `r Biocexptpkg("ChIPexoQualExample")`, and can be loaded by using:
+For the rest of the vignette, we generate an **ExoData** object for each replicate:
 
-```{r load_exdata,include=TRUE,echo=TRUE,eval=TRUE}
+```{r pre_create,include=FALSE,echo=FALSE,eval = TRUE}
     
-    data("exampleExoData") 
+    rm(reads,ex1,ex2)
+    
+```
+
+```{r create_exdata,include=TRUE,echo=TRUE,eval=TRUE}
+    
+    files = files[grep("bai",files,invert = TRUE)] ## ignore index files
+    exampleExoData = lapply(files,ExoData,mc.cores = 2L,verbose = FALSE)
 
 ```
 
@@ -101,7 +107,7 @@ To create the *ARC vs URC plot* proposed in [@qcpipeline], we use the **ARC_URC_
 
 ```{r ARC1,include=TRUE,echo=TRUE,eval=TRUE,warning=FALSE,fig.height=4,fig.width=9,results='markup'}
     
-    ARC_URC_plot(exampleExoData,names_input = paste("Rep",1:3,sep = "-"))
+    ARCvURCplot(exampleExoData,names.input = paste("Rep",1:3,sep = "-"))
     
 ```    
 
@@ -113,10 +119,10 @@ To create the *FSR distribution* and *Region Composition* plots suggested in Wel
 
 ```{r strand1,include=TRUE,echo=TRUE,eval=TRUE,warning=FALSE,results="markup",fig.height=4}
 
-    p1 = region_comp_plot(exampleExoData,names_input = paste("Rep",1:3,sep = "-"),
-        depth_values = seq_len(50))
-    p2 = FSR_dist_plot(exampleExoData,names_input = paste("Rep",1:3,sep = "-"),
-        quantiles = c(.25,.5,.75),depth_values = seq_len(100))
+    p1 = regionCompplot(exampleExoData,names.input = paste("Rep",1:3,sep = "-"),
+        depth.values = seq_len(50))
+    p2 = FSRDistplot(exampleExoData,names.input = paste("Rep",1:3,sep = "-"),
+        quantiles = c(.25,.5,.75),depth.values = seq_len(100))
     gridExtra::grid.arrange(p1,p2,nrow = 1)
     
 ```
@@ -129,10 +135,10 @@ All the plot functions in `r Biocpkg("ChIPexoQual")` allow a list or several sep
 
 ```{r ARC2,include=TRUE,echo=TRUE,eval=TRUE,warning=FALSE,fig.height=4,fig.width=9,results='markup'}
     
-    ARC_URC_plot(exampleExoData[[1]],
-                 subset(exampleExoData[[1]],u > 10),
-                 subset(exampleExoData[[1]],u > 20),
-                 names_input = c("All", "u > 10", "u > 20"))
+    ARCvURCplot(exampleExoData[[1]],
+                 subset(exampleExoData[[1]],uniquePos > 10),
+                 subset(exampleExoData[[1]],uniquePos > 20),
+                 names.input = c("All", "uniquePos > 10", "uniquePos > 20"))
     
 ```    
 
@@ -150,8 +156,8 @@ The distribution of the parameters of this model is built by sampling **nregions
 
 ```{r param_dist,include=TRUE,echo=TRUE,eval=TRUE,warning=FALSE,results="markup",fig.height=2.5}
     
-    p1 = param_dist_boxplot(exampleExoData,which_param = "beta1", names_input = paste("Rep",1:3,sep = "-"))
-    p2 = param_dist_boxplot(exampleExoData,which_param = "beta2", names_input = paste("Rep",1:3,sep = "-"))
+    p1 = paramDistBoxplot(exampleExoData,which.param = "beta1", names.input = paste("Rep",1:3,sep = "-"))
+    p2 = paramDistBoxplot(exampleExoData,which.param = "beta2", names.input = paste("Rep",1:3,sep = "-"))
     grid.arrange(p1,p2,nrow = 1)
 
 ```
@@ -164,6 +170,29 @@ Further details over this analysis are in Welch et. al 2016 (submitted). In shor
     sapply(exampleExoData,function(x)median(-beta2(x)))
 
 ```
+
+## Subsampling reads from the experiment to asses quality
+
+For convenience, we added the function `ExoDataSubsampling`, that performs the analysis suggested by Welch et. al 2016 (submitted) when the experiment is deeply sequenced. To use this function, we proceed as follows:
+
+```{r subsamping,include=TRUE,echo=TRUE,eval=TRUE}
+
+    sample.depth = seq(1e5,2e5,5e4)
+    exoList = ExoDataSubsampling(file = files[3],sample.depth = sample.depth,
+                       verbose=FALSE)
+
+```
+
+The output of `ExoDataSubsampling` is a list of `ExoData` objects, therefore its output can be used with any of the plotting functions to asses the quality of the samples. For example, using we may use `paramDistBoxplot` to get the following figures:
+
+```{r subsamplots,include=TRUE,echo=TRUE,eval=TRUE,warning=FALSE,results="markup",fig.height=2.5}
+    
+    p1 = paramDistBoxplot(exoList,which.param = "beta1")
+    p2 = paramDistBoxplot(exoList,which.param = "beta2")
+    grid.arrange(p1,p2,nrow = 1)
+
+```
+
 
 # Conclusions
 

@@ -22,8 +22,7 @@ A numeric vector with estimated values for \eqn{\beta_1}.
 \code{ChIPexoQual}
 }
 \examples{
-library(ChIPexoQualExample)
-data(exampleExoData)
-beta1(exampleExoData[[1]])
+data(exoExample)
+beta1(exoExample)
 }
 
