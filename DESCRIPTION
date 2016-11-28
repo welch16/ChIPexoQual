@@ -1,7 +1,7 @@
 Package: ChIPexoQual
 Type: Package
 Title: ChIPexoQual
-Version: 0.99.11
+Version: 0.99.12
 Author: Rene Welch, Dongjun Chung, Sunduz Keles
 Maintainer: Rene Welch <welch@stat.wisc.edu>
 Description: Package with a quality control pipeline for ChIP-exo/nexus data.
@@ -21,8 +21,8 @@ Imports:
     data.table (>= 1.9.6),
     Rsamtools (>= 1.16.1),
     IRanges (>= 1.6),
-    S4Vectors (>= 0.10),
-    biovizBase (>= 1.20),
+    S4Vectors (>= 0.8),
+    biovizBase (>= 1.18),
     broom (>= 0.4),
     RColorBrewer (>= 1.1),
     dplyr (>= 0.5),
