@@ -74,7 +74,7 @@ where <span class="math inline">\(W_i\)</span> denotes the width of island <span
 D_i = \beta_1 U_i + \beta_2 W_i + \varepsilon_i,
 \end{align*}
 \]</span> where <span class="math inline">\(\varepsilon_i\)</span> denotes the independent error term. Repeat this process <span class="math inline">\(B\)</span> times and generate box plots of estimated <span class="math inline">\(\beta_1\)</span> and <span class="math inline">\(\beta_2\)</span>.</li>
-</ol><p>We analyzed a larger collection of ChIP-exo/nexus experiments in <span class="citation">(Welch et al. 2016 (submitted))</span> including complete versions of this samples.</p>
+</ol><p>We analyzed a larger collection of ChIP-exo/nexus experiments in <span class="citation">(Welch et al. 2016)</span> including complete versions of this samples.</p>
 </div>
 <div id="creating-an-exodata-object" class="section level1">
 <h1 class="hasAnchor"><html><body><a href="#creating-an-exodata-object" class="anchor"> </a></body></html>Creating an <strong>ExoData</strong> object</h1>
@@ -136,7 +136,7 @@ D_i = \beta_1 U_i + \beta_2 W_i + \varepsilon_i,
     exampleExoData =<span class="st"> </span><span class="kw">lapply</span>(files,ExoData,<span class="dt">mc.cores =</span> 2L,<span class="dt">verbose =</span> <span class="ot">FALSE</span>)</code></pre></div>
 <div id="enrichment-analysis-and-library-complexity" class="section level2">
 <h2 class="hasAnchor"><html><body><a href="#enrichment-analysis-and-library-complexity" class="anchor"> </a></body></html>Enrichment analysis and library complexity:</h2>
-<p>To create the <em>ARC vs URC plot</em> proposed in <span class="citation">(Welch et al. 2016 (submitted))</span>, we use the <strong>ARC_URC_plot</strong> function. This function allows to visually compare different samples:</p>
+<p>To create the <em>ARC vs URC plot</em> proposed in <span class="citation">(Welch et al. 2016)</span>, we use the <strong>ARC_URC_plot</strong> function. This function allows to visually compare different samples:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">    <span class="kw"><a href="../reference/ARCvURCplot.html">ARCvURCplot</a></span>(exampleExoData,<span class="dt">names.input =</span> <span class="kw">paste</span>(<span class="st">"Rep"</span>,<span class="dv">1</span>:<span class="dv">3</span>,<span class="dt">sep =</span> <span class="st">"-"</span>))</code></pre></div>
 <p><img src="vignette_files/figure-html/ARC1-1.png" width="864" style="display: block; margin: auto;"></p>
 <p>This plot typically exhibits one of the following three patterns for any given sample. In all three panels we can observe two arms: the first with low <strong>Average Read Coefficient (ARC)</strong> and varying <strong>Unique Read Coefficient (URC)</strong>; and the second where the <strong>URC</strong> decreases as the <strong>ARC</strong> increases. The first and third replicates exhibit a defined decreasing trend in URC as the ARC increases. This indicates that these samples exhibit a higher ChIP enrichment than the second replicate. On the other hand, the overall URC level from the first two replicates is higher than that of the third replicate, elucidating that the libraries for the first two replicates are more complex than that of the third replicate.</p>
@@ -288,7 +288,7 @@ D_i = \beta_1 U_i + \beta_2 U_2 + \epsilon_i,
 <p>Serandour, Aurelien, Brown Gordon, Joshua Cohen, and Jason Carroll. 2013. &ldquo;Development of and Illumina-Based ChIP-Exonuclease Method Provides Insight into FoxA1-DNA Binding Properties.&rdquo; <em>Genome Biology</em>.</p>
 </div>
 <div id="ref-qcpipeline">
-<p>Welch, Rene, Dongjun Chung, Jeffrey Grass, Robert Landick, and S&uuml;nd&uuml;z Kele&#351;. 2016 (submitted). &ldquo;Data Exploration, Quality Control, and Statistical Analysis of ChIP-Exo/Nexus Experiments.&rdquo; <em>Submitted</em>.</p>
+<p>Welch, Rene, Dongjun Chung, Jeffrey Grass, Robert Landick, and S&uuml;nd&uuml;z Kele&#351;. 2016. &ldquo;Data Exploration, Quality Control, and Statistical Analysis of ChIP-Exo/Nexus Experiments.&rdquo; <em>Submitted</em>.</p>
 </div>
 </div>
 </div>
