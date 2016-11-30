@@ -121,8 +121,8 @@ To create the *FSR distribution* and *Region Composition* plots suggested in Wel
 
 ```{r strand1,include=TRUE,echo=TRUE,eval=TRUE,warning=FALSE,results="markup",fig.height=4}
 
-    p1 = regionCompplot(exampleExoData,names.input = paste("Rep",1:3,sep = "-"),
-        depth.values = seq_len(50))
+    p1 = regionCompplot(exampleExoData,names.input = paste("Rep",1:3,
+        sep = "-"),depth.values = seq_len(50))
     p2 = FSRDistplot(exampleExoData,names.input = paste("Rep",1:3,sep = "-"),
         quantiles = c(.25,.5,.75),depth.values = seq_len(100))
     gridExtra::grid.arrange(p1,p2,nrow = 1)

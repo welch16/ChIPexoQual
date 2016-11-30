@@ -400,9 +400,10 @@ regionCompplot <- function(...,names.input = NULL,
                           nsamples)
     names(regionList) <- NULL
     regionDataFrame <- .nameJoin(regionList,nms)
-    r <- brewer.pal(name = "Set1",3)
+    r <- brewer.pal(name = "Pastel1",3)
+    names(r) = c("both","fwd","bwd")
     regionDataFrame <- regionDataFrame[,lab := 
-        factor(lab,levels = c("both","fwd","bwd"))]
+        factor(lab,levels = rev(names(r)))]
     
     theme_set(theme_bw())
     
@@ -411,7 +412,7 @@ regionCompplot <- function(...,names.input = NULL,
         geom_bar(stat = "identity")+
         theme(legend.position = "top")+
         facet_grid(sample ~ .)+
-        scale_fill_brewer(palette = "Pastel1",name = "Strand composition")+
+        scale_fill_manual(values = r, name = "Strand composition")+
         xlab("Minimum number of reads")+ylab("Proportion of regions")
     p
     

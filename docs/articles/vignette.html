@@ -144,8 +144,8 @@ D_i = \beta_1 U_i + \beta_2 W_i + \varepsilon_i,
 <div id="strand-imbalance" class="section level2">
 <h2 class="hasAnchor"><html><body><a href="#strand-imbalance" class="anchor"> </a></body></html>Strand imbalance</h2>
 <p>To create the <em>FSR distribution</em> and <em>Region Composition</em> plots suggested in Welch et. al 2016 (submitted), we use the <strong>FSR_dist_plot</strong> and <strong>region_comp_plot</strong>, respectively.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">    p1 =<span class="st"> </span><span class="kw"><a href="../reference/regionCompplot.html">regionCompplot</a></span>(exampleExoData,<span class="dt">names.input =</span> <span class="kw">paste</span>(<span class="st">"Rep"</span>,<span class="dv">1</span>:<span class="dv">3</span>,<span class="dt">sep =</span> <span class="st">"-"</span>),
-        <span class="dt">depth.values =</span> <span class="kw">seq_len</span>(<span class="dv">50</span>))
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">    p1 =<span class="st"> </span><span class="kw"><a href="../reference/regionCompplot.html">regionCompplot</a></span>(exampleExoData,<span class="dt">names.input =</span> <span class="kw">paste</span>(<span class="st">"Rep"</span>,<span class="dv">1</span>:<span class="dv">3</span>,
+        <span class="dt">sep =</span> <span class="st">"-"</span>),<span class="dt">depth.values =</span> <span class="kw">seq_len</span>(<span class="dv">50</span>))
     p2 =<span class="st"> </span><span class="kw"><a href="../reference/FSRDistplot.html">FSRDistplot</a></span>(exampleExoData,<span class="dt">names.input =</span> <span class="kw">paste</span>(<span class="st">"Rep"</span>,<span class="dv">1</span>:<span class="dv">3</span>,<span class="dt">sep =</span> <span class="st">"-"</span>),
         <span class="dt">quantiles =</span> <span class="kw">c</span>(.<span class="dv">25</span>,.<span class="dv">5</span>,.<span class="dv">75</span>),<span class="dt">depth.values =</span> <span class="kw">seq_len</span>(<span class="dv">100</span>))
     gridExtra::<span class="kw">grid.arrange</span>(p1,p2,<span class="dt">nrow =</span> <span class="dv">1</span>)</code></pre></div>
@@ -219,67 +219,68 @@ D_i = \beta_1 U_i + \beta_2 U_2 + \epsilon_i,
 ## [1] ChIPexoQual_0.99.12
 ## 
 ## loaded via a namespace (and not attached):
-##   [1] colorspace_1.3-1              rsconnect_0.6                
-##   [3] rprojroot_1.1                 biovizBase_1.22.0            
-##   [5] htmlTable_1.7                 XVector_0.14.0               
-##   [7] GenomicRanges_1.26.1          dichromat_2.0-0              
-##   [9] roxygen2_5.0.1                hexbin_1.27.1                
-##  [11] stats_3.3.2                   getopt_1.20.0                
-##  [13] interactiveDisplayBase_1.12.0 AnnotationDbi_1.36.0         
-##  [15] xml2_1.0.0.9001               codetools_0.2-15             
-##  [17] splines_3.3.2                 mnormt_1.5-5                 
-##  [19] knitr_1.15.1                  pkgload_0.0.0.9000           
-##  [21] jsonlite_1.1                  Formula_1.2-1                
-##  [23] Rsamtools_1.26.1              broom_0.4.1                  
-##  [25] base_3.3.2                    cluster_2.0.5                
-##  [27] graph_1.52.0                  shiny_0.14.2                 
-##  [29] httr_1.2.1                    backports_1.0.4              
-##  [31] assertthat_0.1                Matrix_1.2-7.1               
-##  [33] lazyeval_0.2.0                acepack_1.4.1                
-##  [35] htmltools_0.3.5               tools_3.3.2                  
-##  [37] gtable_0.2.0                  reshape2_1.4.2               
-##  [39] dplyr_0.5.0                   grDevices_3.3.2              
-##  [41] Rcpp_0.12.8                   highlight_0.4.7              
-##  [43] Biobase_2.34.0                pkgdown_0.1.0.9000           
-##  [45] Biostrings_2.42.0             nlme_3.1-128                 
-##  [47] rtracklayer_1.34.1            psych_1.6.9                  
-##  [49] optparse_1.3.2                stringr_1.1.0                
-##  [51] testthat_1.0.2                mime_0.5                     
-##  [53] ensembldb_1.6.2               devtools_1.12.0.9000         
-##  [55] XML_3.98-1.5                  AnnotationHub_2.6.4          
-##  [57] zlibbioc_1.20.0               scales_0.4.1                 
-##  [59] BiocStyle_2.2.1               BSgenome_1.42.0              
-##  [61] VariantAnnotation_1.20.1      BiocInstaller_1.24.0         
-##  [63] graphics_3.3.2                BiocCheck_1.10.0             
-##  [65] parallel_3.3.2                SummarizedExperiment_1.4.0   
-##  [67] RBGL_1.50.0                   RColorBrewer_1.1-2           
-##  [69] utils_3.3.2                   curl_2.3                     
-##  [71] yaml_2.1.14                   memoise_1.0.0                
-##  [73] gridExtra_2.2.1               ggplot2_2.2.0                
-##  [75] datasets_3.3.2                biomaRt_2.30.0               
-##  [77] rpart_4.1-10                  latticeExtra_0.6-28          
-##  [79] stringi_1.1.2                 RSQLite_1.1                  
-##  [81] S4Vectors_0.12.0              desc_1.0.1                   
-##  [83] GenomicFeatures_1.26.0        BiocGenerics_0.20.0          
-##  [85] pkgbuild_0.0.0.9000           BiocParallel_1.8.1           
-##  [87] GenomeInfoDb_1.10.1           bitops_1.0-6                 
-##  [89] evaluate_0.10                 lattice_0.20-34              
-##  [91] ChIPexoQualExample_0.99.3     purrr_0.2.2                  
-##  [93] GenomicAlignments_1.10.0      labeling_0.3                 
-##  [95] plyr_1.8.4                    magrittr_1.5                 
-##  [97] R6_2.2.0                      IRanges_2.8.1                
-##  [99] Hmisc_4.0-0                   RUnit_0.4.31                 
-## [101] DBI_0.5-1                     whisker_0.3-2                
-## [103] foreign_0.8-67                withr_1.0.2                  
-## [105] biocViews_1.42.0              survival_2.40-1              
-## [107] RCurl_1.95-4.8                nnet_7.3-12                  
-## [109] tibble_1.2                    crayon_1.3.2                 
-## [111] rmarkdown_1.2                 viridis_0.3.4                
-## [113] grid_3.3.2                    data.table_1.9.8             
-## [115] callr_1.0.0.9000              methods_3.3.2                
-## [117] digest_0.6.10                 xtable_1.8-2                 
-## [119] tidyr_0.6.0                   httpuv_1.3.3                 
-## [121] stats4_3.3.2                  munsell_0.4.3</code></pre>
+##   [1] backports_1.0.4               Hmisc_4.0-0                  
+##   [3] AnnotationHub_2.6.4           plyr_1.8.4                   
+##   [5] lazyeval_0.2.0                splines_3.3.2                
+##   [7] BiocParallel_1.8.1            GenomeInfoDb_1.10.1          
+##   [9] ggplot2_2.2.0                 digest_0.6.10                
+##  [11] BiocInstaller_1.24.0          ensembldb_1.6.2              
+##  [13] htmltools_0.3.5               viridis_0.3.4                
+##  [15] rsconnect_0.6                 magrittr_1.5                 
+##  [17] memoise_1.0.0                 BSgenome_1.42.0              
+##  [19] cluster_2.0.5                 ChIPexoQualExample_0.99.3    
+##  [21] Biostrings_2.42.0             methods_3.3.2                
+##  [23] pkgdown_0.1.0.9000            colorspace_1.3-1             
+##  [25] dplyr_0.5.0                   callr_1.0.0.9000             
+##  [27] crayon_1.3.2                  RCurl_1.95-4.8               
+##  [29] jsonlite_1.1                  hexbin_1.27.1                
+##  [31] graph_1.52.0                  roxygen2_5.0.1               
+##  [33] survival_2.40-1               VariantAnnotation_1.20.1     
+##  [35] utils_3.3.2                   gtable_0.2.0                 
+##  [37] zlibbioc_1.20.0               XVector_0.14.0               
+##  [39] pkgbuild_0.0.0.9000           BiocGenerics_0.20.0          
+##  [41] scales_0.4.1                  DBI_0.5-1                    
+##  [43] graphics_3.3.2                Rcpp_0.12.8                  
+##  [45] xtable_1.8-2                  htmlTable_1.7                
+##  [47] foreign_0.8-67                Formula_1.2-1                
+##  [49] stats4_3.3.2                  base_3.3.2                   
+##  [51] httr_1.2.1                    getopt_1.20.0                
+##  [53] RColorBrewer_1.1-2            acepack_1.4.1                
+##  [55] XML_3.98-1.5                  nnet_7.3-12                  
+##  [57] labeling_0.3                  reshape2_1.4.2               
+##  [59] AnnotationDbi_1.36.0          stats_3.3.2                  
+##  [61] munsell_0.4.3                 biocViews_1.42.0             
+##  [63] tools_3.3.2                   RSQLite_1.1                  
+##  [65] devtools_1.12.0.9000          broom_0.4.1                  
+##  [67] evaluate_0.10                 stringr_1.1.0                
+##  [69] yaml_2.1.14                   highlight_0.4.7              
+##  [71] grDevices_3.3.2               knitr_1.15.1                 
+##  [73] purrr_0.2.2                   RBGL_1.50.0                  
+##  [75] nlme_3.1-128                  whisker_0.3-2                
+##  [77] mime_0.5                      xml2_1.0.0.9001              
+##  [79] biomaRt_2.30.0                BiocStyle_2.2.1              
+##  [81] curl_2.3                      interactiveDisplayBase_1.12.0
+##  [83] testthat_1.0.2                tibble_1.2                   
+##  [85] stringi_1.1.2                 GenomicFeatures_1.26.0       
+##  [87] desc_1.0.1                    lattice_0.20-34              
+##  [89] Matrix_1.2-7.1                psych_1.6.9                  
+##  [91] BiocCheck_1.10.0              RUnit_0.4.31                 
+##  [93] optparse_1.3.2                data.table_1.9.8             
+##  [95] bitops_1.0-6                  httpuv_1.3.3                 
+##  [97] rtracklayer_1.34.1            GenomicRanges_1.26.1         
+##  [99] R6_2.2.0                      latticeExtra_0.6-28          
+## [101] gridExtra_2.2.1               IRanges_2.8.1                
+## [103] codetools_0.2-15              dichromat_2.0-0              
+## [105] assertthat_0.1                pkgload_0.0.0.9000           
+## [107] SummarizedExperiment_1.4.0    rprojroot_1.1                
+## [109] withr_1.0.2                   GenomicAlignments_1.10.0     
+## [111] Rsamtools_1.26.1              mnormt_1.5-5                 
+## [113] S4Vectors_0.12.0              datasets_3.3.2               
+## [115] parallel_3.3.2                grid_3.3.2                   
+## [117] rpart_4.1-10                  tidyr_0.6.0                  
+## [119] rmarkdown_1.2                 git2r_0.16.0                 
+## [121] biovizBase_1.22.0             Biobase_2.34.0               
+## [123] shiny_0.14.2</code></pre>
 </div>
 <div id="references" class="section level1 unnumbered">
 <h1 class="hasAnchor"><html><body><a href="#references" class="anchor"> </a></body></html>References</h1>
