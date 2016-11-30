@@ -1,6 +1,7 @@
-##' Samples \code{sample.reads} from the ChIP-exo experiment and creates a list
-##' of \code{ExoData} objects
+##' ExoDataSubsampling
 ##'
+##' \code{ExoDataSubsampling} samples \code{sample.reads} from the ChIP-exo experiment and creates a list
+##' of \code{ExoData} objects
 ##'
 ##' @param file a character value with location of the bam file with the aligned
 ##' reads.

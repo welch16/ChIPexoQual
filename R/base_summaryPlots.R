@@ -9,9 +9,10 @@
 ##' @import GenomicRanges
 NULL
 
-##' Calculates the FSR distribution of all regions with depth > value
+##' .filterQuantiles
 ##'  
-##' Calculates the FSR distribution of all regions with depth > value
+##' \code{.filterQuantiles} Calculates the FSR distribution of all regions 
+##' with depth > value.
 ##'  
 ##' @param value a numeric value with the depth lower bound.
 ##' @param DF a \code{DataFrame} with depth and FSR.

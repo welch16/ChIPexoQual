@@ -4,7 +4,7 @@ author: |
         | Rene Welch and S&#252;nd&#252;z Kele&#351;
         | Department of Statistics, University of Wisconsin-Madison
 output: 
-    BiocStyle::html_document
+    BiocStyle::html_document2
 bibliography: biblio.bib    
 biblio-style: plain
 vignette: >
@@ -29,6 +29,8 @@ vignette: >
     library(gridExtra)
     library(ChIPexoQual)
     library(ChIPexoQualExample)
+    library(knitr)
+    opts_chunk$set(fig.align = "center")
 
 ```    
     
@@ -158,7 +160,7 @@ The distribution of the parameters of this model is built by sampling **nregions
     
     p1 = paramDistBoxplot(exampleExoData,which.param = "beta1", names.input = paste("Rep",1:3,sep = "-"))
     p2 = paramDistBoxplot(exampleExoData,which.param = "beta2", names.input = paste("Rep",1:3,sep = "-"))
-    grid.arrange(p1,p2,nrow = 1)
+    gridExtra::grid.arrange(p1,p2,nrow = 1)
 
 ```
 
@@ -189,7 +191,7 @@ The output of `ExoDataSubsampling` is a list of `ExoData` objects, therefore its
     
     p1 = paramDistBoxplot(exoList,which.param = "beta1")
     p2 = paramDistBoxplot(exoList,which.param = "beta2")
-    grid.arrange(p1,p2,nrow = 1)
+    gridExtra::grid.arrange(p1,p2,nrow = 1)
 
 ```
 

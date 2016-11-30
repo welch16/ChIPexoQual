@@ -4,6 +4,10 @@ Title: ChIPexoQual
 Version: 0.99.12
 Author: Rene Welch, Dongjun Chung, Sunduz Keles
 Maintainer: Rene Welch <welch@stat.wisc.edu>
+Authors@R: c(person(given = "Dongjun", family = "Chung", role = "aut"), 
+   person(given = "Sunduz",family = "Keles",role = "aut"),
+   person(given = "Rene", family = "Welch", role = c("aut", "cre"), 
+     email = "[welch@stat.wisc.edu]")) 
 Description: Package with a quality control pipeline for ChIP-exo/nexus data.
 URL: https:github.com/keleslab/ChIPexoQual
 BugReports: https://github.com/welch16/ChIPexoQual/issues
@@ -29,11 +33,11 @@ Imports:
     scales (>= 0.4.0),
     viridis (>= 0.3),
     hexbin (>= 1.27),
+    rmarkdown
 Suggests:
     ChIPexoQualExample (>= 0.99.1),
     knitr (>= 1.10),
     BiocStyle,
-    rmarkdown,
     gridExtra (>= 2.2),
     testthat
 VignetteBuilder: knitr

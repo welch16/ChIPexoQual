@@ -2,10 +2,11 @@
 % Please edit documentation in R/base_summaryStats.R
 \name{calculateParamDist}
 \alias{calculateParamDist}
-\title{Calculates the quality parameters of one iteration
+\title{calculateParamDist
  
-This function samples \code{nregions} rows from the stat matrix and 
-fits the linear model \code{lm(d ~ 0 + u + w)}}
+\code{calculateParamDist} calculates the quality parameters of one iteration.
+This function samples \code{nregions} rows from the stat matrix and fits 
+the linear model \code{lm(d ~ 0 + u + w)}}
 \usage{
 calculateParamDist(i, stats, nregions)
 }
@@ -21,9 +22,10 @@ the model}
 a \code{data.table} with both parameters and some extra info
 }
 \description{
-Calculates the quality parameters of one iteration
+calculateParamDist
  
-This function samples \code{nregions} rows from the stat matrix and 
-fits the linear model \code{lm(d ~ 0 + u + w)}
+\code{calculateParamDist} calculates the quality parameters of one iteration.
+This function samples \code{nregions} rows from the stat matrix and fits 
+the linear model \code{lm(d ~ 0 + u + w)}
 }
 

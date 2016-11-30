@@ -54,10 +54,11 @@ calculateSummary <- function(region,fwdReads,revReads)
 }
 
 
-##' Calculates the quality parameters of one iteration
+##' calculateParamDist
 ##'  
-##' This function samples \code{nregions} rows from the stat matrix and 
-##' fits the linear model \code{lm(d ~ 0 + u + w)}
+##' \code{calculateParamDist} calculates the quality parameters of one iteration.
+##' This function samples \code{nregions} rows from the stat matrix and fits 
+##' the linear model \code{lm(d ~ 0 + u + w)}
 ##'  
 ##' @param i a numeric value indicating the current iteration.
 ##' @param stats a \code{data.table} object with the response and covariates for

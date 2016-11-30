@@ -1,3 +1,5 @@
+##' @importFrom rmarkdown navbar_links_html
+NULL
 
 ##' nreads methods
 ##' 

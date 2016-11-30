@@ -2,8 +2,7 @@
 % Please edit documentation in R/base_subsampling.R
 \name{ExoDataSubsampling}
 \alias{ExoDataSubsampling}
-\title{Samples \code{sample.reads} from the ChIP-exo experiment and creates a list
-of \code{ExoData} objects}
+\title{ExoDataSubsampling}
 \usage{
 ExoDataSubsampling(file = NULL, reads = NULL, sample.depth = NULL,
   height = 1, nregions = 1000, ntimes = 1000, verbose = TRUE,
@@ -44,7 +43,7 @@ partitioning the genome and the summary statistics for each region. If the
 object with the reads of the ChIP-exo experiment.
 }
 \description{
-Samples \code{sample.reads} from the ChIP-exo experiment and creates a list
+\code{ExoDataSubsampling} samples \code{sample.reads} from the ChIP-exo experiment and creates a list
 of \code{ExoData} objects
 }
 \examples{
