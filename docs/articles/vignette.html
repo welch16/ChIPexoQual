@@ -194,7 +194,7 @@ D_i = \beta_1 U_i + \beta_2 U_2 + \epsilon_i,
     p2 =<span class="st"> </span><span class="kw"><a href="../reference/paramDistBoxplot.html">paramDistBoxplot</a></span>(exoList,<span class="dt">which.param =</span> <span class="st">"beta2"</span>)
     gridExtra::<span class="kw">grid.arrange</span>(p1,p2,<span class="dt">nrow =</span> <span class="dv">1</span>)</code></pre></div>
 <p><img src="vignette_files/figure-html/subsamplots-1.png" width="672" style="display: block; margin: auto;"></p>
-<p>Clearly there are increasing trends in both plots, and since we are only using the reads in chromosome 1, we are observing fewer reads than in a typical ChIP-exo/nexus experiment. However, we can see that the estimated parameter&rsquo;s median follows an increasing trend as the number of reads increases. In a higher quality experiment it is expected to show lower <span class="math inline">\(\hat{\beta}_1\)</span> and <span class="math inline">\(\hat{\beta}_2\)</span> levels. Additionally, the rate at which the estimated <span class="math inline">\(\hat{\beta}_2\)</span> parameter increases is going to be higher in a lower quality experiment.</p>
+<p>Clearly there are increasing trends in both plots, and since we are only using the reads in chromosome 1, we are observing fewer reads than in a typical ChIP-exo/nexus experiment. In a higher quality experiment it is expected to show lower <span class="math inline">\(\hat{\beta}_1\)</span> and <span class="math inline">\(\hat{\beta}_2\)</span> levels. Additionally, the rate at which the estimated <span class="math inline">\(\hat{\beta}_2\)</span> parameter increases is going to be higher in a lower quality experiment.</p>
 </div>
 </div>
 <div id="conclusions" class="section level1">

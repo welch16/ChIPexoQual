@@ -203,7 +203,7 @@ The output of `ExoDataSubsampling` is a list of `ExoData` objects, therefore its
 
 ```
 
-Clearly there are increasing trends in both plots, and since we are only using the reads in chromosome 1, we are observing fewer reads than in a typical ChIP-exo/nexus experiment. However, we can see that the estimated parameter's median follows an increasing trend as the number of reads increases. In a higher quality experiment it is expected to show lower $\hat{\beta}_1$ and $\hat{\beta}_2$ levels. Additionally, the rate at which the estimated $\hat{\beta}_2$ parameter increases is going to be higher in a lower quality experiment. 
+Clearly there are increasing trends in both plots, and since we are only using the reads in chromosome 1, we are observing fewer reads than in a typical ChIP-exo/nexus experiment. In a higher quality experiment it is expected to show lower $\hat{\beta}_1$ and $\hat{\beta}_2$ levels. Additionally, the rate at which the estimated $\hat{\beta}_2$ parameter increases is going to be higher in a lower quality experiment. 
 
 # Conclusions
 

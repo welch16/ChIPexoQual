@@ -123,32 +123,45 @@ object with the reads of the ChIP-exo experiment.</p>
 <span class='no'>files</span> <span class='kw'>&lt;-</span> <span class='fu'>list.files</span>(<span class='fu'>system.file</span>(<span class='st'>"extdata"</span>,<span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"ChIPexoQualExample"</span>),
     <span class='kw'>full.names</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 <span class='fu'>ExoData</span>(<span class='no'>files</span>[<span class='fl'>5</span>],<span class='kw'>mc.cores</span> <span class='kw'>=</span> <span class='fl'>2L</span>)</div><div class='output co'>#&gt; <span class='message'>Using &#39;file&#39; argument</span></div><div class='output co'>#&gt; <span class='message'>Creating ExoData object using aligned reads in /home/rene/R/x86_64-pc-linux-gnu-library/3.3/ChIPexoQualExample/extdata/ChIPexo_carroll_FoxA1_mouse_rep3_chr1.bam</span></div><div class='output co'>#&gt; <span class='message'>Keeping reads in object: No</span></div><div class='output co'>#&gt; <span class='message'>Loading experiment reads</span></div><div class='output co'>#&gt; <span class='message'>Calculating summary statistics</span></div><div class='output co'>#&gt; <span class='message'>Calculating quality scores distribution</span></div><div class='output co'>#&gt; <span class='message'>Done!</span></div><div class='output co'>#&gt; ExoData object with 215936 ranges and 11 metadata columns:
-#&gt;            seqnames                 ranges strand |  fwdReads  revReads    fwdPos    revPos
-#&gt;               &lt;Rle&gt;              &lt;IRanges&gt;  &lt;Rle&gt; | &lt;integer&gt; &lt;integer&gt; &lt;integer&gt; &lt;integer&gt;
-#&gt;        [1]     chr1     [3001926, 3001961]      * |         6         0         1         0
-#&gt;        [2]     chr1     [3002412, 3002447]      * |         0         7         0         1
-#&gt;        [3]     chr1     [3003987, 3004022]      * |         0        11         0         1
-#&gt;        [4]     chr1     [3006189, 3006224]      * |         6         0         1         0
-#&gt;        [5]     chr1     [3012445, 3012480]      * |         0         1         0         1
-#&gt;        ...      ...                    ...    ... .       ...       ...       ...       ...
-#&gt;   [215932]     chr1 [197189055, 197189090]      * |        10         0         1         0
-#&gt;   [215933]     chr1 [197189266, 197189301]      * |         2         0         1         0
-#&gt;   [215934]     chr1 [197189679, 197189714]      * |         9         0         1         0
-#&gt;   [215935]     chr1 [197192288, 197192323]      * |         0         4         0         1
-#&gt;   [215936]     chr1 [197192797, 197192832]      * |         3         0         1         0
-#&gt;                depth uniquePos                ARC                URC       FSR         M         A
-#&gt;            &lt;integer&gt; &lt;integer&gt;          &lt;numeric&gt;          &lt;numeric&gt; &lt;numeric&gt; &lt;numeric&gt; &lt;numeric&gt;
-#&gt;        [1]         6         1  0.166666666666667  0.166666666666667         1      -Inf       Inf
-#&gt;        [2]         7         1  0.194444444444444  0.142857142857143         0      -Inf      -Inf
-#&gt;        [3]        11         1  0.305555555555556 0.0909090909090909         0      -Inf      -Inf
-#&gt;        [4]         6         1  0.166666666666667  0.166666666666667         1      -Inf       Inf
-#&gt;        [5]         1         1 0.0277777777777778                  1         0      -Inf      -Inf
-#&gt;        ...       ...       ...                ...                ...       ...       ...       ...
-#&gt;   [215932]        10         1  0.277777777777778                0.1         1      -Inf       Inf
-#&gt;   [215933]         2         1 0.0555555555555556                0.5         1      -Inf       Inf
-#&gt;   [215934]         9         1               0.25  0.111111111111111         1      -Inf       Inf
-#&gt;   [215935]         4         1  0.111111111111111               0.25         0      -Inf      -Inf
-#&gt;   [215936]         3         1 0.0833333333333333  0.333333333333333         1      -Inf       Inf
+#&gt;            seqnames                 ranges strand |  fwdReads  revReads
+#&gt;               &lt;Rle&gt;              &lt;IRanges&gt;  &lt;Rle&gt; | &lt;integer&gt; &lt;integer&gt;
+#&gt;        [1]     chr1     [3001926, 3001961]      * |         6         0
+#&gt;        [2]     chr1     [3002412, 3002447]      * |         0         7
+#&gt;        [3]     chr1     [3003987, 3004022]      * |         0        11
+#&gt;        [4]     chr1     [3006189, 3006224]      * |         6         0
+#&gt;        [5]     chr1     [3012445, 3012480]      * |         0         1
+#&gt;        ...      ...                    ...    ... .       ...       ...
+#&gt;   [215932]     chr1 [197189055, 197189090]      * |        10         0
+#&gt;   [215933]     chr1 [197189266, 197189301]      * |         2         0
+#&gt;   [215934]     chr1 [197189679, 197189714]      * |         9         0
+#&gt;   [215935]     chr1 [197192288, 197192323]      * |         0         4
+#&gt;   [215936]     chr1 [197192797, 197192832]      * |         3         0
+#&gt;               fwdPos    revPos     depth uniquePos                ARC
+#&gt;            &lt;integer&gt; &lt;integer&gt; &lt;integer&gt; &lt;integer&gt;          &lt;numeric&gt;
+#&gt;        [1]         1         0         6         1  0.166666666666667
+#&gt;        [2]         0         1         7         1  0.194444444444444
+#&gt;        [3]         0         1        11         1  0.305555555555556
+#&gt;        [4]         1         0         6         1  0.166666666666667
+#&gt;        [5]         0         1         1         1 0.0277777777777778
+#&gt;        ...       ...       ...       ...       ...                ...
+#&gt;   [215932]         1         0        10         1  0.277777777777778
+#&gt;   [215933]         1         0         2         1 0.0555555555555556
+#&gt;   [215934]         1         0         9         1               0.25
+#&gt;   [215935]         0         1         4         1  0.111111111111111
+#&gt;   [215936]         1         0         3         1 0.0833333333333333
+#&gt;                           URC       FSR         M         A
+#&gt;                     &lt;numeric&gt; &lt;numeric&gt; &lt;numeric&gt; &lt;numeric&gt;
+#&gt;        [1]  0.166666666666667         1      -Inf       Inf
+#&gt;        [2]  0.142857142857143         0      -Inf      -Inf
+#&gt;        [3] 0.0909090909090909         0      -Inf      -Inf
+#&gt;        [4]  0.166666666666667         1      -Inf       Inf
+#&gt;        [5]                  1         0      -Inf      -Inf
+#&gt;        ...                ...       ...       ...       ...
+#&gt;   [215932]                0.1         1      -Inf       Inf
+#&gt;   [215933]                0.5         1      -Inf       Inf
+#&gt;   [215934]  0.111111111111111         1      -Inf       Inf
+#&gt;   [215935]               0.25         0      -Inf      -Inf
+#&gt;   [215936]  0.333333333333333         1      -Inf       Inf
 #&gt;   -------
 #&gt;   seqinfo: 1 sequence from an unspecified genome; no seqlengths</div><div class='input'>
 
