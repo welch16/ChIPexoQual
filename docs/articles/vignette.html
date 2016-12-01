@@ -52,7 +52,7 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 </script><div id="overview" class="section level1">
 <h1 class="hasAnchor"><html><body><a href="#overview" class="anchor"> </a></body></html>Overview</h1>
-<p>In this vignette, we provide a brief overview of the <em><a href="http://bioconductor.org/packages/ChIPexoQual">ChIPexoQual</a></em> package. This package provides a statistical quality control (QC) pipeline that enables the exploration and analysis of ChIP-exo/nexus experiments. Additionally, we used the reads aligned to <strong>chr1</strong> in the mouse liver ChIP-exo experiment <span class="citation">(Serandour et al. 2013)</span> to illustrate the use of the pipeline. To load the packages we use:</p>
+<p>In this vignette, we provide a brief overview of the <em><a href="http://bioconductor.org/packages/ChIPexoQual">ChIPexoQual</a></em> package. This package provides a statistical quality control (QC) pipeline that enables the exploration and analysis of ChIP-exo/nexus experiments. In this vignette we used the reads aligned to <strong>chr1</strong> in the mouse liver ChIP-exo experiment <span class="citation">(Serandour et al. 2013)</span> to illustrate the use of the pipeline. To load the packages we use:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">    <span class="kw">library</span>(ChIPexoQual)
     <span class="kw">library</span>(ChIPexoQualExample)</code></pre></div>
 <p><em><a href="http://bioconductor.org/packages/ChIPexoQual">ChIPexoQual</a></em> takes a set of aligned reads from a ChIP-exo (or ChIP-nexus) experiment as input and performs the following steps:</p>
@@ -134,6 +134,9 @@ D_i = \beta_1 U_i + \beta_2 W_i + \varepsilon_i,
 <p>For the rest of the vignette, we generate an <strong>ExoData</strong> object for each replicate:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">    files =<span class="st"> </span>files[<span class="kw">grep</span>(<span class="st">"bai"</span>,files,<span class="dt">invert =</span> <span class="ot">TRUE</span>)] ## ignore index files
     exampleExoData =<span class="st"> </span><span class="kw">lapply</span>(files,ExoData,<span class="dt">mc.cores =</span> 2L,<span class="dt">verbose =</span> <span class="ot">FALSE</span>)</code></pre></div>
+<p>Finally, we can recover the number of reads that compose a <strong>ExoData</strong> object by using the <strong>nreads</strong> function:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">    <span class="kw">sapply</span>(exampleExoData,nreads)</code></pre></div>
+<pre><code>## [1] 1654985 1766665 1670117</code></pre>
 <div id="enrichment-analysis-and-library-complexity" class="section level2">
 <h2 class="hasAnchor"><html><body><a href="#enrichment-analysis-and-library-complexity" class="anchor"> </a></body></html>Enrichment analysis and library complexity:</h2>
 <p>To create the <em>ARC vs URC plot</em> proposed in <span class="citation">(Welch et al. 2016)</span>, we use the <strong>ARC_URC_plot</strong> function. This function allows to visually compare different samples:</p>
@@ -159,6 +162,7 @@ D_i = \beta_1 U_i + \beta_2 W_i + \varepsilon_i,
                  <span class="kw">subset</span>(exampleExoData[[<span class="dv">1</span>]],uniquePos &gt;<span class="st"> </span><span class="dv">20</span>),
                  <span class="dt">names.input =</span> <span class="kw">c</span>(<span class="st">"All"</span>, <span class="st">"uniquePos &gt; 10"</span>, <span class="st">"uniquePos &gt; 20"</span>))</code></pre></div>
 <p><img src="vignette_files/figure-html/ARC2-1.png" width="864" style="display: block; margin: auto;"></p>
+<p>For this figure, we used the <em>ARC vs URC</em> plot to show how several of the regions with low <strong>ARC</strong> values are composed by reads that align to a small number of unique positions. This technique highlights a strategy that can be followed to further explore the data, as with all the previously listed plotting functions we may compare different subsets of the islands in the partition.</p>
 </div>
 </div>
 <div id="quality-evaluation" class="section level2">
@@ -182,15 +186,15 @@ D_i = \beta_1 U_i + \beta_2 U_2 + \epsilon_i,
 </div>
 <div id="subsampling-reads-from-the-experiment-to-asses-quality" class="section level2">
 <h2 class="hasAnchor"><html><body><a href="#subsampling-reads-from-the-experiment-to-asses-quality" class="anchor"> </a></body></html>Subsampling reads from the experiment to asses quality</h2>
-<p>For convenience, we added the function <code>ExoDataSubsampling</code>, that performs the analysis suggested by Welch et. al 2016 (submitted) when the experiment is deeply sequenced. To use this function, we proceed as follows:</p>
+<p>The behavior of the third&rsquo;s FoxA1 replicate may be an indication of problems in the sample. However, it is also common to observe that pattern in deeply sequenced experiments. For convenience, we added the function <code>ExoDataSubsampling</code>, that performs the analysis suggested by Welch et. al 2016 (submitted) when the experiment is deeply sequenced. To use this function, we proceed as follows:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">    sample.depth =<span class="st"> </span><span class="kw">seq</span>(<span class="fl">1e5</span>,<span class="fl">2e5</span>,<span class="fl">5e4</span>)
-    exoList =<span class="st"> </span><span class="kw"><a href="../reference/ExoDataSubsampling.html">ExoDataSubsampling</a></span>(<span class="dt">file =</span> files[<span class="dv">3</span>],<span class="dt">sample.depth =</span> sample.depth,
-                       <span class="dt">verbose=</span><span class="ot">FALSE</span>)</code></pre></div>
+    exoList =<span class="st"> </span><span class="kw"><a href="../reference/ExoDataSubsampling.html">ExoDataSubsampling</a></span>(<span class="dt">file =</span> files[<span class="dv">3</span>],<span class="dt">sample.depth =</span> sample.depth, <span class="dt">verbose=</span><span class="ot">FALSE</span>)</code></pre></div>
 <p>The output of <code>ExoDataSubsampling</code> is a list of <code>ExoData</code> objects, therefore its output can be used with any of the plotting functions to asses the quality of the samples. For example, using we may use <code>paramDistBoxplot</code> to get the following figures:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">    p1 =<span class="st"> </span><span class="kw"><a href="../reference/paramDistBoxplot.html">paramDistBoxplot</a></span>(exoList,<span class="dt">which.param =</span> <span class="st">"beta1"</span>)
     p2 =<span class="st"> </span><span class="kw"><a href="../reference/paramDistBoxplot.html">paramDistBoxplot</a></span>(exoList,<span class="dt">which.param =</span> <span class="st">"beta2"</span>)
     gridExtra::<span class="kw">grid.arrange</span>(p1,p2,<span class="dt">nrow =</span> <span class="dv">1</span>)</code></pre></div>
 <p><img src="vignette_files/figure-html/subsamplots-1.png" width="672" style="display: block; margin: auto;"></p>
+<p>Clearly there are increasing trends in both plots, and since we are only using the reads in chromosome 1, we are observing fewer reads than in a typical ChIP-exo/nexus experiment. However, we can see that the estimated parameter&rsquo;s median follows an increasing trend as the number of reads increases. In a higher quality experiment it is expected to show lower <span class="math inline">\(\hat{\beta}_1\)</span> and <span class="math inline">\(\hat{\beta}_2\)</span> levels. Additionally, the rate at which the estimated <span class="math inline">\(\hat{\beta}_2\)</span> parameter increases is going to be higher in a lower quality experiment.</p>
 </div>
 </div>
 <div id="conclusions" class="section level1">
@@ -219,68 +223,68 @@ D_i = \beta_1 U_i + \beta_2 U_2 + \epsilon_i,
 ## [1] ChIPexoQual_0.99.12
 ## 
 ## loaded via a namespace (and not attached):
-##   [1] backports_1.0.4               Hmisc_4.0-0                  
-##   [3] AnnotationHub_2.6.4           plyr_1.8.4                   
-##   [5] lazyeval_0.2.0                splines_3.3.2                
-##   [7] BiocParallel_1.8.1            GenomeInfoDb_1.10.1          
-##   [9] ggplot2_2.2.0                 digest_0.6.10                
-##  [11] BiocInstaller_1.24.0          ensembldb_1.6.2              
-##  [13] htmltools_0.3.5               viridis_0.3.4                
-##  [15] rsconnect_0.6                 magrittr_1.5                 
-##  [17] memoise_1.0.0                 BSgenome_1.42.0              
-##  [19] cluster_2.0.5                 ChIPexoQualExample_0.99.3    
-##  [21] Biostrings_2.42.0             methods_3.3.2                
-##  [23] pkgdown_0.1.0.9000            colorspace_1.3-1             
-##  [25] dplyr_0.5.0                   callr_1.0.0.9000             
-##  [27] crayon_1.3.2                  RCurl_1.95-4.8               
-##  [29] jsonlite_1.1                  hexbin_1.27.1                
-##  [31] graph_1.52.0                  roxygen2_5.0.1               
-##  [33] survival_2.40-1               VariantAnnotation_1.20.1     
-##  [35] utils_3.3.2                   gtable_0.2.0                 
-##  [37] zlibbioc_1.20.0               XVector_0.14.0               
-##  [39] pkgbuild_0.0.0.9000           BiocGenerics_0.20.0          
-##  [41] scales_0.4.1                  DBI_0.5-1                    
-##  [43] graphics_3.3.2                Rcpp_0.12.8                  
-##  [45] xtable_1.8-2                  htmlTable_1.7                
-##  [47] foreign_0.8-67                Formula_1.2-1                
-##  [49] stats4_3.3.2                  base_3.3.2                   
-##  [51] httr_1.2.1                    getopt_1.20.0                
-##  [53] RColorBrewer_1.1-2            acepack_1.4.1                
-##  [55] XML_3.98-1.5                  nnet_7.3-12                  
-##  [57] labeling_0.3                  reshape2_1.4.2               
-##  [59] AnnotationDbi_1.36.0          stats_3.3.2                  
-##  [61] munsell_0.4.3                 biocViews_1.42.0             
-##  [63] tools_3.3.2                   RSQLite_1.1                  
-##  [65] devtools_1.12.0.9000          broom_0.4.1                  
-##  [67] evaluate_0.10                 stringr_1.1.0                
-##  [69] yaml_2.1.14                   highlight_0.4.7              
-##  [71] grDevices_3.3.2               knitr_1.15.1                 
-##  [73] purrr_0.2.2                   RBGL_1.50.0                  
-##  [75] nlme_3.1-128                  whisker_0.3-2                
-##  [77] mime_0.5                      xml2_1.0.0.9001              
-##  [79] biomaRt_2.30.0                BiocStyle_2.2.1              
-##  [81] curl_2.3                      interactiveDisplayBase_1.12.0
-##  [83] testthat_1.0.2                tibble_1.2                   
-##  [85] stringi_1.1.2                 GenomicFeatures_1.26.0       
-##  [87] desc_1.0.1                    lattice_0.20-34              
-##  [89] Matrix_1.2-7.1                psych_1.6.9                  
-##  [91] BiocCheck_1.10.0              RUnit_0.4.31                 
-##  [93] optparse_1.3.2                data.table_1.9.8             
-##  [95] bitops_1.0-6                  httpuv_1.3.3                 
-##  [97] rtracklayer_1.34.1            GenomicRanges_1.26.1         
-##  [99] R6_2.2.0                      latticeExtra_0.6-28          
-## [101] gridExtra_2.2.1               IRanges_2.8.1                
-## [103] codetools_0.2-15              dichromat_2.0-0              
-## [105] assertthat_0.1                pkgload_0.0.0.9000           
-## [107] SummarizedExperiment_1.4.0    rprojroot_1.1                
-## [109] withr_1.0.2                   GenomicAlignments_1.10.0     
-## [111] Rsamtools_1.26.1              mnormt_1.5-5                 
-## [113] S4Vectors_0.12.0              datasets_3.3.2               
-## [115] parallel_3.3.2                grid_3.3.2                   
-## [117] rpart_4.1-10                  tidyr_0.6.0                  
-## [119] rmarkdown_1.2                 git2r_0.16.0                 
-## [121] biovizBase_1.22.0             Biobase_2.34.0               
-## [123] shiny_0.14.2</code></pre>
+##   [1] colorspace_1.3-1              rsconnect_0.6                
+##   [3] rprojroot_1.1                 biovizBase_1.22.0            
+##   [5] htmlTable_1.7                 XVector_0.14.0               
+##   [7] GenomicRanges_1.26.1          dichromat_2.0-0              
+##   [9] roxygen2_5.0.1                hexbin_1.27.1                
+##  [11] stats_3.3.2                   getopt_1.20.0                
+##  [13] interactiveDisplayBase_1.12.0 AnnotationDbi_1.36.0         
+##  [15] xml2_1.0.0.9001               codetools_0.2-15             
+##  [17] splines_3.3.2                 mnormt_1.5-5                 
+##  [19] knitr_1.15.1                  pkgload_0.0.0.9000           
+##  [21] Formula_1.2-1                 jsonlite_1.1                 
+##  [23] Rsamtools_1.26.1              broom_0.4.1                  
+##  [25] base_3.3.2                    cluster_2.0.5                
+##  [27] graph_1.52.0                  shiny_0.14.2                 
+##  [29] httr_1.2.1                    backports_1.0.4              
+##  [31] assertthat_0.1                Matrix_1.2-7.1               
+##  [33] lazyeval_0.2.0                acepack_1.4.1                
+##  [35] htmltools_0.3.5               tools_3.3.2                  
+##  [37] gtable_0.2.0                  reshape2_1.4.2               
+##  [39] dplyr_0.5.0                   grDevices_3.3.2              
+##  [41] highlight_0.4.7               Rcpp_0.12.8                  
+##  [43] Biobase_2.34.0                pkgdown_0.1.0.9000           
+##  [45] Biostrings_2.42.0             nlme_3.1-128                 
+##  [47] rtracklayer_1.34.1            psych_1.6.9                  
+##  [49] optparse_1.3.2                stringr_1.1.0                
+##  [51] testthat_1.0.2                mime_0.5                     
+##  [53] ensembldb_1.6.2               devtools_1.12.0.9000         
+##  [55] XML_3.98-1.5                  AnnotationHub_2.6.4          
+##  [57] zlibbioc_1.20.0               scales_0.4.1                 
+##  [59] BiocStyle_2.2.1               BSgenome_1.42.0              
+##  [61] VariantAnnotation_1.20.1      BiocInstaller_1.24.0         
+##  [63] graphics_3.3.2                BiocCheck_1.10.0             
+##  [65] parallel_3.3.2                SummarizedExperiment_1.4.0   
+##  [67] RBGL_1.50.0                   RColorBrewer_1.1-2           
+##  [69] utils_3.3.2                   yaml_2.1.14                  
+##  [71] curl_2.3                      memoise_1.0.0                
+##  [73] gridExtra_2.2.1               ggplot2_2.2.0                
+##  [75] datasets_3.3.2                biomaRt_2.30.0               
+##  [77] rpart_4.1-10                  latticeExtra_0.6-28          
+##  [79] stringi_1.1.2                 RSQLite_1.1                  
+##  [81] S4Vectors_0.12.0              desc_1.0.1                   
+##  [83] GenomicFeatures_1.26.0        BiocGenerics_0.20.0          
+##  [85] pkgbuild_0.0.0.9000           BiocParallel_1.8.1           
+##  [87] GenomeInfoDb_1.10.1           bitops_1.0-6                 
+##  [89] evaluate_0.10                 lattice_0.20-34              
+##  [91] ChIPexoQualExample_0.99.3     purrr_0.2.2                  
+##  [93] GenomicAlignments_1.10.0      labeling_0.3                 
+##  [95] plyr_1.8.4                    magrittr_1.5                 
+##  [97] R6_2.2.0                      IRanges_2.8.1                
+##  [99] magick_0.3                    Hmisc_4.0-0                  
+## [101] RUnit_0.4.31                  DBI_0.5-1                    
+## [103] whisker_0.3-2                 foreign_0.8-67               
+## [105] withr_1.0.2                   biocViews_1.42.0             
+## [107] survival_2.40-1               RCurl_1.95-4.8               
+## [109] nnet_7.3-12                   tibble_1.2                   
+## [111] crayon_1.3.2                  rmarkdown_1.2                
+## [113] viridis_0.3.4                 grid_3.3.2                   
+## [115] data.table_1.9.8              callr_1.0.0.9000             
+## [117] git2r_0.16.0                  methods_3.3.2                
+## [119] digest_0.6.10                 xtable_1.8-2                 
+## [121] tidyr_0.6.0                   httpuv_1.3.3                 
+## [123] stats4_3.3.2                  munsell_0.4.3</code></pre>
 </div>
 <div id="references" class="section level1 unnumbered">
 <h1 class="hasAnchor"><html><body><a href="#references" class="anchor"> </a></body></html>References</h1>

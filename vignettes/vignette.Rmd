@@ -36,7 +36,7 @@ vignette: >
     
 # Overview
 
-In this vignette, we provide a brief overview of the `r Biocpkg("ChIPexoQual")` package. This package provides a statistical quality control (QC) pipeline that enables the exploration and analysis of ChIP-exo/nexus experiments. Additionally, we used the reads aligned to **chr1** in the mouse liver ChIP-exo experiment [@exoillumina] to illustrate the use of the pipeline. To load the packages we use:
+In this vignette, we provide a brief overview of the `r Biocpkg("ChIPexoQual")` package. This package provides a statistical quality control (QC) pipeline that enables the exploration and analysis of ChIP-exo/nexus experiments. In this vignette we used the reads aligned to **chr1** in the mouse liver ChIP-exo experiment [@exoillumina] to illustrate the use of the pipeline. To load the packages we use: 
 
 ```{r load,include=TRUE,echo=TRUE,eval=FALSE}
 
@@ -103,6 +103,13 @@ For the rest of the vignette, we generate an **ExoData** object for each replica
 
 ```
 
+Finally, we can recover the number of reads that compose a **ExoData** object by using the **nreads** function:
+
+```{r depth,include=TRUE,echo=TRUE,eval=TRUE}
+
+    sapply(exampleExoData,nreads)
+
+```
 ## Enrichment analysis and library complexity:
 
 To create the *ARC vs URC plot* proposed in [@qcpipeline], we use the **ARC_URC_plot** function. This function allows to visually compare different samples:
@@ -113,8 +120,8 @@ To create the *ARC vs URC plot* proposed in [@qcpipeline], we use the **ARC_URC_
     
 ```    
 
-This plot typically exhibits one of the following three patterns for any given sample. In all three panels we can observe two arms: the first with low **Average Read Coefficient (ARC)** and varying **Unique Read Coefficient (URC)**; and the second where the **URC** decreases as the **ARC** increases. The first and third replicates exhibit a defined decreasing trend in URC as the ARC increases. This indicates that these samples exhibit a higher ChIP enrichment than the second replicate. On the other hand, the overall URC level from the first two replicates is higher than that of the third replicate, elucidating that the libraries for the first two replicates are more complex than that of the third replicate.
- 
+This plot typically exhibits one of the following three patterns for any given sample. In all three panels we can observe two arms: the first with low **Average Read Coefficient (ARC)** and varying **Unique Read Coefficient (URC)**; and the second where the **URC** decreases as the **ARC** increases. The first and third replicates exhibit a defined decreasing trend in URC as the ARC increases. This indicates that these samples exhibit a higher ChIP enrichment than the second replicate. On the other hand, the overall URC level from the first two replicates is higher than that of the third replicate, elucidating that the libraries for the first two replicates are more complex than that of the third replicate. 
+
 ## Strand imbalance
 
 To create the *FSR distribution* and *Region Composition* plots suggested in Welch et. al 2016 (submitted), we use the **FSR_dist_plot** and **region_comp_plot**, respectively. 
@@ -143,6 +150,8 @@ All the plot functions in `r Biocpkg("ChIPexoQual")` allow a list or several sep
                  names.input = c("All", "uniquePos > 10", "uniquePos > 20"))
     
 ```    
+
+For this figure, we used the *ARC vs URC* plot to show how several of the regions with low **ARC** values are composed by reads that align to a small number of unique positions. This technique highlights a strategy that can be followed to further explore the data, as with all the previously listed plotting functions we may compare different subsets of the islands in the partition.
 
 ## Quality evaluation
 
@@ -175,13 +184,12 @@ Further details over this analysis are in Welch et. al 2016 (submitted). In shor
 
 ## Subsampling reads from the experiment to asses quality
 
-For convenience, we added the function `ExoDataSubsampling`, that performs the analysis suggested by Welch et. al 2016 (submitted) when the experiment is deeply sequenced. To use this function, we proceed as follows:
+The behavior of the third's FoxA1 replicate may be an indication of problems in the sample. However, it is also common to observe that pattern in deeply sequenced experiments. For convenience, we added the function `ExoDataSubsampling`, that performs the analysis suggested by Welch et. al 2016 (submitted) when the experiment is deeply sequenced. To use this function, we proceed as follows:
 
 ```{r subsamping,include=TRUE,echo=TRUE,eval=TRUE}
 
     sample.depth = seq(1e5,2e5,5e4)
-    exoList = ExoDataSubsampling(file = files[3],sample.depth = sample.depth,
-                       verbose=FALSE)
+    exoList = ExoDataSubsampling(file = files[3],sample.depth = sample.depth, verbose=FALSE)
 
 ```
 
@@ -195,6 +203,7 @@ The output of `ExoDataSubsampling` is a list of `ExoData` objects, therefore its
 
 ```
 
+Clearly there are increasing trends in both plots, and since we are only using the reads in chromosome 1, we are observing fewer reads than in a typical ChIP-exo/nexus experiment. However, we can see that the estimated parameter's median follows an increasing trend as the number of reads increases. In a higher quality experiment it is expected to show lower $\hat{\beta}_1$ and $\hat{\beta}_2$ levels. Additionally, the rate at which the estimated $\hat{\beta}_2$ parameter increases is going to be higher in a lower quality experiment. 
 
 # Conclusions
 
