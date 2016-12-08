@@ -78,7 +78,8 @@ boxplot comparing the <code>ntimes</code> estimations of the chosen
 parameter.</p>
     
 
-    <pre><span class='fu'>paramDistBoxplot</span>(<span class='no'>...</span>, <span class='kw'>names.input</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>which.param</span> <span class='kw'>=</span> <span class='st'>"beta1"</span>)</pre>
+    <pre><span class='fu'>paramDistBoxplot</span>(<span class='no'>...</span>, <span class='kw'>names.input</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>which.param</span> <span class='kw'>=</span> <span class='st'>"beta1"</span>,
+  <span class='kw'>sort.as.numeric</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <dl class="dl-horizontal">
@@ -95,6 +96,10 @@ name them as Sample: 1 ,... , Sample: k.</dd>
 <code>&quot;beta2&quot;</code> that determines which paramters in the model 
 depth_i ~ uniquePos_i + width_i to plot. The default value is 
 <code>&quot;beta1&quot;</code>.</dd>
+      <dt>sort.as.numeric</dt>
+      <dd>a logical value indicating if the values of 
+<code>names.input</code> are meant to be interpreted as numeric and sorted 
+accordingly.</dd>
     </dl>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>

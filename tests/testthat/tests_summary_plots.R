@@ -55,3 +55,12 @@ test_that("param_dist_boxplot error when the length of names is different
                   paramDistBoxplot(exoExample,names_input = u)
               )
           })
+
+test_that("param_dist_boxplot error when sort.as.numeric is not logical",
+          {
+              n <- 2
+              u <- as.character(runif(n))
+              expect_error(
+                  paramDistBoxplot(exoExample,names_input = u , sort.as.numeric = "NO")
+              )
+          })

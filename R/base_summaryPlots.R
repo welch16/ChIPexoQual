@@ -434,6 +434,9 @@ regionCompplot <- function(...,names.input = NULL,
 ##' plot. If it is empty \code{paramDistBoxplot} is going to create the 
 ##' names as the names of the list when they are available or is going to 
 ##' name them as Sample: 1 ,... , Sample: k.
+##' @param sort.as.numeric a logical value indicating if the values of 
+##' \code{names.input} are meant to be interpreted as numeric and sorted 
+##' accordingly.
 ##' 
 ##' @return A \code{ggplot2} object with the boxplot of the chosen 
 ##' parameter
@@ -444,12 +447,15 @@ regionCompplot <- function(...,names.input = NULL,
 ##' data(exoExample)
 ##' paramDistBoxplot(exoExample)
 paramDistBoxplot <- function(...,names.input = NULL,
-                            which.param = "beta1")
+                            which.param = "beta1",
+                            sort.as.numeric = FALSE)
 {
 
     lab <- depth <- prob <- NULL
     
     stopifnot(which.param %in% c("beta1","beta2"))
+    stopifnot(is.logical(sort.as.numeric))
+    
     args <- unlist(list(...))
     if(!is.null(names.input)){
         stopifnot(length(names.input) == length(args))
@@ -460,6 +466,12 @@ paramDistBoxplot <- function(...,names.input = NULL,
                           nsamples)
     names(paramList) <- NULL
     paramDataFrame <- .nameJoin(paramList,nms)
+
+    if(sort.as.numeric){
+        paramDataFrame$sample = factor(paramDataFrame$sample,
+            levels = as.character(sort(as.numeric(nms))))
+    }
+    
     paramDataFrame$beta2 <- - paramDataFrame$beta2
     p <- ggplot(paramDataFrame,
                 aes_string(x = "sample",

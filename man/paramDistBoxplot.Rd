@@ -4,7 +4,8 @@
 \alias{paramDistBoxplot}
 \title{paramDistBoxplot}
 \usage{
-paramDistBoxplot(..., names.input = NULL, which.param = "beta1")
+paramDistBoxplot(..., names.input = NULL, which.param = "beta1",
+  sort.as.numeric = FALSE)
 }
 \arguments{
 \item{...}{a \code{list} of \code{ExoData} objects, or several 
@@ -19,6 +20,10 @@ name them as Sample: 1 ,... , Sample: k.}
 \code{"beta2"} that determines which paramters in the model 
 depth_i ~ uniquePos_i + width_i to plot. The default value is 
 \code{"beta1"}.}
+
+\item{sort.as.numeric}{a logical value indicating if the values of 
+\code{names.input} are meant to be interpreted as numeric and sorted 
+accordingly.}
 }
 \value{
 A \code{ggplot2} object with the boxplot of the chosen 
