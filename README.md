@@ -16,7 +16,8 @@ To install the package, it is easiest to use:
 ```
 #install.packages("devtools")
 library(devtools)
-install_github("keleslab/ChIPexoQual")
+install_github("welch16/ChIPexoQualExample")
+install_github("welch16/ChIPexoQual")
 ```
 
 References
