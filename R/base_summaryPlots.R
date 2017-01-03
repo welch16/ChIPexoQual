@@ -170,7 +170,7 @@ MAplot <- function(...,names.input = NULL)
 ##' data(exoExample)
 ##' .ARCvURCDataFrame(exoExample,both.strand = FALSE)
 ##' .ARCvURCDataFrame(exoExample,both.strand = TRUE)
-.ARCvURCDataFrame = function(object,both.strand)
+.ARCvURCDataFrame <- function(object,both.strand)
 {
     fwdReads <- revReads <-  NULL
     
@@ -331,7 +331,7 @@ FSRDistplot <- function(...,names.input = NULL,
     p <- ggplot(FSRDataFrame,aes(depth,FSR,colour = as.factor(quantiles)))+
         geom_line(size = 1)+
         theme(legend.position = "top")+facet_grid(sample ~ .)+
-        scale_color_brewer(palette = "Dark2",name = "")+
+        scale_color_brewer(palette = "Dark2",name = "Quantile")+
         xlab("Minimum number of reads")+ylab("Forward Strand Ratio \n (FSR)")+
         ylim(0,1)
     p
@@ -401,7 +401,7 @@ regionCompplot <- function(...,names.input = NULL,
     names(regionList) <- NULL
     regionDataFrame <- .nameJoin(regionList,nms)
     r <- brewer.pal(name = "Pastel1",3)
-    names(r) = c("both","fwd","bwd")
+    names(r) <- c("both","fwd","bwd")
     regionDataFrame <- regionDataFrame[,lab := 
         factor(lab,levels = rev(names(r)))]
     
@@ -468,7 +468,7 @@ paramDistBoxplot <- function(...,names.input = NULL,
     paramDataFrame <- .nameJoin(paramList,nms)
 
     if(sort.as.numeric){
-        paramDataFrame$sample = factor(paramDataFrame$sample,
+        paramDataFrame$sample <- factor(paramDataFrame$sample,
             levels = as.character(sort(as.numeric(nms))))
     }
     
