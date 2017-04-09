@@ -4,6 +4,7 @@
 \name{nreads}
 \alias{nreads}
 \alias{nreads,ExoData-method}
+\alias{nreads}
 \title{nreads methods}
 \usage{
 nreads(object)
@@ -23,4 +24,3 @@ The number of reads in the \code{ExoData} object.
 data(exoExample)
 nreads(exoExample)
 }
-

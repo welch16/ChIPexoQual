@@ -2,6 +2,7 @@
 % Please edit documentation in R/AllClasses.R
 \docType{class}
 \name{ExoData-class}
+\alias{ExoData-class}
 \alias{ExoData}
 \alias{ExoData-class}
 \title{ExoData object and constructors}
@@ -54,4 +55,3 @@ ExoData(files[5],mc.cores = 2L)
 
 
 }
-

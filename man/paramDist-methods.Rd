@@ -4,6 +4,7 @@
 \name{paramDist}
 \alias{paramDist}
 \alias{paramDist,ExoData-method}
+\alias{paramDist}
 \title{paramDist methods}
 \usage{
 paramDist(object)
@@ -26,4 +27,3 @@ fitted by \code{ChIPexoQual}
 data(exoExample)
 paramDist(exoExample)
 }
-

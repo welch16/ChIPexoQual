@@ -21,4 +21,3 @@ file:
 \item ChIPexo_carroll_FoxA1_mouse_rep3_chr1.bam
 }
 }
-

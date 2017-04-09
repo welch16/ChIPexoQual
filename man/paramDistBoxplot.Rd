@@ -38,4 +38,3 @@ parameter.
 data(exoExample)
 paramDistBoxplot(exoExample)
 }
-

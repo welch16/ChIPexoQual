@@ -40,4 +40,3 @@ ChIP-exo data.
 data(exoExample)
 FSRDistplot(exoExample)
 }
-

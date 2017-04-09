@@ -28,4 +28,9 @@ calculateParamDist
 This function samples \code{nregions} rows from the stat matrix and fits 
 the linear model \code{lm(d ~ 0 + u + w)}
 }
+\examples{
+data("exoExample")
+DT <- formatRegions(exoExample)
+calculateParamDist(1,DT,100)
 
+}

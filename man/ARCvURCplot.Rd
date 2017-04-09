@@ -30,4 +30,3 @@ URC plot to analyze enrichment and library complexity in ChIP-exo data.
 data(exoExample)
 ARCvURCplot(exoExample)
 }
-

@@ -30,4 +30,3 @@ Region Composition plot to analyze strand imbalance in ChIP-exo data.
 data(exoExample)
 regionCompplot(exoExample)
 }
-

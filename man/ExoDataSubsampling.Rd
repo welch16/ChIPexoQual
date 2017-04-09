@@ -54,4 +54,3 @@ sample.depth <- seq(1e5,2e5,5e4)
 ExoDataSubsampling(file = files[5],sample.depth = sample.depth)
 
 }
-

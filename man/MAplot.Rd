@@ -26,4 +26,3 @@ analyze the strand imbalance in ChIP-exo data.
 data(exoExample)
 MAplot(exoExample)
 }
-

@@ -4,6 +4,7 @@
 \name{beta2}
 \alias{beta2}
 \alias{beta2,ExoData-method}
+\alias{beta2}
 \title{beta2 methods}
 \usage{
 beta2(object)
@@ -25,4 +26,3 @@ A numeric vector with estimated values for \eqn{\beta_2}.
 data(exoExample)
 beta2(exoExample)
 }
-
