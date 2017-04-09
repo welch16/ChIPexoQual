@@ -67,6 +67,11 @@ calculateSummary <- function(region,fwdReads,revReads)
 ##' 
 ##' @return a \code{data.table} with both parameters and some extra info
 ##' 
+##' @examples
+##' data("exoExample")
+##' DT <- formatRegions(exoExample)
+##' calculateParamDist(1,DT,100)
+##' 
 ##' @export
 ##' 
 ##' @rdname calculateParamDist
@@ -77,4 +82,30 @@ calculateParamDist <- function(i,stats,nregions)
     dt <- stats[sample(.N,nregions)]
     model <- lm(depth ~ 0 + uniquePos + width , data = dt)
     data.table(broom::tidy(model))
+}
+
+##' formatRegions
+##'  
+##' \code{formatRegions} separates the width, depth and uniquePos summary statistics from the \code{ExoData}
+##' object to calculate the quality parameters/
+##'  
+##' @param exo a \code{ExoData} object
+##' @return a \code{data.table} with the width, depth and uniquePos of the regions in \code{exo}.
+##' 
+##' @examples 
+##' data("exoExample")
+##' formatRegions(exoExample)
+##' 
+##' @export
+##' 
+##' @rdname formatRegions
+##' @name formatRegions
+## 
+formatRegions <- function(exo)
+{
+  depth <- uniquePos <- NULL
+  DT <- data.table(as.data.frame(mcols(exo)))
+  DT <- DT[,list(depth,uniquePos)]
+  DT <- DT[,width := width(exo)]
+  DT
 }

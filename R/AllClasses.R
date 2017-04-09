@@ -164,9 +164,8 @@ ExoData <- function(file = NULL, reads = NULL , height = 1 ,
     depth <- uniquePos <- width <-  NULL
     
     if(verbose) message("Calculating quality scores distribution")
-    DT <- data.table(as.data.frame(mcols(regions)))
-    DT <- DT[,list(depth,uniquePos)]
-    DT <- DT[,width := width(regions)]
+
+    DT <- formatRegions(regions)
 
     paramList <- lapply(seq_len(ntimes),calculateParamDist,DT,nregions)
                           
