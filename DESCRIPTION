@@ -1,7 +1,7 @@
 Package: ChIPexoQual
 Type: Package
 Title: ChIPexoQual
-Version: 0.99.14
+Version: 1.0.0
 Author: Rene Welch, Dongjun Chung, Sunduz Keles
 Maintainer: Rene Welch <welch@stat.wisc.edu>
 Authors@R: c(person(given = "Dongjun", family = "Chung", role = "aut"),
