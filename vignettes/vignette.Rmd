@@ -4,7 +4,7 @@ author: |
         | Rene Welch and S&#252;nd&#252;z Kele&#351;
         | Department of Statistics, University of Wisconsin-Madison
 output: 
-    BiocStyle::html_document2
+    BiocStyle::html_document
 bibliography: biblio.bib    
 biblio-style: plain
 vignette: >
