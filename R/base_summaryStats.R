@@ -3,20 +3,20 @@
 ##' @importFrom stats lm
 NULL
 
-## Calculate the summary statistics for each region
-## 
-## @param region a IRanges object with the regions of a certain chromosome
-## @param fwdReads a GRanges object with the forward reads of the ChIP-exo 
-## experiment
-## @param revReads a GRanges object with the reverse reads of the ChIP-exo 
-## experiment
-## 
-## @return stats a \code{DataFrame} object with the summary statistics 
-## necessary for the \code{ExoData}.
-## 
-## @rdname calculateSummary
-## @name calculateSummary
-## 
+##' Calculate the summary statistics for each region
+##' 
+##' @param region a IRanges object with the regions of a certain chromosome
+##' @param fwdReads a GRanges object with the forward reads of the ChIP-exo 
+##' experiment
+##' @param revReads a GRanges object with the reverse reads of the ChIP-exo 
+##' experiment
+##' 
+##' @return stats a \code{DataFrame} object with the summary statistics 
+##' necessary for the \code{ExoData}.
+##' 
+##' @rdname calculateSummary
+##' @name calculateSummary
+##' 
 calculateSummary <- function(region,fwdReads,revReads)
 {
     ## fix formats and stuff
