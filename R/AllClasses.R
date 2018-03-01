@@ -7,6 +7,7 @@
 ##' @importFrom BiocParallel SnowParam bpmapply MulticoreParam
 ##' @import  methods
 ##' @import  GenomeInfoDb
+##' @import utils
 NULL
 
 
